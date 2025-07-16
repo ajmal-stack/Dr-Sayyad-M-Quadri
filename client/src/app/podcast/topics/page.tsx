@@ -115,7 +115,7 @@ export default function PodcastTopicsPage() {
               Featured Topic: Spiritual Awakening
             </h2>
             <p className='text-xl text-emerald-100 mb-6'>
-              This month we're diving deep into the journey of spiritual
+              This month we&apos;re diving deep into the journey of spiritual
               awakening - exploring the signs, stages, and transformative power
               of conscious awareness.
             </p>

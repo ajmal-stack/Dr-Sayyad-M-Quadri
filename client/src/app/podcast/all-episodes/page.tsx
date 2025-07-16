@@ -74,9 +74,9 @@ export default function AllEpisodesPage() {
                   Finding Your Purpose in Modern Life
                 </h3>
                 <p className='text-gray-600 mb-4 text-sm'>
-                  A deep dive into understanding your life's purpose and how to
-                  align your actions with your core values in today's busy
-                  world.
+                  A deep dive into understanding your life&apos;s purpose and
+                  how to align your actions with your core values in
+                  today&apos;s busy world.
                 </p>
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center space-x-2'>

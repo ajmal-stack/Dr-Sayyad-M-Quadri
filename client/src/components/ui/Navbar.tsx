@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -333,9 +334,11 @@ export default function Navbar() {
                     className='group block bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/30 rounded-2xl p-5 hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-emerald-100/50 hover:border-emerald-200'
                   >
                     <div className='aspect-[3/4] mb-4 overflow-hidden rounded-xl bg-white shadow-lg group-hover:shadow-xl transition-shadow duration-300'>
-                      <img
+                      <Image
                         src={book.image}
                         alt={book.title}
+                        width={200}
+                        height={267}
                         className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
                       />
                     </div>

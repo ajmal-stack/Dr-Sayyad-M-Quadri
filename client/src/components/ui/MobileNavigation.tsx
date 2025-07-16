@@ -59,16 +59,11 @@ export default function MobileNavigation({
   const [searchQuery, setSearchQuery] = useState('');
   const [showProfile, setShowProfile] = useState(false);
 
-  // Animation states
-  const [isAnimating, setIsAnimating] = useState(false);
-
   useEffect(() => {
     if (isOpen) {
-      setIsAnimating(true);
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
-      setTimeout(() => setIsAnimating(false), 300);
     }
 
     return () => {

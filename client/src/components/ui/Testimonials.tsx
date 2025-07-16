@@ -203,7 +203,6 @@ export default function Testimonials() {
     setIsAutoPlay(false);
   };
 
-  const featuredTestimonials = testimonials.filter((t) => t.featured);
   const currentTestimonialData = testimonials[currentTestimonial];
 
   return (

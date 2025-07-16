@@ -326,7 +326,7 @@ export default function FAQ() {
             </div>
 
             <div className='grid md:grid-cols-2 gap-6'>
-              {popularFAQs.map((faq, index) => (
+              {popularFAQs.map((faq) => (
                 <div
                   key={faq.id}
                   className='group bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 border border-slate-200/50 hover:border-blue-200/50 hover:scale-[1.02]'
@@ -379,7 +379,7 @@ export default function FAQ() {
           </div>
 
           <div className='space-y-4'>
-            {filteredFAQs.map((faq, index) => (
+            {filteredFAQs.map((faq) => (
               <div
                 key={faq.id}
                 className='group bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 border border-slate-200/50 hover:border-blue-200/50 overflow-hidden'
@@ -496,8 +496,8 @@ export default function FAQ() {
                 Still Have Questions?
               </h3>
               <p className='text-xl mb-8 opacity-90 max-w-2xl mx-auto'>
-                I'm here to help. Reach out for personalized answers about your
-                mental health journey
+                I&apos;m here to help. Reach out for personalized answers about
+                your mental health journey
               </p>
 
               <div className='flex flex-col sm:flex-row gap-4 justify-center'>
