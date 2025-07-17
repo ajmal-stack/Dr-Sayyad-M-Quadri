@@ -6,6 +6,7 @@ import FeaturedContent from '@/components/ui/FeaturedContent';
 import Newsletter from '@/components/ui/Newsletter';
 import About from '@/components/ui/About';
 import CTA from '@/components/ui/CTA';
+import Footer from '@/components/ui/Footer';
 
 export default function Home() {
   return (
@@ -25,6 +26,8 @@ export default function Home() {
       <About />
 
       <CTA />
+
+      <Footer />
     </div>
   );
 }

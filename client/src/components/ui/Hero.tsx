@@ -150,6 +150,24 @@ export default function Hero() {
             }`}
           >
             <div className='space-y-8'>
+              {/* Logo */}
+              <div className='flex items-center space-x-4 mb-4'>
+                <div className='relative'>
+                  <Image
+                    src='/SMQ.png'
+                    alt='SMQ - Partner in emotional health'
+                    width={120}
+                    height={60}
+                    className='h-12 w-auto object-contain'
+                    priority
+                  />
+                </div>
+                <div className='h-8 w-px bg-slate-300'></div>
+                <div className='text-slate-600 text-sm font-medium'>
+                  Partner in emotional health
+                </div>
+              </div>
+
               {/* Badge */}
               <div className='inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-8 py-3 rounded-full text-sm font-semibold shadow-lg'>
                 <CheckBadgeIconSolid className='w-5 h-5 mr-2 text-blue-600' />
@@ -159,7 +177,7 @@ export default function Hero() {
               {/* Main Heading */}
               <div className='space-y-4'>
                 <h1 className='text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 leading-tight'>
-                  Dr. Sayyed M{' '}
+                  Dr. Syed M{' '}
                   <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent'>
                     Quadri
                   </span>
@@ -368,38 +386,6 @@ export default function Hero() {
         </div>
 
         {/* Bottom CTA */}
-        <div
-          className={`mt-16 text-center ${
-            isVisible
-              ? 'animate-in slide-in-from-bottom duration-1000 delay-1000'
-              : 'opacity-0'
-          }`}
-        >
-          <div className='bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 text-white shadow-2xl'>
-            <h3 className='text-2xl md:text-3xl font-bold mb-4'>
-              Ready to Begin Your Healing Journey?
-            </h3>
-            <p className='text-xl mb-6 opacity-90'>
-              Take the first step towards mental wellness and personal growth
-            </p>
-            <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-              <Link
-                href='/about/contact'
-                className='inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 rounded-2xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105'
-              >
-                <CalendarDaysIcon className='w-5 h-5 mr-2' />
-                Schedule Free Consultation
-              </Link>
-              <Link
-                href='/books'
-                className='inline-flex items-center justify-center px-8 py-4 bg-white/10 text-white rounded-2xl font-semibold text-lg hover:bg-white/20 transition-all duration-300 border border-white/20'
-              >
-                <BookOpenIcon className='w-5 h-5 mr-2' />
-                Explore Books
-              </Link>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

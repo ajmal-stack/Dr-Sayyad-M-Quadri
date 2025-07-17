@@ -571,68 +571,6 @@ export default function Testimonials() {
         </div>
 
         {/* Call to Action */}
-        <div
-          className={`text-center ${
-            isVisible
-              ? 'animate-in slide-in-from-bottom duration-1000 delay-1000'
-              : 'opacity-0'
-          }`}
-        >
-          <div className='bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden'>
-            {/* Background Pattern */}
-            <div className='absolute inset-0 opacity-20'>
-              <div
-                className='w-full h-full bg-repeat'
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                }}
-              />
-            </div>
-
-            <div className='relative z-10'>
-              <h3 className='text-3xl md:text-4xl font-bold mb-4'>
-                Ready to Write Your Success Story?
-              </h3>
-              <p className='text-xl mb-8 opacity-90 max-w-2xl mx-auto'>
-                Join thousands of patients who have transformed their lives
-                through compassionate, evidence-based mental health care
-              </p>
-
-              <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-                <Link
-                  href='/contact'
-                  className='group inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 rounded-2xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105'
-                >
-                  <CalendarDaysIcon className='w-5 h-5 mr-2' />
-                  Start Your Journey Today
-                  <ChevronRightIcon className='w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform' />
-                </Link>
-                <Link
-                  href='/about'
-                  className='inline-flex items-center justify-center px-8 py-4 bg-white/10 text-white rounded-2xl font-semibold text-lg hover:bg-white/20 transition-all duration-300 border border-white/20'
-                >
-                  Learn About Our Approach
-                </Link>
-              </div>
-
-              {/* Trust Indicators */}
-              <div className='mt-8 flex flex-wrap justify-center items-center gap-6 text-sm opacity-80'>
-                <div className='flex items-center'>
-                  <CheckBadgeIcon className='w-5 h-5 mr-2' />
-                  Board Certified
-                </div>
-                <div className='flex items-center'>
-                  <HeartIcon className='w-5 h-5 mr-2' />
-                  10+ Years Experience
-                </div>
-                <div className='flex items-center'>
-                  <StarIcon className='w-5 h-5 mr-2' />
-                  4.9/5 Patient Rating
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

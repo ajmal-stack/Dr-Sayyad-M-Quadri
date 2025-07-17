@@ -398,17 +398,15 @@ export default function Navbar() {
           <div className='flex items-center justify-between h-20'>
             {/* Logo */}
             <div className='flex-shrink-0 flex items-center'>
-              <Link
-                href='/'
-                className='group flex items-center space-x-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-sm tracking-wide hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl'
-              >
-                <div className='w-10 h-10 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors'>
-                  <HeartIcon className='w-6 h-6 text-white' />
-                </div>
-                <div className='hidden sm:block'>
-                  <div className='text-base font-bold'>Dr. Quadri</div>
-                  <div className='text-xs opacity-90'>Mental Wellness</div>
-                </div>
+              <Link href='/'>
+                <Image
+                  src='/SMQ.png'
+                  alt='SMQ - Partner in emotional health'
+                  width={200}
+                  height={100}
+                  className='h-24 w-auto object-contain'
+                  priority
+                />
               </Link>
             </div>
 
