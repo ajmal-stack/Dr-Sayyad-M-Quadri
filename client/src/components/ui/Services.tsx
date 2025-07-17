@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import {
   HeartIcon,
   CpuChipIcon,
@@ -11,8 +10,6 @@ import {
   MoonIcon,
   ArrowPathIcon,
   StarIcon,
-  CalendarDaysIcon,
-  ArrowRightIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
 import {
