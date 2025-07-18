@@ -6,9 +6,9 @@ import {
   HeartIcon,
 } from '@heroicons/react/24/outline';
 
-export default function MindMattersPage() {
+export default function LoveHealingPage() {
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30'>
+    <div className='min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50/30'>
       <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         {/* Back Button */}
         <Link
@@ -22,10 +22,10 @@ export default function MindMattersPage() {
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
           {/* Book Cover */}
           <div className='flex justify-center lg:justify-start'>
-            <div className='relative w-80 h-96 bg-white rounded-2xl shadow-2xl overflow-hidden border border-blue-100/50'>
+            <div className='relative w-80 h-96 bg-white rounded-2xl shadow-2xl overflow-hidden border border-pink-100/50'>
               <Image
-                src='/books/Navy and Pink Illustrated Mind Matters Book Cover.jpg'
-                alt='Mind Matters Book Cover'
+                src='/books/Romantic Doctor Love Story Ebook Cover.png'
+                alt='Love & Healing Book Cover'
                 fill
                 className='object-cover'
               />
@@ -36,62 +36,61 @@ export default function MindMattersPage() {
           <div className='space-y-6'>
             <div>
               <h1 className='text-4xl font-bold text-slate-800 mb-2'>
-                Mind Matters
+                Love & Healing
               </h1>
               <p className='text-lg text-slate-600 mb-4'>
-                Understanding Mental Health and Wellness
+                A Therapeutic Journey Through Relationships
               </p>
               <p className='text-sm text-blue-600 font-semibold'>
-                By Dr. Sayyed M Quadri
+                By Dr. Syed M Quadri
               </p>
             </div>
 
             <div className='prose prose-slate max-w-none'>
               <p className='text-slate-700 leading-relaxed'>
-                Dive deep into the complexities of mental health with this
-                comprehensive guide. &quot;Mind Matters&quot; offers practical
-                insights and therapeutic approaches to understanding the human
-                psyche and promoting mental wellness.
+                Explore the intersection of love, healing, and professional care
+                in this compelling narrative. This book weaves together the
+                complexities of human relationships with the therapeutic
+                process, offering insights into emotional healing and personal
+                growth.
               </p>
 
               <h3 className='text-xl font-semibold text-slate-800 mt-6 mb-3'>
-                What You&apos;ll Learn:
+                Key Themes:
               </h3>
               <ul className='list-disc list-inside text-slate-700 space-y-2'>
-                <li>Fundamental principles of mental health</li>
-                <li>Cognitive behavioral therapy techniques</li>
-                <li>Mindfulness and meditation practices</li>
-                <li>Stress management strategies</li>
-                <li>Building emotional resilience</li>
+                <li>The healing power of compassionate relationships</li>
+                <li>Professional boundaries and emotional connection</li>
+                <li>Overcoming trauma through therapeutic relationships</li>
+                <li>The role of empathy in healing</li>
+                <li>Building healthy attachment patterns</li>
               </ul>
             </div>
 
             <div className='flex items-center space-x-4 pt-6'>
-              <button className='flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl'>
+              <button className='flex items-center space-x-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl'>
                 <ShoppingCartIcon className='w-5 h-5' />
-                <span>Purchase Book</span>
+                <span>Purchase Ebook</span>
               </button>
 
-              <button className='flex items-center space-x-2 text-slate-600 hover:text-blue-600 px-6 py-3 rounded-xl border border-slate-300 hover:border-blue-300 transition-all duration-300'>
+              <button className='flex items-center space-x-2 text-slate-600 hover:text-pink-600 px-6 py-3 rounded-xl border border-slate-300 hover:border-pink-300 transition-all duration-300'>
                 <HeartIcon className='w-5 h-5' />
                 <span>Add to Wishlist</span>
               </button>
             </div>
 
-            <div className='bg-blue-50/50 rounded-xl p-6 border border-blue-100/50'>
+            <div className='bg-pink-50/50 rounded-xl p-6 border border-pink-100/50'>
               <h3 className='text-lg font-semibold text-slate-800 mb-3'>
                 Book Details
               </h3>
               <div className='grid grid-cols-2 gap-4 text-sm'>
                 <div>
                   <span className='font-medium text-slate-600'>Format:</span>
-                  <span className='text-slate-800 ml-2'>
-                    Paperback & Digital
-                  </span>
+                  <span className='text-slate-800 ml-2'>Digital Only</span>
                 </div>
                 <div>
                   <span className='font-medium text-slate-600'>Pages:</span>
-                  <span className='text-slate-800 ml-2'>324</span>
+                  <span className='text-slate-800 ml-2'>298</span>
                 </div>
                 <div>
                   <span className='font-medium text-slate-600'>Language:</span>
@@ -99,7 +98,9 @@ export default function MindMattersPage() {
                 </div>
                 <div>
                   <span className='font-medium text-slate-600'>Category:</span>
-                  <span className='text-slate-800 ml-2'>Mental Health</span>
+                  <span className='text-slate-800 ml-2'>
+                    Fiction/Therapeutic
+                  </span>
                 </div>
               </div>
             </div>

@@ -42,7 +42,7 @@ export default function FoodJournalPage() {
                 Track Your Nutrition and Mental Health Connection
               </p>
               <p className='text-sm text-blue-600 font-semibold'>
-                By Dr. Sayyed M Quadri
+                By Dr. Syed M Quadri
               </p>
             </div>
 

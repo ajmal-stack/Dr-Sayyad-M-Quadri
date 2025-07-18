@@ -232,28 +232,8 @@ export default function Navbar() {
   };
 
   const renderBooksDropdown = () => {
-    const getSlidesPerView = () => {
-      if (bookItems.length === 0) return 1;
-      if (bookItems.length === 1) return 1;
-      if (bookItems.length === 2) return 2;
-      if (bookItems.length === 3) return 3;
-      if (bookItems.length === 4) return 4;
-      return 5;
-    };
-
-    const getDropdownWidth = () => {
-      const slidesPerView = getSlidesPerView();
-      if (slidesPerView === 1) return 'w-80';
-      if (slidesPerView === 2) return 'w-[640px]';
-      if (slidesPerView === 3) return 'w-[960px]';
-      if (slidesPerView === 4) return 'w-[1280px]';
-      return 'w-screen max-w-7xl';
-    };
-
     return (
-      <div
-        className={`absolute left-1/2 -translate-x-1/2 mt-0 ${getDropdownWidth()} bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-100/50 py-6 z-10 animate-in slide-in-from-top-2 duration-300`}
-      >
+      <div className='absolute left-1/2 -translate-x-1/2 mt-0 w-[800px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-100/50 py-6 z-10 animate-in slide-in-from-top-2 duration-300'>
         <div className='absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-emerald-100/50 rotate-45'></div>
 
         <div className='px-8 mb-6'>
@@ -284,8 +264,8 @@ export default function Navbar() {
           <div className='relative books-swiper'>
             <Swiper
               modules={[Navigation, Pagination, Autoplay]}
-              spaceBetween={24}
-              slidesPerView={getSlidesPerView()}
+              spaceBetween={20}
+              slidesPerView={3}
               navigation={{
                 nextEl: '.books-swiper-next',
                 prevEl: '.books-swiper-prev',
@@ -295,37 +275,15 @@ export default function Navbar() {
                 el: '.books-swiper-pagination',
               }}
               autoplay={
-                bookItems.length > getSlidesPerView()
+                bookItems.length > 3
                   ? {
                       delay: 4000,
                       disableOnInteraction: false,
                     }
                   : false
               }
-              loop={bookItems.length > getSlidesPerView()}
+              loop={bookItems.length > 3}
               className='px-8'
-              breakpoints={{
-                320: {
-                  slidesPerView: 1,
-                  spaceBetween: 16,
-                },
-                640: {
-                  slidesPerView: Math.min(2, bookItems.length),
-                  spaceBetween: 20,
-                },
-                768: {
-                  slidesPerView: Math.min(3, bookItems.length),
-                  spaceBetween: 24,
-                },
-                1024: {
-                  slidesPerView: Math.min(4, bookItems.length),
-                  spaceBetween: 24,
-                },
-                1280: {
-                  slidesPerView: getSlidesPerView(),
-                  spaceBetween: 24,
-                },
-              }}
             >
               {bookItems.map((book) => (
                 <SwiperSlide key={book.id}>
@@ -353,7 +311,7 @@ export default function Navbar() {
               ))}
             </Swiper>
 
-            {bookItems.length > getSlidesPerView() && (
+            {bookItems.length > 3 && (
               <>
                 <button className='books-swiper-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-xl border border-emerald-100/50 flex items-center justify-center text-slate-600 hover:text-emerald-600 transition-all duration-300 hover:scale-110'>
                   <ChevronLeftIcon className='w-6 h-6' />
@@ -366,7 +324,7 @@ export default function Navbar() {
           </div>
         )}
 
-        {bookItems.length > getSlidesPerView() && (
+        {bookItems.length > 3 && (
           <div className='books-swiper-pagination flex justify-center mt-6 space-x-2'></div>
         )}
 
@@ -390,8 +348,8 @@ export default function Navbar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
           scrolled
-            ? 'bg-white/95 backdrop-blur-xl shadow-2xl border-b border-blue-100/50'
-            : 'bg-gradient-to-r from-white/80 via-blue-50/50 to-indigo-50/30 backdrop-blur-sm'
+            ? 'bg-gradient-to-r from-blue-50/95 via-indigo-50/95 to-purple-50/95 backdrop-blur-xl shadow-2xl border-b border-blue-200/50'
+            : 'bg-gradient-to-r from-blue-100/80 via-indigo-100/70 to-purple-100/60 backdrop-blur-sm'
         }`}
       >
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>

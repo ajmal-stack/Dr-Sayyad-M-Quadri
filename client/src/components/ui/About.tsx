@@ -229,10 +229,9 @@ const About = () => {
             <div className='space-y-8'>
               <div className='space-y-6 text-lg text-slate-600 leading-relaxed'>
                 <p>
-                  With over a decade of experience in psychiatric care, Dr.
-                  Sayyed M Quadri combines clinical expertise with genuine
-                  compassion to help individuals navigate their mental health
-                  journey.
+                  With over a decade of experience in psychiatric care, Dr. Syed
+                  M Quadri combines clinical expertise with genuine compassion
+                  to help individuals navigate their mental health journey.
                 </p>
                 <p>
                   Specializing in anxiety, depression, trauma, and relationship

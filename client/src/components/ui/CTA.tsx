@@ -131,7 +131,7 @@ export default function CTA() {
             <div className='flex flex-col sm:flex-row gap-4 justify-center items-center text-sm text-slate-500'>
               <span>📞 Call: (555) 123-4567</span>
               <span className='hidden sm:block'>•</span>
-              <span>📧 Email: contact@drsayyedquadri.com</span>
+              <span>📧 Email: contact@drSyedquadri.com</span>
               <span className='hidden sm:block'>•</span>
               <span>🕒 Mon-Fri: 9AM-6PM</span>
             </div>

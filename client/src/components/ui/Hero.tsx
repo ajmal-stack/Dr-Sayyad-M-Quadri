@@ -268,7 +268,7 @@ export default function Hero() {
                   <div className='relative overflow-hidden rounded-2xl'>
                     <Image
                       src='/sayyed-quadri1.png'
-                      alt='Dr. Sayyed M Quadri - Licensed Psychiatrist'
+                      alt='Dr. Syed M Quadri - Licensed Psychiatrist'
                       width={400}
                       height={500}
                       className='w-full h-auto object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110'

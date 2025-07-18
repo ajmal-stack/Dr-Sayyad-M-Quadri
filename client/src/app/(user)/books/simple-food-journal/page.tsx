@@ -6,9 +6,9 @@ import {
   HeartIcon,
 } from '@heroicons/react/24/outline';
 
-export default function LoveHealingPage() {
+export default function SimpleFoodJournalPage() {
   return (
-    <div className='min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50/30'>
+    <div className='min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50/30'>
       <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         {/* Back Button */}
         <Link
@@ -22,10 +22,10 @@ export default function LoveHealingPage() {
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
           {/* Book Cover */}
           <div className='flex justify-center lg:justify-start'>
-            <div className='relative w-80 h-96 bg-white rounded-2xl shadow-2xl overflow-hidden border border-pink-100/50'>
+            <div className='relative w-80 h-96 bg-white rounded-2xl shadow-2xl overflow-hidden border border-red-100/50'>
               <Image
-                src='/books/Romantic Doctor Love Story Ebook Cover.png'
-                alt='Love & Healing Book Cover'
+                src='/books/Red Simple Food Journal Book Cover.jpg'
+                alt='Simple Food Journal Book Cover'
                 fill
                 className='object-cover'
               />
@@ -36,70 +36,71 @@ export default function LoveHealingPage() {
           <div className='space-y-6'>
             <div>
               <h1 className='text-4xl font-bold text-slate-800 mb-2'>
-                Love & Healing
+                Simple Food Journal
               </h1>
               <p className='text-lg text-slate-600 mb-4'>
-                A Therapeutic Journey Through Relationships
+                Mindful Eating for Better Mental Health
               </p>
               <p className='text-sm text-blue-600 font-semibold'>
-                By Dr. Sayyed M Quadri
+                By Dr. Syed M Quadri
               </p>
             </div>
 
             <div className='prose prose-slate max-w-none'>
               <p className='text-slate-700 leading-relaxed'>
-                Explore the intersection of love, healing, and professional care
-                in this compelling narrative. This book weaves together the
-                complexities of human relationships with the therapeutic
-                process, offering insights into emotional healing and personal
-                growth.
+                A streamlined approach to food journaling that focuses on
+                mindfulness and mental wellness. This simple yet effective
+                journal helps you develop a healthier relationship with food
+                through conscious eating practices and emotional awareness.
               </p>
 
               <h3 className='text-xl font-semibold text-slate-800 mt-6 mb-3'>
-                Key Themes:
+                Features:
               </h3>
               <ul className='list-disc list-inside text-slate-700 space-y-2'>
-                <li>The healing power of compassionate relationships</li>
-                <li>Professional boundaries and emotional connection</li>
-                <li>Overcoming trauma through therapeutic relationships</li>
-                <li>The role of empathy in healing</li>
-                <li>Building healthy attachment patterns</li>
+                <li>Easy-to-use daily tracking pages</li>
+                <li>Mindfulness exercises for conscious eating</li>
+                <li>Mood and energy level monitoring</li>
+                <li>Weekly reflection prompts</li>
+                <li>Tips for emotional eating management</li>
               </ul>
             </div>
 
             <div className='flex items-center space-x-4 pt-6'>
-              <button className='flex items-center space-x-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl'>
+              <button className='flex items-center space-x-2 bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl'>
                 <ShoppingCartIcon className='w-5 h-5' />
-                <span>Purchase Ebook</span>
+                <span>Purchase Journal</span>
               </button>
 
-              <button className='flex items-center space-x-2 text-slate-600 hover:text-pink-600 px-6 py-3 rounded-xl border border-slate-300 hover:border-pink-300 transition-all duration-300'>
+              <button className='flex items-center space-x-2 text-slate-600 hover:text-red-600 px-6 py-3 rounded-xl border border-slate-300 hover:border-red-300 transition-all duration-300'>
                 <HeartIcon className='w-5 h-5' />
                 <span>Add to Wishlist</span>
               </button>
             </div>
 
-            <div className='bg-pink-50/50 rounded-xl p-6 border border-pink-100/50'>
+            <div className='bg-red-50/50 rounded-xl p-6 border border-red-100/50'>
               <h3 className='text-lg font-semibold text-slate-800 mb-3'>
-                Book Details
+                Journal Details
               </h3>
               <div className='grid grid-cols-2 gap-4 text-sm'>
                 <div>
                   <span className='font-medium text-slate-600'>Format:</span>
-                  <span className='text-slate-800 ml-2'>Digital Only</span>
+                  <span className='text-slate-800 ml-2'>
+                    Paperback & Digital
+                  </span>
                 </div>
                 <div>
                   <span className='font-medium text-slate-600'>Pages:</span>
-                  <span className='text-slate-800 ml-2'>298</span>
+                  <span className='text-slate-800 ml-2'>120</span>
                 </div>
                 <div>
-                  <span className='font-medium text-slate-600'>Language:</span>
-                  <span className='text-slate-800 ml-2'>English</span>
+                  <span className='font-medium text-slate-600'>Duration:</span>
+                  <span className='text-slate-800 ml-2'>60 Days</span>
                 </div>
                 <div>
                   <span className='font-medium text-slate-600'>Category:</span>
                   <span className='text-slate-800 ml-2'>
-                    Fiction/Therapeutic
+                    Wellness & Mindfulness
                   </span>
                 </div>
               </div>

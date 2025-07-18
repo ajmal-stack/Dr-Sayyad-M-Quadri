@@ -429,7 +429,7 @@ export default function MobileNavigation({
               </div>
               <div>
                 <span className='font-bold text-slate-800 text-lg'>
-                  Dr. Sayyed M Quadri
+                  Dr. Syed M Quadri
                 </span>
                 <div className='text-xs text-slate-500'>
                   Licensed Psychiatrist

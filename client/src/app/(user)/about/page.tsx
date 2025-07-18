@@ -6,7 +6,7 @@ export default function AboutPage() {
         <div className='text-center mb-16'>
           <div className='w-32 h-32 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full mx-auto mb-6'></div>
           <h1 className='text-4xl md:text-5xl font-bold text-gray-900 mb-4'>
-            Dr. Sayyed M Quadri
+            Dr. Syed M Quadri
           </h1>
           <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
             Author, Speaker, and Thought Leader dedicated to sharing insights on
@@ -20,7 +20,7 @@ export default function AboutPage() {
             <h2 className='text-2xl font-bold text-gray-900 mb-6'>Biography</h2>
             <div className='space-y-4 text-gray-600'>
               <p>
-                Dr. Sayyed M Quadri is a renowned author and speaker who has
+                Dr. Syed M Quadri is a renowned author and speaker who has
                 dedicated his life to exploring the intersection of
                 spirituality, personal development, and practical wisdom.
               </p>

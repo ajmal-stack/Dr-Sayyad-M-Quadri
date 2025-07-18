@@ -110,7 +110,7 @@ export default function Footer() {
             <div className='lg:col-span-1'>
               <div className='mb-6'>
                 <h3 className='text-2xl font-bold text-slate-900 mb-4'>
-                  Dr. Sayyed M Quadri
+                  Dr. Syed M Quadri
                 </h3>
                 <p className='text-slate-600 mb-6 leading-relaxed'>
                   Board-certified psychiatrist dedicated to providing
@@ -139,7 +139,7 @@ export default function Footer() {
                   </div>
                   <div>
                     <p className='text-slate-900 font-medium'>
-                      contact@drsayyedquadri.com
+                      contact@drSyedquadri.com
                     </p>
                     <p className='text-slate-500 text-sm'>General Inquiries</p>
                   </div>
@@ -308,7 +308,7 @@ export default function Footer() {
         <div className='border-t border-slate-200 py-6'>
           <div className='flex flex-col md:flex-row justify-between items-center'>
             <div className='flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 text-slate-600 text-sm'>
-              <p>&copy; 2024 Dr. Sayyed M Quadri. All rights reserved.</p>
+              <p>&copy; 2024 Dr. Syed M Quadri. All rights reserved.</p>
               <div className='flex items-center space-x-4'>
                 <Link
                   href='/privacy'

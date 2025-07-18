@@ -42,7 +42,7 @@ export default function PublicSpeakingPage() {
                 Overcome Anxiety and Speak with Confidence
               </p>
               <p className='text-sm text-blue-600 font-semibold'>
-                By Dr. Sayyed M Quadri
+                By Dr. Syed M Quadri
               </p>
             </div>
 

@@ -1,0 +1,40 @@
+{
+  "name": "dr-syed-quadri-server",
+  "version": "1.0.0",
+  "description": "Backend server for Dr. Syed M Quadri website",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "build": "echo 'No build step required'",
+    "test": "echo 'No tests specified'",
+    "seed": "node src/scripts/seedData.js",
+    "seed-users": "node src/scripts/seedUsers.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "api"
+  ],
+  "author": "Dr. Syed M Quadri",
+  "license": "ISC",
+  "dependencies": {
+    "cloudinary": "^1.41.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "mongoose": "^8.16.4",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
