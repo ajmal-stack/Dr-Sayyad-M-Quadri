@@ -1,33 +1,50 @@
 import Hero from '@/components/ui/Hero';
 import Services from '@/components/ui/Services';
 import Testimonials from '@/components/ui/Testimonials';
-import FAQ from '@/components/ui/FAQ';
+// import FAQ from '@/components/ui/FAQ';
 import FeaturedContent from '@/components/ui/FeaturedContent';
 import Newsletter from '@/components/ui/Newsletter';
 import About from '@/components/ui/About';
 import CTA from '@/components/ui/CTA';
 import Footer from '@/components/ui/Footer';
+import SectionToggle from '@/components/ui/SectionToggle';
 
 export default function Home() {
   return (
     <div className='min-h-screen'>
-      <Hero />
+      <div id='hero'>
+        <Hero />
+      </div>
 
-      <Services />
+      <div id='services'>
+        <Services />
+      </div>
 
-      <Testimonials />
+      <div id='testimonials'>
+        <Testimonials />
+      </div>
 
-      <FAQ />
+      {/* <FAQ /> */}
 
-      <FeaturedContent />
+      <div id='featured-content'>
+        <FeaturedContent />
+      </div>
 
-      <Newsletter />
+      <div id='newsletter'>
+        <Newsletter />
+      </div>
 
-      <About />
+      <div id='about'>
+        <About />
+      </div>
 
-      <CTA />
+      <div id='cta'>
+        <CTA />
+      </div>
 
       <Footer />
+
+      <SectionToggle />
     </div>
   );
 }

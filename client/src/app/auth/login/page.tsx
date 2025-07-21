@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/AuthProvider';
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -38,21 +38,12 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (data.success) {
-        // Store token in localStorage
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify(data.data.user));
-
-        // Redirect based on role
-        const userRole = data.data.user.role;
-        if (userRole === 'SuperAdmin' || userRole === 'Admin') {
-          router.push('/admin');
-        } else {
-          router.push('/user');
-        }
+        // Use AuthProvider's login function which handles storage and redirect
+        login(data.data.token, data.data.user);
       } else {
         setError(data.error || 'Login failed');
       }
-    } catch (err) {
+    } catch {
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);

@@ -40,10 +40,10 @@ export default function AdminLayout({
     { name: 'Books Management', href: '/admin/books', icon: '📚' },
     { name: 'Podcasts Management', href: '/admin/podcasts', icon: '🎙️' },
     { name: 'Contacts', href: '/admin/contacts', icon: '💬' },
-    ...(user.permissions.canManageUsers
+    ...(user.role === 'Admin' || user.role === 'SuperAdmin'
       ? [{ name: 'User Management', href: '/admin/users', icon: '👥' }]
       : []),
-    ...(user.permissions.canAccessAnalytics
+    ...(user.role === 'Admin' || user.role === 'SuperAdmin'
       ? [{ name: 'Analytics', href: '/admin/analytics', icon: '📈' }]
       : []),
     { name: 'File Uploads', href: '/admin/uploads', icon: '📁' },

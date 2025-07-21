@@ -5,30 +5,34 @@ const API_BASE_URL =
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string[] } }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
-  return proxyRequest(request, params.slug, 'GET');
+  const resolvedParams = await params;
+  return proxyRequest(request, resolvedParams.slug, 'GET');
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { slug: string[] } }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
-  return proxyRequest(request, params.slug, 'POST');
+  const resolvedParams = await params;
+  return proxyRequest(request, resolvedParams.slug, 'POST');
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { slug: string[] } }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
-  return proxyRequest(request, params.slug, 'PUT');
+  const resolvedParams = await params;
+  return proxyRequest(request, resolvedParams.slug, 'PUT');
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { slug: string[] } }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
-  return proxyRequest(request, params.slug, 'DELETE');
+  const resolvedParams = await params;
+  return proxyRequest(request, resolvedParams.slug, 'DELETE');
 }
 
 async function proxyRequest(

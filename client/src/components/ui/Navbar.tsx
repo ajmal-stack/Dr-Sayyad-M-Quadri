@@ -141,28 +141,34 @@ const navItems: NavItem[] = [
     isBooks: true,
   },
   {
-    name: 'LIVE',
-    href: '/live',
+    name: 'YOUTUBE',
+    href: '/youtube',
     icon: <VideoCameraIcon className='w-5 h-5' />,
     color: 'from-red-500 to-orange-500',
     hasDropdown: true,
     dropdownItems: [
       {
-        name: 'Upcoming Sessions',
-        href: '/live/upcoming',
-        description: 'Live therapy sessions and webinars',
+        name: 'Latest Videos',
+        href: '/youtube/latest',
+        description: 'Recent mental health videos and tutorials',
         icon: <VideoCameraIcon className='w-4 h-4' />,
       },
       {
-        name: 'Past Sessions',
-        href: '/live/past',
-        description: 'Previous therapeutic sessions',
+        name: 'Popular Videos',
+        href: '/youtube/popular',
+        description: 'Most watched therapeutic content',
         icon: <PlayIcon className='w-4 h-4' />,
       },
       {
-        name: 'Schedule',
-        href: '/live/schedule',
-        description: 'Therapy session calendar',
+        name: 'Playlists',
+        href: '/youtube/playlists',
+        description: 'Organized video collections by topic',
+        icon: <SparklesIcon className='w-4 h-4' />,
+      },
+      {
+        name: 'YouTube Channel',
+        href: '/youtube/channel',
+        description: 'Visit our official YouTube channel',
         icon: <ShieldCheckIcon className='w-4 h-4' />,
       },
     ],
@@ -205,6 +211,12 @@ const navItems: NavItem[] = [
     href: '/journal',
     icon: <PencilSquareIcon className='w-5 h-5' />,
     color: 'from-amber-500 to-yellow-500',
+  },
+  {
+    name: 'FAQ',
+    href: '/faq',
+    icon: <ShieldCheckIcon className='w-5 h-5' />,
+    color: 'from-slate-500 to-gray-500',
   },
 ];
 
@@ -265,7 +277,7 @@ export default function Navbar() {
             <Swiper
               modules={[Navigation, Pagination, Autoplay]}
               spaceBetween={20}
-              slidesPerView={3}
+              slidesPerView={4}
               navigation={{
                 nextEl: '.books-swiper-next',
                 prevEl: '.books-swiper-prev',
@@ -275,14 +287,14 @@ export default function Navbar() {
                 el: '.books-swiper-pagination',
               }}
               autoplay={
-                bookItems.length > 3
+                bookItems.length > 4
                   ? {
                       delay: 4000,
                       disableOnInteraction: false,
                     }
                   : false
               }
-              loop={bookItems.length > 3}
+              loop={bookItems.length > 4}
               className='px-8'
             >
               {bookItems.map((book) => (
@@ -311,7 +323,7 @@ export default function Navbar() {
               ))}
             </Swiper>
 
-            {bookItems.length > 3 && (
+            {bookItems.length > 4 && (
               <>
                 <button className='books-swiper-prev absolute left-2 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-xl border border-emerald-100/50 flex items-center justify-center text-slate-600 hover:text-emerald-600 transition-all duration-300 hover:scale-110'>
                   <ChevronLeftIcon className='w-6 h-6' />
@@ -324,17 +336,17 @@ export default function Navbar() {
           </div>
         )}
 
-        {bookItems.length > 3 && (
+        {bookItems.length > 4 && (
           <div className='books-swiper-pagination flex justify-center mt-6 space-x-2'></div>
         )}
 
         {bookItems.length > 0 && (
-          <div className='px-8 mt-6 pt-6 border-t border-emerald-100/50'>
+          <div className='px-8 mt-4 pt-4 border-t border-emerald-100/50'>
             <Link
               href='/books'
-              className='flex items-center justify-center w-full py-4 px-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl text-sm font-bold hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:shadow-xl hover:scale-105'
+              className='flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl text-xs font-semibold hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:shadow-lg hover:scale-105'
             >
-              <BookOpenIcon className='w-5 h-5 mr-2' />
+              <BookOpenIcon className='w-4 h-4 mr-2' />
               Explore All Books
             </Link>
           </div>

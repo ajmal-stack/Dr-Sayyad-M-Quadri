@@ -11,7 +11,6 @@ import {
   MicrophoneIcon,
   UserIcon,
   CheckBadgeIcon,
-  ArrowUpIcon,
 } from '@heroicons/react/24/outline';
 // Social media icons as SVG components
 const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -45,10 +44,6 @@ const YouTubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const quickLinks = [
     { name: 'Home', href: '/' },
     { name: 'About Dr. Quadri', href: '/about' },
@@ -344,14 +339,6 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
-        {/* Scroll to Top Button */}
-        <button
-          onClick={scrollToTop}
-          className='fixed bottom-8 right-8 w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center z-50'
-        >
-          <ArrowUpIcon className='w-5 h-5' />
-        </button>
       </div>
     </footer>
   );
