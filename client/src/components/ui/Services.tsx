@@ -73,7 +73,6 @@ const services = [
 
 export default function Services() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  const [hoveredApproach, setHoveredApproach] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {

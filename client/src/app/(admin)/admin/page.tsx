@@ -2,24 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-  isActive: boolean;
-  isEmailVerified: boolean;
-  createdAt: string;
-  permissions: {
-    canRead: boolean;
-    canWrite: boolean;
-    canDelete: boolean;
-    canManageUsers: boolean;
-    canManageRoles: boolean;
-    canAccessAnalytics: boolean;
-  };
-}
-
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -44,8 +26,8 @@ export default function AdminDashboard() {
       <div className='mb-8'>
         <h1 className='text-2xl font-bold text-gray-900'>Dashboard Overview</h1>
         <p className='mt-2 text-gray-600'>
-          Welcome to the admin panel. Here's what's happening with your platform
-          today.
+          Welcome to the admin panel. Here&apos;s what&apos;s happening with
+          your platform today.
         </p>
       </div>
 

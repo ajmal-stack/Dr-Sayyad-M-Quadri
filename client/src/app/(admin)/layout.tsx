@@ -130,7 +130,9 @@ function SidebarContent({
   user,
   logout,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   navigation: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: any;
   logout: () => void;
 }) {

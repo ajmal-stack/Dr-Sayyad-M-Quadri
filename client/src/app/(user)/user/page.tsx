@@ -52,7 +52,7 @@ export default function UserDashboard() {
           Welcome back, {user.name}!
         </h1>
         <p className='mt-2 text-gray-600'>
-          Explore Dr. Syed M Quadri's resources and continue your wellness
+          Explore Dr. Syed M Quadri&apos;s resources and continue your wellness
           journey.
         </p>
       </div>
@@ -336,7 +336,8 @@ export default function UserDashboard() {
                   Browse Books
                 </h4>
                 <p className='mt-2 text-sm text-gray-500'>
-                  Explore Dr. Quadri's collection of health and wellness books.
+                  Explore Dr. Quadri&apos;s collection of health and wellness
+                  books.
                 </p>
               </div>
             </a>
@@ -399,7 +400,8 @@ export default function UserDashboard() {
                   About Dr. Quadri
                 </h4>
                 <p className='mt-2 text-sm text-gray-500'>
-                  Learn more about Dr. Syed M Quadri's background and expertise.
+                  Learn more about Dr. Syed M Quadri&apos;s background and
+                  expertise.
                 </p>
               </div>
             </a>
