@@ -297,15 +297,15 @@ const YouTubeContent = () => {
             />
 
             {/* Modal */}
-            <div className='fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none'>
-              <div className='relative w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 pointer-events-auto'>
+            <div className='fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 lg:p-6 xl:p-8 pointer-events-none'>
+              <div className='relative w-full h-full sm:h-auto max-w-7xl max-h-[95vh] bg-white rounded-none sm:rounded-2xl lg:rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 pointer-events-auto flex flex-col'>
                 {/* Close Button */}
                 <button
                   onClick={() => setActiveVideo(null)}
-                  className='absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110'
+                  className='absolute top-2 right-2 sm:top-4 sm:right-4 z-10 w-8 h-8 sm:w-10 sm:h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110'
                 >
                   <svg
-                    className='w-6 h-6'
+                    className='w-4 h-4 sm:w-6 sm:h-6'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'
@@ -319,8 +319,8 @@ const YouTubeContent = () => {
                   </svg>
                 </button>
 
-                {/* Video Player */}
-                <div className='aspect-video bg-black'>
+                {/* Video Player Container */}
+                <div className='w-full aspect-video bg-black flex-shrink-0'>
                   <iframe
                     ref={(el) => {
                       if (el && activeVideo) {
@@ -338,107 +338,112 @@ const YouTubeContent = () => {
                   ></iframe>
                 </div>
 
-                {/* Video Info */}
-                <div className='p-6 lg:p-8'>
-                  <div className='flex flex-col lg:flex-row lg:items-start gap-6'>
-                    <div className='flex-1'>
-                      <h3 className='text-xl lg:text-2xl font-bold text-slate-900 mb-3'>
-                        {youtubeVideos.find((v) => v.id === activeVideo)?.title}
-                      </h3>
-                      <p className='text-slate-600 mb-4 leading-relaxed'>
-                        {
-                          youtubeVideos.find((v) => v.id === activeVideo)
-                            ?.description
-                        }
-                      </p>
-
-                      {/* Video Stats */}
-                      <div className='flex flex-wrap items-center gap-4 text-sm text-slate-500 mb-4'>
-                        <span className='flex items-center'>
-                          <EyeIcon className='w-4 h-4 mr-1' />
-                          {formatViews(
-                            youtubeVideos.find((v) => v.id === activeVideo)
-                              ?.views || 0
-                          )}{' '}
-                          views
-                        </span>
-                        <span className='flex items-center'>
-                          <HandThumbUpIcon className='w-4 h-4 mr-1' />
-                          {formatViews(
-                            youtubeVideos.find((v) => v.id === activeVideo)
-                              ?.likes || 0
-                          )}{' '}
-                          likes
-                        </span>
-                        <span className='flex items-center'>
-                          <CalendarIcon className='w-4 h-4 mr-1' />
-                          {formatDate(
-                            youtubeVideos.find((v) => v.id === activeVideo)
-                              ?.publishDate || ''
-                          )}
-                        </span>
-                        <span className='flex items-center'>
-                          <ClockIcon className='w-4 h-4 mr-1' />
+                {/* Video Info - Scrollable */}
+                <div className='flex-1 overflow-y-auto'>
+                  <div className='p-3 sm:p-4 lg:p-6 xl:p-8'>
+                    <div className='flex flex-col xl:flex-row xl:items-start gap-4 lg:gap-6'>
+                      <div className='flex-1 min-w-0'>
+                        <h3 className='text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-slate-900 mb-2 lg:mb-3 leading-tight'>
                           {
                             youtubeVideos.find((v) => v.id === activeVideo)
-                              ?.duration
+                              ?.title
                           }
-                        </span>
+                        </h3>
+                        <p className='text-sm sm:text-base text-slate-600 mb-3 lg:mb-4 leading-relaxed'>
+                          {
+                            youtubeVideos.find((v) => v.id === activeVideo)
+                              ?.description
+                          }
+                        </p>
+
+                        {/* Video Stats */}
+                        <div className='flex flex-wrap items-center gap-3 lg:gap-4 text-xs sm:text-sm text-slate-500 mb-3 lg:mb-4'>
+                          <span className='flex items-center'>
+                            <EyeIcon className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />
+                            {formatViews(
+                              youtubeVideos.find((v) => v.id === activeVideo)
+                                ?.views || 0
+                            )}{' '}
+                            views
+                          </span>
+                          <span className='flex items-center'>
+                            <HandThumbUpIcon className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />
+                            {formatViews(
+                              youtubeVideos.find((v) => v.id === activeVideo)
+                                ?.likes || 0
+                            )}{' '}
+                            likes
+                          </span>
+                          <span className='flex items-center'>
+                            <CalendarIcon className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />
+                            {formatDate(
+                              youtubeVideos.find((v) => v.id === activeVideo)
+                                ?.publishDate || ''
+                            )}
+                          </span>
+                          <span className='flex items-center'>
+                            <ClockIcon className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />
+                            {
+                              youtubeVideos.find((v) => v.id === activeVideo)
+                                ?.duration
+                            }
+                          </span>
+                        </div>
+
+                        {/* Tags */}
+                        <div className='flex flex-wrap gap-1 sm:gap-2'>
+                          {youtubeVideos
+                            .find((v) => v.id === activeVideo)
+                            ?.tags.map((tag, index) => (
+                              <span
+                                key={index}
+                                className='bg-red-50 text-red-700 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border border-red-100'
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                        </div>
                       </div>
 
-                      {/* Tags */}
-                      <div className='flex flex-wrap gap-2'>
-                        {youtubeVideos
-                          .find((v) => v.id === activeVideo)
-                          ?.tags.map((tag, index) => (
-                            <span
-                              key={index}
-                              className='bg-red-50 text-red-700 px-3 py-1 rounded-full text-sm font-medium border border-red-100'
-                            >
-                              {tag}
-                            </span>
-                          ))}
+                      {/* Action Buttons */}
+                      <div className='flex xl:flex-col gap-2 sm:gap-3 flex-shrink-0'>
+                        <button
+                          onClick={() => handleLike(activeVideo)}
+                          className={`flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl font-medium transition-all duration-300 text-xs sm:text-sm ${
+                            likedVideos.includes(activeVideo)
+                              ? 'bg-red-600 text-white'
+                              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                          }`}
+                        >
+                          {likedVideos.includes(activeVideo) ? (
+                            <HandThumbUpIconSolid className='w-3 h-3 sm:w-4 sm:h-4' />
+                          ) : (
+                            <HandThumbUpIcon className='w-3 h-3 sm:w-4 sm:h-4' />
+                          )}
+                          <span className='hidden sm:inline'>Like</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleSave(activeVideo)}
+                          className={`flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl font-medium transition-all duration-300 text-xs sm:text-sm ${
+                            savedVideos.includes(activeVideo)
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                          }`}
+                        >
+                          {savedVideos.includes(activeVideo) ? (
+                            <BookmarkIconSolid className='w-3 h-3 sm:w-4 sm:h-4' />
+                          ) : (
+                            <BookmarkIcon className='w-3 h-3 sm:w-4 sm:h-4' />
+                          )}
+                          <span className='hidden sm:inline'>Save</span>
+                        </button>
+
+                        <button className='flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg sm:rounded-xl font-medium transition-all duration-300 text-xs sm:text-sm'>
+                          <ShareIcon className='w-3 h-3 sm:w-4 sm:h-4' />
+                          <span className='hidden sm:inline'>Share</span>
+                        </button>
                       </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className='flex lg:flex-col gap-3'>
-                      <button
-                        onClick={() => handleLike(activeVideo)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
-                          likedVideos.includes(activeVideo)
-                            ? 'bg-red-600 text-white'
-                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                        }`}
-                      >
-                        {likedVideos.includes(activeVideo) ? (
-                          <HandThumbUpIconSolid className='w-4 h-4' />
-                        ) : (
-                          <HandThumbUpIcon className='w-4 h-4' />
-                        )}
-                        <span className='hidden sm:inline'>Like</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleSave(activeVideo)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
-                          savedVideos.includes(activeVideo)
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                        }`}
-                      >
-                        {savedVideos.includes(activeVideo) ? (
-                          <BookmarkIconSolid className='w-4 h-4' />
-                        ) : (
-                          <BookmarkIcon className='w-4 h-4' />
-                        )}
-                        <span className='hidden sm:inline'>Save</span>
-                      </button>
-
-                      <button className='flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl font-medium transition-all duration-300'>
-                        <ShareIcon className='w-4 h-4' />
-                        <span className='hidden sm:inline'>Share</span>
-                      </button>
                     </div>
                   </div>
                 </div>
