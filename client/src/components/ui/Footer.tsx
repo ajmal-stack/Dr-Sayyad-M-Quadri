@@ -12,6 +12,7 @@ import {
   UserIcon,
   CheckBadgeIcon,
 } from '@heroicons/react/24/outline';
+
 // Social media icons as SVG components
 const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg fill='currentColor' viewBox='0 0 24 24' {...props}>
@@ -46,131 +47,71 @@ const YouTubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export default function Footer() {
   const quickLinks = [
     { name: 'Home', href: '/' },
-    { name: 'About Dr. Quadri', href: '/about' },
-    { name: 'Services', href: '/services' },
-    { name: 'Appointments', href: '/appointments' },
+    { name: 'About', href: '/about' },
+    { name: 'Books', href: '/books' },
+    { name: 'Podcast', href: '/podcast' },
     { name: 'Contact', href: '/contact' },
-  ];
-
-  const services = [
-    { name: 'Anxiety Treatment', href: '/services/anxiety' },
-    { name: 'Depression Therapy', href: '/services/depression' },
-    { name: 'Trauma Counseling', href: '/services/trauma' },
-    { name: 'Relationship Therapy', href: '/services/relationships' },
-    { name: 'Stress Management', href: '/services/stress' },
   ];
 
   const resources = [
     { name: 'All Books', href: '/books', icon: BookOpenIcon },
     { name: 'Podcast Episodes', href: '/podcast', icon: MicrophoneIcon },
-    { name: 'Mental Health Blog', href: '/blog', icon: BookOpenIcon },
     { name: 'Patient Resources', href: '/resources', icon: UserIcon },
     { name: 'FAQ', href: '/faq', icon: BookOpenIcon },
   ];
 
   const socialLinks = [
-    { name: 'Facebook', href: '#', icon: FacebookIcon, color: 'text-blue-600' },
-    { name: 'Twitter', href: '#', icon: TwitterIcon, color: 'text-blue-400' },
-    {
-      name: 'Instagram',
-      href: '#',
-      icon: InstagramIcon,
-      color: 'text-pink-600',
-    },
-    { name: 'LinkedIn', href: '#', icon: LinkedInIcon, color: 'text-blue-700' },
-    { name: 'YouTube', href: '#', icon: YouTubeIcon, color: 'text-red-600' },
+    { name: 'Facebook', href: '#', icon: FacebookIcon },
+    { name: 'Twitter', href: '#', icon: TwitterIcon },
+    { name: 'Instagram', href: '#', icon: InstagramIcon },
+    { name: 'LinkedIn', href: '#', icon: LinkedInIcon },
+    { name: 'YouTube', href: '#', icon: YouTubeIcon },
   ];
 
   return (
-    <footer className='bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
-      {/* Background Pattern */}
-      <div className='absolute inset-0 opacity-5'>
-        <div
-          className='w-full h-full bg-repeat'
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-      </div>
-
-      {/* Floating Elements */}
-      <div className='absolute top-20 left-10 w-20 h-20 bg-blue-200/10 rounded-full blur-xl animate-pulse' />
-      <div className='absolute bottom-20 right-10 w-32 h-32 bg-indigo-200/10 rounded-full blur-xl animate-pulse delay-1000' />
-
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative'>
-        {/* Main Footer Content */}
-        <div className='pt-16 pb-8'>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
-            {/* About Section */}
-            <div className='lg:col-span-1'>
-              <div className='mb-6'>
-                <h3 className='text-2xl font-bold text-slate-900 mb-4'>
+    <footer className='bg-gradient-to-br from-slate-900 to-slate-800 text-white'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+        {/* Main Content */}
+        <div className='py-12 lg:py-16'>
+          <div className='grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12'>
+            {/* Brand Section */}
+            <div className='lg:col-span-2'>
+              <h3 className='text-2xl lg:text-3xl font-bold mb-4'>
+                <span className='bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'>
                   Dr. Syed M Quadri
-                </h3>
-                <p className='text-slate-600 mb-6 leading-relaxed'>
-                  Board-certified psychiatrist dedicated to providing
-                  compassionate, evidence-based mental health care for over 10
-                  years.
-                </p>
-              </div>
+                </span>
+              </h3>
+              <p className='text-slate-300 mb-8 leading-relaxed max-w-lg'>
+                Board-certified psychiatrist providing compassionate,
+                evidence-based mental health care for over 10 years.
+              </p>
 
               {/* Contact Info */}
               <div className='space-y-4'>
                 <div className='flex items-center space-x-3'>
-                  <div className='w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center'>
-                    <PhoneIcon className='w-5 h-5 text-blue-600' />
-                  </div>
-                  <div>
-                    <p className='text-slate-900 font-medium'>(555) 123-4567</p>
-                    <p className='text-slate-500 text-sm'>
-                      24/7 Emergency Line
-                    </p>
-                  </div>
+                  <PhoneIcon className='w-5 h-5 text-blue-400' />
+                  <span className='text-slate-300'>(555) 123-4567</span>
                 </div>
-
                 <div className='flex items-center space-x-3'>
-                  <div className='w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center'>
-                    <EnvelopeIcon className='w-5 h-5 text-green-600' />
-                  </div>
-                  <div>
-                    <p className='text-slate-900 font-medium'>
-                      contact@drSyedquadri.com
-                    </p>
-                    <p className='text-slate-500 text-sm'>General Inquiries</p>
-                  </div>
+                  <EnvelopeIcon className='w-5 h-5 text-blue-400' />
+                  <span className='text-slate-300'>contact@drquadri.com</span>
                 </div>
-
                 <div className='flex items-center space-x-3'>
-                  <div className='w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center'>
-                    <MapPinIcon className='w-5 h-5 text-purple-600' />
-                  </div>
-                  <div>
-                    <p className='text-slate-900 font-medium'>
-                      123 Wellness Street
-                    </p>
-                    <p className='text-slate-500 text-sm'>New York, NY 10001</p>
-                  </div>
+                  <MapPinIcon className='w-5 h-5 text-blue-400' />
+                  <span className='text-slate-300'>
+                    123 Wellness Street, NY 10001
+                  </span>
                 </div>
-
                 <div className='flex items-center space-x-3'>
-                  <div className='w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center'>
-                    <ClockIcon className='w-5 h-5 text-orange-600' />
-                  </div>
-                  <div>
-                    <p className='text-slate-900 font-medium'>
-                      Mon-Fri: 9AM-6PM
-                    </p>
-                    <p className='text-slate-500 text-sm'>
-                      Weekend: By Appointment
-                    </p>
-                  </div>
+                  <ClockIcon className='w-5 h-5 text-blue-400' />
+                  <span className='text-slate-300'>Mon-Fri: 9AM-6PM</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Links */}
             <div>
-              <h4 className='text-lg font-semibold text-slate-900 mb-6'>
+              <h4 className='text-lg font-semibold mb-6 text-white'>
                 Quick Links
               </h4>
               <ul className='space-y-3'>
@@ -178,30 +119,9 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className='text-slate-600 hover:text-blue-600 transition-colors duration-200 flex items-center group'
+                      className='text-slate-300 hover:text-white transition-colors duration-200'
                     >
-                      <span className='w-2 h-2 bg-blue-200 rounded-full mr-3 group-hover:bg-blue-600 transition-colors'></span>
                       {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Services */}
-            <div>
-              <h4 className='text-lg font-semibold text-slate-900 mb-6'>
-                Our Services
-              </h4>
-              <ul className='space-y-3'>
-                {services.map((service) => (
-                  <li key={service.name}>
-                    <Link
-                      href={service.href}
-                      className='text-slate-600 hover:text-blue-600 transition-colors duration-200 flex items-center group'
-                    >
-                      <span className='w-2 h-2 bg-green-200 rounded-full mr-3 group-hover:bg-green-600 transition-colors'></span>
-                      {service.name}
                     </Link>
                   </li>
                 ))}
@@ -210,7 +130,7 @@ export default function Footer() {
 
             {/* Resources */}
             <div>
-              <h4 className='text-lg font-semibold text-slate-900 mb-6'>
+              <h4 className='text-lg font-semibold mb-6 text-white'>
                 Resources
               </h4>
               <ul className='space-y-3'>
@@ -218,9 +138,9 @@ export default function Footer() {
                   <li key={resource.name}>
                     <Link
                       href={resource.href}
-                      className='text-slate-600 hover:text-blue-600 transition-colors duration-200 flex items-center group'
+                      className='text-slate-300 hover:text-white transition-colors duration-200 flex items-center'
                     >
-                      <resource.icon className='w-4 h-4 mr-3 text-slate-400 group-hover:text-blue-600 transition-colors' />
+                      <resource.icon className='w-4 h-4 mr-2 text-blue-400' />
                       {resource.name}
                     </Link>
                   </li>
@@ -229,111 +149,108 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Newsletter Signup */}
-          <div className='mt-12 pt-8 border-t border-slate-200'>
-            <div className='bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-slate-200'>
-              <div className='text-center mb-6'>
-                <h4 className='text-2xl font-bold text-slate-900 mb-2'>
-                  Stay Connected
-                </h4>
-                <p className='text-slate-600'>
-                  Get weekly mental health tips and updates delivered to your
-                  inbox
-                </p>
-              </div>
-
-              <div className='flex flex-col sm:flex-row gap-4 max-w-md mx-auto'>
+          {/* Newsletter */}
+          <div className='mt-12 pt-8 border-t border-slate-700'>
+            <div className='max-w-md'>
+              <h4 className='text-lg font-semibold mb-4 text-white'>
+                Stay Updated
+              </h4>
+              <p className='text-slate-300 mb-4 text-sm'>
+                Get weekly mental health tips delivered to your inbox
+              </p>
+              <div className='flex gap-3'>
                 <input
                   type='email'
                   placeholder='Enter your email'
-                  className='flex-1 px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                  className='flex-1 px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
-                <button className='bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105'>
+                <button className='bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors'>
                   Subscribe
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Stats & Social */}
-          <div className='mt-12 pt-8 border-t border-slate-200'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-8 items-center'>
-              {/* Stats */}
-              <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-                <div className='text-center'>
-                  <div className='text-2xl font-bold text-blue-600'>5000+</div>
-                  <div className='text-slate-600 text-sm'>Patients Helped</div>
+          {/* Stats */}
+          <div className='mt-12 pt-8 border-t border-slate-700'>
+            <div className='grid grid-cols-2 lg:grid-cols-4 gap-8 text-center'>
+              <div>
+                <div className='text-2xl font-bold text-blue-400 mb-1'>
+                  5000+
                 </div>
-                <div className='text-center'>
-                  <div className='text-2xl font-bold text-green-600'>10+</div>
-                  <div className='text-slate-600 text-sm'>Years Experience</div>
-                </div>
-                <div className='text-center'>
-                  <div className='text-2xl font-bold text-purple-600'>92%</div>
-                  <div className='text-slate-600 text-sm'>Success Rate</div>
-                </div>
-                <div className='text-center'>
-                  <div className='text-2xl font-bold text-orange-600'>4.9</div>
-                  <div className='text-slate-600 text-sm'>Patient Rating</div>
-                </div>
+                <div className='text-slate-300 text-sm'>Patients Helped</div>
               </div>
-
-              {/* Social Links */}
-              <div className='text-center md:text-right'>
-                <h4 className='text-lg font-semibold text-slate-900 mb-4'>
-                  Follow Us
-                </h4>
-                <div className='flex justify-center md:justify-end space-x-4'>
-                  {socialLinks.map((social) => (
-                    <Link
-                      key={social.name}
-                      href={social.href}
-                      className={`w-10 h-10 bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center ${social.color} hover:scale-110`}
-                    >
-                      <social.icon className='w-5 h-5' />
-                    </Link>
-                  ))}
+              <div>
+                <div className='text-2xl font-bold text-green-400 mb-1'>
+                  10+
                 </div>
+                <div className='text-slate-300 text-sm'>Years Experience</div>
+              </div>
+              <div>
+                <div className='text-2xl font-bold text-purple-400 mb-1'>
+                  92%
+                </div>
+                <div className='text-slate-300 text-sm'>Success Rate</div>
+              </div>
+              <div>
+                <div className='text-2xl font-bold text-orange-400 mb-1'>
+                  4.9
+                </div>
+                <div className='text-slate-300 text-sm'>Patient Rating</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className='border-t border-slate-200 py-6'>
-          <div className='flex flex-col md:flex-row justify-between items-center'>
-            <div className='flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 text-slate-600 text-sm'>
+        <div className='border-t border-slate-700 py-6'>
+          <div className='flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0'>
+            {/* Copyright */}
+            <div className='flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-slate-400 text-sm'>
               <p>&copy; 2024 Dr. Syed M Quadri. All rights reserved.</p>
-              <div className='flex items-center space-x-4'>
+              <div className='flex space-x-4'>
                 <Link
                   href='/privacy'
-                  className='hover:text-blue-600 transition-colors'
+                  className='hover:text-white transition-colors'
                 >
                   Privacy Policy
                 </Link>
                 <Link
                   href='/terms'
-                  className='hover:text-blue-600 transition-colors'
+                  className='hover:text-white transition-colors'
                 >
-                  Terms of Service
+                  Terms
                 </Link>
                 <Link
                   href='/hipaa'
-                  className='hover:text-blue-600 transition-colors'
+                  className='hover:text-white transition-colors'
                 >
-                  HIPAA Compliance
+                  HIPAA
                 </Link>
               </div>
             </div>
 
+            {/* Social Links */}
+            <div className='flex space-x-4'>
+              {socialLinks.map((social) => (
+                <Link
+                  key={social.name}
+                  href={social.href}
+                  className='w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors'
+                >
+                  <social.icon className='w-5 h-5' />
+                </Link>
+              ))}
+            </div>
+
             {/* Trust Badges */}
-            <div className='flex items-center space-x-4 mt-4 md:mt-0'>
-              <div className='flex items-center space-x-2 text-slate-600 text-sm'>
-                <CheckBadgeIcon className='w-4 h-4 text-green-600' />
-                <span>Licensed Professional</span>
+            <div className='flex items-center space-x-4 text-slate-400 text-sm'>
+              <div className='flex items-center space-x-1'>
+                <CheckBadgeIcon className='w-4 h-4 text-green-400' />
+                <span>Licensed</span>
               </div>
-              <div className='flex items-center space-x-2 text-slate-600 text-sm'>
-                <ShieldCheckIcon className='w-4 h-4 text-blue-600' />
+              <div className='flex items-center space-x-1'>
+                <ShieldCheckIcon className='w-4 h-4 text-blue-400' />
                 <span>HIPAA Compliant</span>
               </div>
             </div>
