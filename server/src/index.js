@@ -21,11 +21,32 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust proxy settings - Required for rate limiting behind proxies
+// Set to true if behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+// Set to 1 if you know the number of proxies in front of your app
+app.set('trust proxy', process.env.TRUST_PROXY || 1);
+
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
+// Stricter rate limiting for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
+  max: parseInt(process.env.AUTH_RATE_LIMIT_MAX_REQUESTS) || 5, // limit each IP to 5 login attempts per windowMs
+  message: {
+    error:
+      'Too many login attempts from this IP, please try again after 15 minutes.',
+    retryAfter: '15 minutes',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true, // Don't count successful requests
 });
 
 // Middleware
@@ -62,7 +83,7 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
-app.use('/api/auth', (await import('./routes/auth.js')).default);
+app.use('/api/auth', authLimiter, (await import('./routes/auth.js')).default);
 app.use('/api/books', (await import('./routes/books.js')).default);
 app.use('/api/podcasts', (await import('./routes/podcasts.js')).default);
 app.use('/api/contact', (await import('./routes/contact.js')).default);
@@ -93,4 +114,19 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🌐 Health check: http://localhost:${PORT}/health`);
+  console.log(`🔒 Trust proxy setting: ${app.get('trust proxy')}`);
+  console.log(
+    `⏱️  Rate limit: ${
+      parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100
+    } requests per ${
+      (parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000) / 60000
+    } minutes`
+  );
+  console.log(
+    `🔐 Auth rate limit: ${
+      parseInt(process.env.AUTH_RATE_LIMIT_MAX_REQUESTS) || 5
+    } requests per ${
+      (parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000) / 60000
+    } minutes`
+  );
 });

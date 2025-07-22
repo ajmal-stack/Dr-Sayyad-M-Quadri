@@ -1,50 +1,95 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+// import Link from 'next/link';
 import Image from 'next/image';
 import {
-  PlayIcon,
-  CalendarDaysIcon,
-  BookOpenIcon,
-  MicrophoneIcon,
-  ArrowRightIcon,
-  HeartIcon,
-  ShieldCheckIcon,
-  AcademicCapIcon,
+  // CalendarDaysIcon,
+  // BookOpenIcon,
+  // ArrowRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import {
   StarIcon as StarIconSolid,
   CheckBadgeIcon as CheckBadgeIconSolid,
 } from '@heroicons/react/24/solid';
 
-const achievements = [
+// Main Hero Carousel Data with Background Images
+const heroSlides = [
   {
-    icon: <AcademicCapIcon className='w-6 h-6' />,
-    title: 'Licensed Psychiatrist',
-    description: 'Board-certified mental health specialist',
-    color: 'from-blue-500 to-indigo-500',
+    id: 1,
+    title: 'Dr. Syed M Quadri',
+    subtitle: 'Licensed Psychiatrist & Mental Health Expert',
+    description:
+      'Transforming lives through compassionate care, evidence-based therapy, and holistic wellness approaches',
+    backgroundImage: '/Full video domestic violence.jpg',
+    gradient: 'from-blue-900/80 via-blue-800/70 to-indigo-900/80',
+    textGradient: 'from-blue-400 via-indigo-300 to-purple-400',
+    badge: 'Licensed Psychiatrist',
+    stats: { left: '10+ Years', right: '5000+ Lives' },
+    primaryCTA: 'Book Consultation',
+    secondaryCTA: 'Learn More',
   },
   {
-    icon: <HeartIcon className='w-6 h-6' />,
-    title: '10+ Years Experience',
-    description: 'Helping thousands transform their lives',
-    color: 'from-emerald-500 to-teal-500',
+    id: 2,
+    title: 'Expert Mental Health Care',
+    subtitle: 'Specialized Treatment for Every Individual',
+    description:
+      'Comprehensive therapy for anxiety, depression, trauma, and relationship issues with proven, personalized approaches',
+    backgroundImage: '/Full video domestic violence.jpg',
+    gradient: 'from-emerald-900/80 via-teal-800/70 to-cyan-900/80',
+    textGradient: 'from-emerald-400 via-teal-300 to-cyan-400',
+    badge: 'Board Certified',
+    stats: { left: 'Expert Care', right: '24/7 Support' },
+    primaryCTA: 'Start Treatment',
+    secondaryCTA: 'View Services',
   },
   {
-    icon: <BookOpenIcon className='w-6 h-6' />,
-    title: 'Published Author',
-    description: 'Mental wellness books & research',
-    color: 'from-purple-500 to-pink-500',
+    id: 3,
+    title: 'Holistic Wellness Approach',
+    subtitle: 'Mind, Body & Soul Integration',
+    description:
+      'Combining modern psychiatry with mindfulness, lifestyle coaching, and evidence-based therapeutic interventions',
+    backgroundImage: '/Full video domestic violence.jpg',
+    gradient: 'from-purple-900/80 via-pink-800/70 to-rose-900/80',
+    textGradient: 'from-purple-400 via-pink-300 to-rose-400',
+    badge: 'Holistic Healing',
+    stats: { left: 'Mind-Body', right: 'Complete Care' },
+    primaryCTA: 'Explore Approach',
+    secondaryCTA: 'Read Research',
   },
   {
-    icon: <MicrophoneIcon className='w-6 h-6' />,
-    title: 'Podcast Host',
-    description: 'Weekly therapeutic discussions',
-    color: 'from-orange-500 to-red-500',
+    id: 4,
+    title: 'Author & Podcast Host',
+    subtitle: 'Sharing Knowledge Globally',
+    description:
+      'Published mental health books and weekly therapeutic podcast reaching thousands of lives worldwide',
+    backgroundImage: '/Full video domestic violence.jpg',
+    gradient: 'from-orange-900/80 via-red-800/70 to-pink-900/80',
+    textGradient: 'from-orange-400 via-red-300 to-pink-400',
+    badge: 'Published Author',
+    stats: { left: '3 Books', right: '100+ Episodes' },
+    primaryCTA: 'Listen Podcast',
+    secondaryCTA: 'Buy Books',
+  },
+  {
+    id: 5,
+    title: 'Trauma & PTSD Specialist',
+    subtitle: 'Healing Through Expert Care',
+    description:
+      'Specialized trauma therapy using EMDR, cognitive approaches, and innovative healing methodologies',
+    backgroundImage: '/Full video domestic violence.jpg',
+    gradient: 'from-slate-900/80 via-gray-800/70 to-zinc-900/80',
+    textGradient: 'from-slate-400 via-gray-300 to-zinc-400',
+    badge: 'Trauma Expert',
+    stats: { left: 'EMDR Certified', right: '600+ Healed' },
+    primaryCTA: 'Get Help Now',
+    secondaryCTA: 'Learn About PTSD',
   },
 ];
 
+// Testimonials for overlay
 const testimonials = [
   {
     name: 'Sarah M.',
@@ -52,340 +97,346 @@ const testimonials = [
     content:
       'Dr. Quadri helped me overcome panic attacks and find peace again.',
     rating: 5,
+    location: 'New York, NY',
   },
   {
     name: 'Michael R.',
     role: 'Depression Treatment',
     content: 'Professional, compassionate, and truly life-changing therapy.',
     rating: 5,
+    location: 'Los Angeles, CA',
   },
   {
     name: 'Lisa K.',
     role: 'Relationship Counseling',
     content: 'Saved my marriage and taught us healthy communication skills.',
     rating: 5,
+    location: 'Chicago, IL',
   },
 ];
 
-const specializations = [
-  'Anxiety & Panic Disorders',
-  'Depression & Mood Disorders',
-  'Trauma & PTSD',
-  'Relationship Issues',
-  'Stress Management',
-  'Sleep Disorders',
-  'Addiction Recovery',
-  'Life Transitions',
-];
-
 export default function Hero() {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
+  // Auto-play carousel
   useEffect(() => {
     setIsVisible(true);
+
     const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Mouse tracking for cursor effects
-  useEffect(() => {
-    const handleMouseMove = (e: Event) => {
-      const mouseEvent = e as MouseEvent;
-      const imageContainer = document.querySelector(
-        '.hero-image-container'
-      ) as HTMLElement;
-      if (imageContainer) {
-        const rect = imageContainer.getBoundingClientRect();
-        const x = ((mouseEvent.clientX - rect.left) / rect.width) * 100;
-        const y = ((mouseEvent.clientY - rect.top) / rect.height) * 100;
-
-        imageContainer.style.setProperty('--mouse-x', `${x}%`);
-        imageContainer.style.setProperty('--mouse-y', `${y}%`);
+      if (!isPaused) {
+        setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
       }
-    };
+    }, 5000);
 
-    const imageContainer = document.querySelector(
-      '.hero-image-container'
-    ) as HTMLElement;
-    if (imageContainer) {
-      imageContainer.addEventListener('mousemove', handleMouseMove);
-      return () =>
-        imageContainer.removeEventListener('mousemove', handleMouseMove);
-    }
-  }, [isVisible]);
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
-  const currentTestimonialData = testimonials[currentTestimonial];
+  // Navigation functions
+  const nextSlide = () =>
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  const prevSlide = () =>
+    setCurrentSlide(
+      (prev) => (prev - 1 + heroSlides.length) % heroSlides.length
+    );
+  const goToSlide = (index: number) => setCurrentSlide(index);
+
+  const currentSlideData = heroSlides[currentSlide];
 
   return (
-    <section className='relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden'>
-      {/* Background Pattern */}
-      <div className='absolute inset-0 opacity-30'>
-        <div className='absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-indigo-600/5' />
-        <div
-          className='w-full h-full bg-repeat opacity-40'
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e7ff' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-      </div>
-
-      {/* Floating Elements */}
-      <div className='absolute inset-0 pointer-events-none'>
-        <div className='absolute top-20 left-10 w-20 h-20 bg-blue-200/30 rounded-full blur-xl animate-pulse' />
-        <div className='absolute top-40 right-20 w-32 h-32 bg-indigo-200/20 rounded-full blur-2xl animate-pulse delay-1000' />
-        <div className='absolute bottom-20 left-20 w-24 h-24 bg-purple-200/25 rounded-full blur-xl animate-pulse delay-2000' />
-      </div>
-
-      <div className='relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20'>
-        <div className='grid lg:grid-cols-2 gap-12 items-start lg:items-center'>
-          {/* Left Column - Content */}
+    <section
+      className='relative h-[90vh] w-full overflow-hidden mt-20'
+      id='hero'
+    >
+      {/* Background Image Carousel */}
+      <div className='absolute inset-0'>
+        {heroSlides.map((slide, index) => (
           <div
-            className={`space-y-8 flex flex-col justify-center min-h-[600px] lg:min-h-[700px] ${
-              isVisible
-                ? 'animate-in slide-in-from-left duration-1000'
-                : 'opacity-0'
+            key={slide.id}
+            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+              index === currentSlide
+                ? 'opacity-100 scale-100'
+                : 'opacity-0 scale-110'
             }`}
           >
-            <div className='space-y-8'>
-              {/* Logo */}
-              <div className='flex items-center space-x-4 mb-4'>
-                <div className='relative'>
-                  <Image
-                    src='/SMQ.png'
-                    alt='SMQ - Partner in emotional health'
-                    width={120}
-                    height={60}
-                    className='h-12 w-auto object-contain'
-                    priority
-                  />
-                </div>
-                <div className='h-8 w-px bg-slate-300'></div>
-                <div className='text-slate-600 text-sm font-medium'>
-                  Partner in emotional health
-                </div>
-              </div>
-
-              {/* Badge */}
-              <div className='inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-8 py-3 rounded-full text-sm font-semibold shadow-lg'>
-                <CheckBadgeIconSolid className='w-5 h-5 mr-2 text-blue-600' />
-                Licensed Psychiatrist & Mental Health Expert
-              </div>
-
-              {/* Main Heading */}
-              <div className='space-y-4'>
-                <h1 className='text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 leading-tight'>
-                  Dr. Syed M{' '}
-                  <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-                    Quadri
-                  </span>
-                </h1>
-                <p className='text-xl md:text-2xl text-slate-600 leading-relaxed max-w-xl'>
-                  Transforming lives through{' '}
-                  <span className='text-blue-600 font-semibold'>
-                    compassionate care
-                  </span>
-                  ,{' '}
-                  <span className='text-indigo-600 font-semibold'>
-                    evidence-based therapy
-                  </span>
-                  , and{' '}
-                  <span className='text-purple-600 font-semibold'>
-                    holistic wellness
-                  </span>
-                </p>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className='flex flex-col sm:flex-row gap-4'>
-                <Link
-                  href='/about/contact'
-                  className='group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105'
-                >
-                  <CalendarDaysIcon className='w-5 h-5 mr-2' />
-                  Book Consultation
-                  <ArrowRightIcon className='w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform' />
-                </Link>
-                <Link
-                  href='/podcast'
-                  className='group inline-flex items-center justify-center px-8 py-4 bg-white text-slate-700 rounded-2xl font-semibold text-lg hover:bg-slate-50 transition-all duration-300 shadow-lg hover:shadow-xl border border-slate-200 hover:border-slate-300'
-                >
-                  <PlayIcon className='w-5 h-5 mr-2 text-blue-600' />
-                  Listen to Podcast
-                </Link>
-              </div>
-
-              {/* Testimonial Carousel */}
-              <div className='bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-slate-200/50'>
-                <div className='flex items-center mb-3'>
-                  <div className='flex space-x-1'>
-                    {[...Array(5)].map((_, i) => (
-                      <StarIconSolid
-                        key={i}
-                        className='w-5 h-5 text-yellow-400'
-                      />
-                    ))}
-                  </div>
-                  <span className='ml-2 text-sm text-slate-600'>
-                    {currentTestimonialData.rating}/5
-                  </span>
-                </div>
-                <p className='text-slate-700 mb-3 italic'>
-                  &quot;{currentTestimonialData.content}&quot;
-                </p>
-                <div className='flex items-center'>
-                  <div className='w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold text-sm'>
-                    {currentTestimonialData.name[0]}
-                  </div>
-                  <div className='ml-3'>
-                    <div className='font-semibold text-slate-800'>
-                      {currentTestimonialData.name}
-                    </div>
-                    <div className='text-sm text-slate-600'>
-                      {currentTestimonialData.role}
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {/* Background Image */}
+            <div className='absolute inset-0'>
+              <Image
+                src={slide.backgroundImage}
+                alt={slide.title}
+                fill
+                className='object-cover object-center'
+                priority={index === 0}
+                quality={95}
+              />
             </div>
+
+            {/* Simple Dark Overlay for Text Readability */}
+            <div className='absolute inset-0 bg-black/60' />
           </div>
+        ))}
+      </div>
+      {/* Main Content - Centered without navbar conflict */}
+      <div className='relative z-10 h-full flex items-center justify-center'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8'>
+          <div className='text-center'>
+            {/* Logo */}
+            <div
+              className={`flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4 sm:mb-6 md:mb-8 ${
+                isVisible
+                  ? 'animate-in fade-in slide-in-from-top duration-1000'
+                  : 'opacity-0'
+              }`}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              {/* <div className='relative'>
+                <Image
+                  src='/SMQ.png'
+                  alt='SMQ - Partner in emotional health'
+                  width={140}
+                  height={70}
+                  className='h-8 sm:h-10 md:h-12 lg:h-16 w-auto object-contain filter brightness-0 invert'
+                  priority
+                />
+              </div> */}
+              {/* <div className='hidden sm:block h-6 md:h-8 lg:h-12 w-px bg-white/50'></div>
+              <div className='text-white/90 text-xs sm:text-sm md:text-base font-medium text-center sm:text-left'>
+                Partner in emotional health
+              </div> */}
+            </div>
 
-          {/* Right Column - Image & Stats */}
-          <div
-            className={`space-y-8 flex flex-col justify-center min-h-[600px] lg:min-h-[700px] ${
-              isVisible
-                ? 'animate-in slide-in-from-right duration-1000 delay-300'
-                : 'opacity-0'
-            }`}
-          >
-            {/* Professional Image with Interactive Effects */}
-            <div className='relative group cursor-none hero-image-container flex-1 flex items-center justify-center'>
-              <div className='relative w-full max-w-md mx-auto'>
-                <div className='absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur-2xl opacity-20 transform rotate-6 group-hover:opacity-30 group-hover:scale-110 transition-all duration-500'></div>
-                <div className='relative bg-white p-2 rounded-3xl shadow-2xl group-hover:shadow-3xl transition-all duration-500 group-hover:scale-[1.02]'>
-                  <div className='relative overflow-hidden rounded-2xl'>
-                    <Image
-                      src='/sayyed-quadri1.png'
-                      alt='Dr. Syed M Quadri - Licensed Psychiatrist'
-                      width={400}
-                      height={500}
-                      className='w-full h-auto object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110'
-                      priority
+            {/* Badge */}
+            <div
+              className={`inline-flex items-center bg-white/20 backdrop-blur-md text-white px-3 sm:px-4 md:px-6 lg:px-8 py-1.5 sm:py-2 md:py-3 rounded-full text-xs sm:text-sm md:text-base font-semibold mb-4 sm:mb-6 md:mb-8 border border-white/30 ${
+                isVisible
+                  ? 'animate-in fade-in slide-in-from-top duration-1000 delay-200'
+                  : 'opacity-0'
+              }`}
+            >
+              <CheckBadgeIconSolid className='w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-2' />
+              {currentSlideData.badge}
+            </div>
+
+            {/* Main Title */}
+            <h1
+              className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-2 sm:mb-3 md:mb-4 lg:mb-6 leading-tight px-2 text-white ${
+                isVisible
+                  ? 'animate-in fade-in slide-in-from-bottom duration-1000 delay-400'
+                  : 'opacity-0'
+              }`}
+            >
+              {currentSlideData.title}
+            </h1>
+
+            {/* Subtitle */}
+            <h2
+              className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-semibold text-white/90 mb-2 sm:mb-3 md:mb-4 lg:mb-6 px-4 ${
+                isVisible
+                  ? 'animate-in fade-in slide-in-from-bottom duration-1000 delay-600'
+                  : 'opacity-0'
+              }`}
+            >
+              {currentSlideData.subtitle}
+            </h2>
+
+            {/* Description */}
+            <p
+              className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white/80 leading-relaxed max-w-4xl mx-auto mb-4 sm:mb-6 md:mb-8 lg:mb-12 px-4 ${
+                isVisible
+                  ? 'animate-in fade-in slide-in-from-bottom duration-1000 delay-800'
+                  : 'opacity-0'
+              }`}
+            >
+              {currentSlideData.description}
+            </p>
+
+            {/* CTA Buttons */}
+            {/* <div
+              className={`flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center mb-4 sm:mb-6 md:mb-8 lg:mb-12 px-4 ${
+                isVisible
+                  ? 'animate-in fade-in slide-in-from-bottom duration-1000 delay-1000'
+                  : 'opacity-0'
+              }`}
+            >
+              <Link
+                href='/about/contact'
+                className='group inline-flex items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-2.5 sm:py-3 md:py-4 lg:py-5 bg-white text-slate-900 rounded-xl md:rounded-2xl font-bold text-sm sm:text-base md:text-lg lg:text-xl hover:bg-white/90 transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:scale-105 w-full sm:w-auto sm:min-w-[180px] md:min-w-[220px] lg:min-w-[250px]'
+              >
+                <CalendarDaysIcon className='w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3' />
+                {currentSlideData.primaryCTA}
+                <ArrowRightIcon className='w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform' />
+              </Link>
+
+              <Link
+                href='/services'
+                className='group inline-flex items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-2.5 sm:py-3 md:py-4 lg:py-5 bg-white/20 backdrop-blur-md text-white rounded-xl md:rounded-2xl font-bold text-sm sm:text-base md:text-lg lg:text-xl hover:bg-white/30 transition-all duration-300 border-2 border-white/30 hover:border-white/50 w-full sm:w-auto sm:min-w-[180px] md:min-w-[220px] lg:min-w-[250px]'
+              >
+                <BookOpenIcon className='w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3' />
+                {currentSlideData.secondaryCTA}
+              </Link>
+            </div> */}
+
+            {/* Stats */}
+            {/* <div
+              className={`flex flex-col xs:flex-row gap-4 sm:gap-6 md:gap-8 lg:gap-12 justify-center items-center mb-4 sm:mb-6 md:mb-8 lg:mb-12 px-4 ${
+                isVisible
+                  ? 'animate-in fade-in slide-in-from-bottom duration-1000 delay-1200'
+                  : 'opacity-0'
+              }`}
+            >
+              <div className='text-center'>
+                <div className='text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-1 md:mb-2'>
+                  {currentSlideData.stats.left}
+                </div>
+                <div className='text-xs sm:text-sm md:text-base text-white/70 font-medium'>
+                  Experience
+                </div>
+              </div>
+
+              <div className='hidden xs:block w-px h-8 sm:h-10 md:h-12 lg:h-16 bg-white/30'></div>
+
+              <div className='text-center'>
+                <div className='text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-1 md:mb-2'>
+                  {currentSlideData.stats.right}
+                </div>
+                <div className='text-xs sm:text-sm md:text-base text-white/70 font-medium'>
+                  Transformed
+                </div>
+              </div>
+            </div> */}
+
+            {/* Testimonial Preview */}
+            {testimonials[currentSlide % testimonials.length] && (
+              <div
+                className={`max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl mx-auto bg-white/10 backdrop-blur-md rounded-xl md:rounded-2xl lg:rounded-3xl p-3 sm:p-4 md:p-6 lg:p-8 border border-white/20 mx-4 ${
+                  isVisible
+                    ? 'animate-in fade-in slide-in-from-bottom duration-1000 delay-1400'
+                    : 'opacity-0'
+                }`}
+              >
+                <div className='flex justify-center mb-2 sm:mb-3 md:mb-4'>
+                  {[...Array(5)].map((_, i) => (
+                    <StarIconSolid
+                      key={i}
+                      className='w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-400'
                     />
-                    {/* Gradient Overlay on Hover */}
-                    <div className='absolute inset-0 bg-gradient-to-t from-blue-900/20 via-transparent to-indigo-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
-
-                    {/* Interactive Light Effect */}
-                    <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
-                      <div className='absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-br from-blue-400/30 to-transparent rounded-full blur-xl animate-pulse'></div>
-                      <div className='absolute bottom-1/3 right-1/4 w-24 h-24 bg-gradient-to-br from-indigo-400/30 to-transparent rounded-full blur-xl animate-pulse delay-300'></div>
-                    </div>
-
-                    {/* Sparkle Effects */}
-                    <div className='absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700'>
-                      <div className='absolute top-1/6 left-1/3 w-2 h-2 bg-blue-400 rounded-full animate-ping'></div>
-                      <div className='absolute top-2/3 left-1/6 w-1 h-1 bg-indigo-400 rounded-full animate-ping delay-200'></div>
-                      <div className='absolute top-1/2 right-1/4 w-1.5 h-1.5 bg-purple-400 rounded-full animate-ping delay-500'></div>
-                      <div className='absolute bottom-1/4 right-1/3 w-1 h-1 bg-teal-400 rounded-full animate-ping delay-700'></div>
-                    </div>
+                  ))}
+                </div>
+                <blockquote className='text-xs sm:text-sm md:text-base lg:text-lg text-white/90 italic mb-2 sm:mb-3 md:mb-4'>
+                  &quot;
+                  {testimonials[currentSlide % testimonials.length].content}
+                  &quot;
+                </blockquote>
+                <div className='flex flex-col xs:flex-row items-center justify-center space-y-1 xs:space-y-0 xs:space-x-2'>
+                  <div className='font-semibold text-white text-xs sm:text-sm md:text-base'>
+                    {testimonials[currentSlide % testimonials.length].name}
                   </div>
-                </div>
-
-                {/* Custom Cursor Follower */}
-                <div
-                  className='absolute pointer-events-none z-10 w-8 h-8 border-2 border-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 mix-blend-difference'
-                  style={{
-                    transform: 'translate(-50%, -50%)',
-                    left: 'var(--mouse-x, 50%)',
-                    top: 'var(--mouse-y, 50%)',
-                  }}
-                >
-                  <div className='w-full h-full bg-blue-500/20 rounded-full animate-pulse'></div>
-                </div>
-
-                {/* Magnetic Effect Border */}
-                <div className='absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
-                  <div className='absolute inset-0 rounded-3xl border-2 border-blue-400/50 animate-pulse'></div>
-                  <div className='absolute inset-2 rounded-3xl border border-indigo-400/30 animate-pulse delay-300'></div>
-                </div>
-              </div>
-
-              {/* Floating Stats */}
-              <div className='absolute -top-4 -right-4 bg-white rounded-2xl p-4 shadow-xl border border-slate-200/50'>
-                <div className='text-center'>
-                  <div className='text-2xl font-bold text-blue-600'>10+</div>
-                  <div className='text-sm text-slate-600'>Years Experience</div>
-                </div>
-              </div>
-
-              <div className='absolute -bottom-4 -left-4 bg-white rounded-2xl p-4 shadow-xl border border-slate-200/50'>
-                <div className='text-center'>
-                  <div className='text-2xl font-bold text-emerald-600'>
-                    5000+
-                  </div>
-                  <div className='text-sm text-slate-600'>
-                    Lives Transformed
+                  <span className='hidden xs:inline text-white/60'>•</span>
+                  <div className='text-xs sm:text-sm text-white/70'>
+                    {testimonials[currentSlide % testimonials.length].role}
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Achievements Grid */}
-            <div className='grid grid-cols-2 gap-4'>
-              {achievements.map((achievement, index) => (
-                <div
-                  key={index}
-                  className={`bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-slate-200/50 hover:shadow-xl transition-all duration-300 hover:scale-105 ${
-                    isVisible
-                      ? 'animate-in slide-in-from-bottom duration-1000'
-                      : 'opacity-0'
-                  }`}
-                  style={{ animationDelay: `${400 + index * 100}ms` }}
-                >
-                  <div
-                    className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r ${achievement.color} text-white mb-3`}
-                  >
-                    {achievement.icon}
-                  </div>
-                  <h3 className='font-semibold text-slate-800 mb-1'>
-                    {achievement.title}
-                  </h3>
-                  <p className='text-sm text-slate-600'>
-                    {achievement.description}
-                  </p>
-                </div>
-              ))}
-            </div>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* Specializations */}
-        <div
-          className={`mt-20 text-center ${
-            isVisible
-              ? 'animate-in slide-in-from-bottom duration-1000 delay-700'
-              : 'opacity-0'
-          }`}
-        >
-          <h2 className='text-2xl md:text-3xl font-bold text-slate-900 mb-8'>
-            Areas of Expertise
-          </h2>
-          <div className='flex flex-wrap justify-center gap-3'>
-            {specializations.map((spec, index) => (
-              <span
+      {/* Floating Particles */}
+      <div className='absolute inset-0 pointer-events-none'>
+        <div className='absolute top-20 left-10 w-2 h-2 bg-white/30 rounded-full animate-ping' />
+        <div className='absolute top-40 right-20 w-1 h-1 bg-white/40 rounded-full animate-ping delay-1000' />
+        <div className='absolute bottom-40 left-20 w-1.5 h-1.5 bg-white/20 rounded-full animate-ping delay-2000' />
+        <div className='absolute top-60 left-1/3 w-1 h-1 bg-white/30 rounded-full animate-ping delay-500' />
+        <div className='absolute bottom-60 right-1/3 w-2 h-2 bg-white/20 rounded-full animate-ping delay-1500' />
+      </div>
+
+      {/* Navigation Controls */}
+      <div className='absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20'>
+        <div className='flex items-center space-x-2 sm:space-x-3 md:space-x-4 bg-white/20 backdrop-blur-md rounded-full px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 border border-white/30'>
+          {/* Previous Button */}
+          <button
+            onClick={prevSlide}
+            className='p-1.5 sm:p-2 md:p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 group'
+            aria-label='Previous slide'
+          >
+            <ChevronLeftIcon className='w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white group-hover:scale-110 transition-transform' />
+          </button>
+
+          {/* Slide Indicators */}
+          <div className='flex space-x-1 sm:space-x-2 md:space-x-3'>
+            {heroSlides.map((_, index) => (
+              <button
                 key={index}
-                className='inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200/50 hover:from-blue-100 hover:to-indigo-100 transition-all duration-300 hover:scale-105'
-              >
-                <ShieldCheckIcon className='w-4 h-4 mr-2' />
-                {spec}
-              </span>
+                onClick={() => goToSlide(index)}
+                className={`h-1.5 sm:h-2 md:h-3 rounded-full transition-all duration-300 ${
+                  index === currentSlide
+                    ? 'bg-white w-4 sm:w-6 md:w-8 lg:w-12'
+                    : 'bg-white/50 w-1.5 sm:w-2 md:w-3 hover:bg-white/70'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
             ))}
           </div>
-        </div>
 
-        {/* Bottom CTA */}
+          {/* Next Button */}
+          <button
+            onClick={nextSlide}
+            className='p-1.5 sm:p-2 md:p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 group'
+            aria-label='Next slide'
+          >
+            <ChevronRightIcon className='w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white group-hover:scale-110 transition-transform' />
+          </button>
+        </div>
+      </div>
+
+      {/* Side Navigation - Hidden on mobile */}
+      <div className='absolute right-4 md:right-6 lg:right-8 top-1/2 transform -translate-y-1/2 z-20 hidden lg:block'>
+        <div className='flex flex-col space-y-3 md:space-y-4'>
+          {heroSlides.map((slide, index) => (
+            <button
+              key={slide.id}
+              onClick={() => goToSlide(index)}
+              className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full transition-all duration-300 border-2 ${
+                index === currentSlide
+                  ? 'bg-white/20 border-white backdrop-blur-md'
+                  : 'bg-white/10 border-white/50 hover:bg-white/20 hover:border-white'
+              }`}
+              title={slide.title}
+            >
+              <span className='sr-only'>{slide.title}</span>
+              <div
+                className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full mx-auto ${
+                  index === currentSlide ? 'bg-white' : 'bg-white/70'
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Emergency Contact - Top Right */}
+      {/* <div className='absolute top-4 sm:top-6 md:top-8 right-2 sm:right-4 md:right-8 z-20'>
+        <Link
+          href='tel:+1234567890'
+          className='flex items-center space-x-1 sm:space-x-2 bg-red-600/90 hover:bg-red-600 text-white px-2 sm:px-3 md:px-4 lg:px-6 py-1.5 sm:py-2 md:py-3 rounded-full font-semibold text-xs sm:text-sm md:text-base transition-all duration-300 shadow-lg hover:shadow-xl'
+        >
+          <PhoneIcon className='w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5' />
+          <span className='hidden sm:inline'>Emergency: (123) 456-7890</span>
+          <span className='sm:hidden'>Emergency</span>
+        </Link>
+      </div> */}
+
+      {/* Progress Bar */}
+      <div className='absolute bottom-0 left-0 right-0 h-0.5 sm:h-1 bg-white/20 z-20'>
+        <div
+          className='h-full bg-white transition-all duration-300 ease-linear'
+          style={{
+            width: `${((currentSlide + 1) / heroSlides.length) * 100}%`,
+          }}
+        />
       </div>
     </section>
   );
