@@ -33,7 +33,7 @@ const heroSlides = [
   },
   {
     id: 2,
-    title: 'Expert Mental Health Care',
+    title: 'Expert Mental Health ',
     subtitle: 'Specialized Treatment for Every Individual',
     description:
       'Comprehensive therapy for anxiety, depression, trauma, and relationship issues with proven, personalized approaches',
