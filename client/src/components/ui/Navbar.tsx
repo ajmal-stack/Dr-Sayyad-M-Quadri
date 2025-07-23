@@ -230,9 +230,9 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    name: 'JOURNAL',
-    href: '/journal',
-    icon: <PencilSquareIcon className='w-5 h-5' />,
+    name: 'TREATMENT',
+    href: '/treatment',
+    icon: <HeartIcon className='w-5 h-5' />,
     color: 'from-blue-500 to-indigo-600',
   },
   {
