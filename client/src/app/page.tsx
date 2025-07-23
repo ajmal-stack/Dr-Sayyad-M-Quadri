@@ -1,6 +1,6 @@
 import Hero from '@/components/ui/Hero';
 import Services from '@/components/ui/Services';
-import Testimonials from '@/components/ui/Testimonials';
+// import Testimonials from '@/components/ui/Testimonials';
 // import FAQ from '@/components/ui/FAQ';
 import FeaturedContent from '@/components/ui/FeaturedContent';
 import Newsletter from '@/components/ui/Newsletter';
@@ -20,9 +20,9 @@ export default function Home() {
         <Services />
       </div>
 
-      <div id='testimonials'>
+      {/* <div id='testimonials'>
         <Testimonials />
-      </div>
+      </div> */}
 
       {/* <FAQ /> */}
 
