@@ -200,42 +200,6 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    name: 'NEWSLETTER',
-    href: '/newsletter',
-    icon: <NewspaperIcon className='w-5 h-5' />,
-    color: 'from-blue-500 to-indigo-600',
-  },
-  {
-    name: 'ABOUT',
-    href: '/about',
-    icon: <UserIcon className='w-5 h-5' />,
-    color: 'from-blue-500 to-indigo-600',
-    hasDropdown: true,
-    dropdownItems: [
-      {
-        name: 'Biography',
-        href: '/about/bio',
-        featured: true,
-        description: 'Learn about Dr. Quadri',
-        icon: <UserIcon className='w-4 h-4' />,
-      },
-      {
-        name: 'Contact',
-        href: '/about/contact',
-        featured: true,
-        description: 'Get professional consultation',
-        icon: <HeartIcon className='w-4 h-4' />,
-      },
-      {
-        name: 'Press Kit',
-        href: '/about/press',
-        featured: true,
-        description: 'Media and professional resources',
-        icon: <ShieldCheckIcon className='w-4 h-4' />,
-      },
-    ],
-  },
-  {
     name: 'TREATMENT',
     href: '/treatment',
     icon: <HeartIcon className='w-5 h-5' />,
@@ -300,6 +264,19 @@ const navItems: NavItem[] = [
       },
     ],
   },
+  {
+    name: 'NEWSLETTER',
+    href: '/newsletter',
+    icon: <NewspaperIcon className='w-5 h-5' />,
+    color: 'from-blue-500 to-indigo-600',
+  },
+  {
+    name: 'ABOUT',
+    href: '/about',
+    icon: <UserIcon className='w-5 h-5' />,
+    color: 'from-blue-500 to-indigo-600',
+  },
+
   {
     name: 'FAQ',
     href: '/faq',
@@ -457,8 +434,8 @@ export default function Navbar() {
         }`}
       >
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-center justify-between h-20'>
-            {/* Logo */}
+          <div className='flex items-center h-20'>
+            {/* Logo - Far Left Corner */}
             <div className='flex-shrink-0 flex items-center'>
               <Link href='/'>
                 <Image
@@ -472,9 +449,9 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
-            <div className='hidden lg:block'>
-              <div className='flex items-center space-x-2'>
+            {/* Desktop Navigation - Center-Right Area */}
+            <div className='hidden lg:block flex-1'>
+              <div className='flex items-center space-x-2 justify-center ml-8'>
                 {navItems.map((item) => (
                   <div
                     key={item.name}
@@ -588,8 +565,8 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Search and Mobile Menu */}
-            <div className='flex items-center space-x-3'>
+            {/* Search and Mobile Menu - Far Right */}
+            <div className='flex items-center space-x-3 ml-auto'>
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className='relative text-slate-600 hover:text-blue-700 p-3 rounded-xl hover:bg-blue-50 transition-all duration-300 hover:shadow-md border border-transparent hover:border-blue-100'

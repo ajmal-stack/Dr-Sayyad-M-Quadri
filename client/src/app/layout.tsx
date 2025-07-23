@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { AuthProvider } from '@/components/AuthProvider';
-import ConditionalNavbar from '@/components/ConditionalNavbar';
+import Navbar from '@/components/ui/Navbar';
 
 export const metadata: Metadata = {
   title: 'Dr. Syed M Quadri - Psychiatrist & Mental Health Specialist',
@@ -20,10 +19,8 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`antialiased min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 text-slate-800`}
       >
-        <AuthProvider>
-          <ConditionalNavbar />
-          <main>{children}</main>
-        </AuthProvider>
+        <Navbar />
+        <main>{children}</main>
       </body>
     </html>
   );
