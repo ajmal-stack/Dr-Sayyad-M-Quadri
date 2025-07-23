@@ -196,7 +196,7 @@ export default function Hero() {
             </div> */}
 
             {/* Main Title */}
-            <h1
+            {/* <h1
               className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-2 sm:mb-3 md:mb-4 lg:mb-6 leading-tight px-2 ${
                 isVisible
                   ? 'animate-in fade-in slide-in-from-bottom duration-1000 delay-400'
@@ -223,10 +223,10 @@ export default function Hero() {
               >
                 Dr. Syed M Quadri
               </span>
-            </h1>
+            </h1> */}
 
             {/* Subtitle */}
-            <h2
+            {/* <h2
               className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-semibold text-white/95 mb-2 sm:mb-3 md:mb-4 lg:mb-6 px-4 ${
                 isVisible
                   ? 'animate-in fade-in slide-in-from-bottom duration-1000 delay-600'
@@ -235,10 +235,10 @@ export default function Hero() {
               style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}
             >
               Licensed Psychiatrist & Mental Health Expert
-            </h2>
+            </h2> */}
 
             {/* Description */}
-            <p
+            {/* <p
               className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white/90 leading-relaxed max-w-4xl mx-auto mb-4 sm:mb-6 md:mb-8 lg:mb-12 px-4 ${
                 isVisible
                   ? 'animate-in fade-in slide-in-from-bottom duration-1000 delay-800'
@@ -248,7 +248,7 @@ export default function Hero() {
             >
               Transforming lives through compassionate care, evidence-based
               therapy, and holistic wellness approaches
-            </p>
+            </p> */}
 
             {/* CTA Buttons */}
             {/* <div
