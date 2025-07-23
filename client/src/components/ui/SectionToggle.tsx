@@ -33,42 +33,42 @@ const sectionItems: SectionItem[] = [
     id: 'services',
     name: 'Services',
     icon: WrenchScrewdriverIcon,
-    color: 'from-emerald-500 to-teal-600',
+    color: 'from-blue-500 to-indigo-600',
     description: 'Our therapeutic services',
   },
   {
     id: 'testimonials',
     name: 'Testimonials',
     icon: ChatBubbleLeftRightIcon,
-    color: 'from-purple-500 to-violet-600',
+    color: 'from-blue-500 to-indigo-600',
     description: 'Client experiences',
   },
   {
     id: 'featured-content',
     name: 'YouTube',
     icon: VideoCameraIcon,
-    color: 'from-red-500 to-orange-600',
+    color: 'from-blue-500 to-indigo-600',
     description: 'Featured content',
   },
   {
     id: 'newsletter',
     name: 'Newsletter',
     icon: NewspaperIcon,
-    color: 'from-yellow-500 to-amber-600',
+    color: 'from-blue-500 to-indigo-600',
     description: 'Stay updated',
   },
   {
     id: 'about',
     name: 'About',
     icon: UserIcon,
-    color: 'from-slate-500 to-gray-600',
+    color: 'from-blue-500 to-indigo-600',
     description: 'About Dr. Quadri',
   },
   {
     id: 'cta',
     name: 'Contact',
     icon: PhoneIcon,
-    color: 'from-pink-500 to-rose-600',
+    color: 'from-blue-500 to-indigo-600',
     description: 'Get in touch',
   },
 ];
@@ -99,7 +99,7 @@ export default function SectionToggle() {
         <div className='relative'>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`w-14 h-14 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group ${
+            className={`w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group ${
               isOpen ? 'scale-110' : 'hover:scale-105'
             }`}
             aria-label={
@@ -192,7 +192,7 @@ export default function SectionToggle() {
         <div className='relative'>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group ${
+            className={`w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group ${
               isOpen ? 'scale-110' : 'hover:scale-105'
             }`}
             aria-label={

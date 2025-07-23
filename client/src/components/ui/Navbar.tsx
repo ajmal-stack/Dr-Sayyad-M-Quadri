@@ -40,7 +40,8 @@ const bookItems: BookItem[] = [
     id: '1',
     title: 'Mind Matters',
     image: '/books/Navy and Pink Illustrated Mind Matters Book Cover.jpg',
-    description: 'Understanding mental health and wellness',
+    description:
+      'Understanding mental health and wellness through comprehensive insights',
     href: '/books/mind-matters',
   },
   {
@@ -48,30 +49,41 @@ const bookItems: BookItem[] = [
     title: 'Public Speaking Mastery',
     image:
       '/books/Blue & Orange Playful Illustrative Public Speaking Book Cover.jpg',
-    description: 'Overcome anxiety and speak with confidence',
+    description: 'Overcome anxiety and speak with confidence in any situation',
     href: '/books/public-speaking',
   },
+
   {
     id: '3',
-    title: 'Daily Food Journal',
-    image:
-      '/books/Red and Green Seamless Pattern Printable Daily Food Journal Cover.jpg',
-    description: 'Track your nutrition and mental health connection',
-    href: '/books/food-journal',
+    title: 'Simple Food Journal',
+    image: '/books/Red Simple Food Journal Book Cover.jpg',
+    description: 'Mindful eating practices for better mental health',
+    href: '/books/simple-food-journal',
   },
   {
     id: '4',
     title: 'Love & Healing',
     image: '/books/Romantic Doctor Love Story Ebook Cover.png',
-    description: 'A therapeutic journey through relationships',
+    description:
+      'A therapeutic journey through relationships and emotional healing',
     href: '/books/love-healing',
   },
   {
     id: '5',
-    title: 'Simple Food Journal',
-    image: '/books/Red Simple Food Journal Book Cover.jpg',
-    description: 'Mindful eating for better mental health',
-    href: '/books/simple-food-journal',
+    title: 'Daily Food Journal',
+    image:
+      '/books/Red and Green Seamless Pattern Printable Daily Food Journal Cover.jpg',
+    description: 'Track your nutrition and discover the mind-body connection',
+    href: '/books/food-journal',
+  },
+  {
+    id: '6',
+    title: 'Modern Psychology Guide',
+    image:
+      '/books/Black%20and%20White%20Modern%20Psychology%20Book%20Cover.jpg',
+    description:
+      'Contemporary approaches to understanding human behavior and mental wellness',
+    href: '/books/modern-psychology',
   },
 ];
 
@@ -96,12 +108,13 @@ const navItems: NavItem[] = [
     name: 'PODCAST',
     href: '/podcast',
     icon: <MicrophoneIcon className='w-5 h-5' />,
-    color: 'from-purple-500 to-pink-500',
+    color: 'from-blue-500 to-indigo-600',
     hasDropdown: true,
     dropdownItems: [
       {
         name: 'All Podcast Episodes',
         href: '/podcast/all-episodes',
+        featured: true,
         description: 'Browse all therapeutic podcast episodes',
         icon: <PlayIcon className='w-4 h-4' />,
       },
@@ -116,18 +129,21 @@ const navItems: NavItem[] = [
         name: 'Podcast Topics',
         href: '/podcast/topics',
         description: 'Browse by therapeutic categories',
+        featured: true,
         icon: <BookOpenIcon className='w-4 h-4' />,
       },
       {
         name: 'Episode Search',
         href: '/podcast/search',
         description: 'Find specific mental health topics',
+        featured: true,
         icon: <MagnifyingGlassIcon className='w-4 h-4' />,
       },
       {
         name: 'Podcast Membership',
         href: '/podcast/membership',
         description: 'Join our therapeutic community',
+        featured: true,
         icon: <ShieldCheckIcon className='w-4 h-4' />,
       },
     ],
@@ -136,7 +152,7 @@ const navItems: NavItem[] = [
     name: 'BOOKS',
     href: '/books',
     icon: <BookOpenIcon className='w-5 h-5' />,
-    color: 'from-emerald-500 to-teal-500',
+    color: 'from-blue-500 to-indigo-600',
     hasDropdown: true,
     isBooks: true,
   },
@@ -144,30 +160,34 @@ const navItems: NavItem[] = [
     name: 'YOUTUBE',
     href: '/youtube',
     icon: <VideoCameraIcon className='w-5 h-5' />,
-    color: 'from-red-500 to-orange-500',
+    color: 'from-blue-500 to-indigo-600',
     hasDropdown: true,
     dropdownItems: [
       {
         name: 'Latest Videos',
         href: '/youtube/latest',
         description: 'Recent mental health videos and tutorials',
+        featured: true,
         icon: <VideoCameraIcon className='w-4 h-4' />,
       },
       {
         name: 'Popular Videos',
         href: '/youtube/popular',
+        featured: true,
         description: 'Most watched therapeutic content',
         icon: <PlayIcon className='w-4 h-4' />,
       },
       {
         name: 'Playlists',
         href: '/youtube/playlists',
+        featured: true,
         description: 'Organized video collections by topic',
         icon: <SparklesIcon className='w-4 h-4' />,
       },
       {
         name: 'YouTube Channel',
         href: '/youtube/channel',
+        featured: true,
         description: 'Visit our official YouTube channel',
         icon: <ShieldCheckIcon className='w-4 h-4' />,
       },
@@ -177,30 +197,33 @@ const navItems: NavItem[] = [
     name: 'NEWSLETTER',
     href: '/newsletter',
     icon: <NewspaperIcon className='w-5 h-5' />,
-    color: 'from-blue-500 to-indigo-500',
+    color: 'from-blue-500 to-indigo-600',
   },
   {
     name: 'ABOUT',
     href: '/about',
     icon: <UserIcon className='w-5 h-5' />,
-    color: 'from-slate-500 to-gray-500',
+    color: 'from-blue-500 to-indigo-600',
     hasDropdown: true,
     dropdownItems: [
       {
         name: 'Biography',
         href: '/about/bio',
+        featured: true,
         description: 'Learn about Dr. Quadri',
         icon: <UserIcon className='w-4 h-4' />,
       },
       {
         name: 'Contact',
         href: '/about/contact',
+        featured: true,
         description: 'Get professional consultation',
         icon: <HeartIcon className='w-4 h-4' />,
       },
       {
         name: 'Press Kit',
         href: '/about/press',
+        featured: true,
         description: 'Media and professional resources',
         icon: <ShieldCheckIcon className='w-4 h-4' />,
       },
@@ -210,13 +233,13 @@ const navItems: NavItem[] = [
     name: 'JOURNAL',
     href: '/journal',
     icon: <PencilSquareIcon className='w-5 h-5' />,
-    color: 'from-amber-500 to-yellow-500',
+    color: 'from-blue-500 to-indigo-600',
   },
   {
     name: 'FAQ',
     href: '/faq',
     icon: <ShieldCheckIcon className='w-5 h-5' />,
-    color: 'from-slate-500 to-gray-500',
+    color: 'from-blue-500 to-indigo-600',
   },
 ];
 
@@ -245,8 +268,8 @@ export default function Navbar() {
 
   const renderBooksDropdown = () => {
     return (
-      <div className='absolute left-1/2 -translate-x-1/2 mt-0 w-[800px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-emerald-100/50 py-6 z-10 animate-in slide-in-from-top-2 duration-300'>
-        <div className='absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-emerald-100/50 rotate-45'></div>
+      <div className='absolute left-1/2 -translate-x-1/2 mt-0 w-[800px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-blue-200/60 hover:border-blue-300/80 py-6 z-10 animate-in slide-in-from-top-2 duration-300 transition-all'>
+        <div className='absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-blue-200/60 rotate-45'></div>
 
         <div className='px-8 mb-6'>
           <div className='flex items-center space-x-3 mb-2'>
@@ -301,7 +324,7 @@ export default function Navbar() {
                 <SwiperSlide key={book.id}>
                   <Link
                     href={book.href}
-                    className='group block bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/30 rounded-2xl p-5 hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-emerald-100/50 hover:border-emerald-200'
+                    className='group block bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/20 rounded-2xl p-5 hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-blue-200/60 hover:border-blue-300'
                   >
                     <div className='aspect-[3/4] mb-4 overflow-hidden rounded-xl bg-white shadow-lg group-hover:shadow-xl transition-shadow duration-300'>
                       <Image
@@ -310,6 +333,10 @@ export default function Navbar() {
                         width={200}
                         height={267}
                         className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
+                        onError={(e) => {
+                          console.error('Failed to load image:', book.image);
+                          e.currentTarget.src = '/placeholder-book.jpg';
+                        }}
                       />
                     </div>
                     <h4 className='font-bold text-sm text-slate-800 mb-2 line-clamp-1 group-hover:text-emerald-700 transition-colors'>
@@ -430,8 +457,8 @@ export default function Navbar() {
                         {item.isBooks ? (
                           renderBooksDropdown()
                         ) : (
-                          <div className='absolute left-0 mt-0 w-96 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-blue-100/50 py-4 z-10 animate-in slide-in-from-top-2 duration-300'>
-                            <div className='absolute -top-2 left-8 w-4 h-4 bg-white border-l border-t border-blue-100/50 rotate-45'></div>
+                          <div className='absolute left-0 mt-0 w-96 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-blue-200/60 hover:border-blue-300/80 py-4 z-10 animate-in slide-in-from-top-2 duration-300 transition-all'>
+                            <div className='absolute -top-2 left-8 w-4 h-4 bg-white border-l border-t border-blue-200/60 rotate-45'></div>
                             <div className='px-6 mb-4'>
                               <div className='flex items-center space-x-3'>
                                 <div
@@ -454,17 +481,17 @@ export default function Navbar() {
                               <Link
                                 key={dropdownItem.name}
                                 href={dropdownItem.href}
-                                className={`group flex items-start px-6 py-4 text-sm transition-all duration-300 mx-2 rounded-2xl ${
+                                className={`group flex items-start mt-1 px-6 py-4 text-sm transition-all duration-300 mx-2 rounded-2xl ${
                                   dropdownItem.featured
-                                    ? 'text-blue-700 hover:bg-blue-50 hover:text-blue-800 border-l-4 border-blue-500'
-                                    : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900 border-l-4 border-transparent hover:border-blue-300'
+                                    ? 'text-blue-700 bg-blue-100/60 hover:bg-blue-200/90 hover:text-blue-800 border-l-4 border-blue-500 shadow-sm'
+                                    : 'text-slate-700 bg-transparent hover:bg-blue-100/70 hover:text-blue-800 border-l-4 border-transparent hover:border-blue-400 hover:shadow-md'
                                 }`}
                               >
                                 <div
-                                  className={`mr-4 mt-0.5 p-2 rounded-xl ${
+                                  className={`mr-4 mt-0.5 p-2 rounded-xl transition-all duration-300 ${
                                     dropdownItem.featured
-                                      ? 'bg-blue-100 text-blue-600'
-                                      : 'bg-slate-100 text-slate-600 group-hover:bg-blue-100 group-hover:text-blue-600'
+                                      ? 'bg-blue-200 text-blue-700 group-hover:bg-blue-300 group-hover:text-blue-800'
+                                      : 'bg-slate-100 text-slate-600 group-hover:bg-blue-200 group-hover:text-blue-700'
                                   }`}
                                 >
                                   {dropdownItem.icon}

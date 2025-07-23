@@ -19,73 +19,75 @@ import {
 const heroSlides = [
   {
     id: 1,
-    title: 'Dr. Syed M Quadri',
-    subtitle: 'Licensed Psychiatrist & Mental Health Expert',
-    description:
-      'Transforming lives through compassionate care, evidence-based therapy, and holistic wellness approaches',
-    backgroundImage: '/banner/Parenting Unveiled (1).jpg',
-    gradient: 'from-blue-900/80 via-blue-800/70 to-indigo-900/80',
-    textGradient: 'from-blue-400 via-indigo-300 to-purple-400',
-    badge: 'Licensed Psychiatrist',
-    stats: { left: '10+ Years', right: '5000+ Lives' },
-    primaryCTA: 'Book Consultation',
-    secondaryCTA: 'Learn More',
+    // title: 'Dr. Syed M Quadri',
+    // subtitle: 'Licensed Psychiatrist & Mental Health Expert',
+    // description:
+    //   'Transforming lives through compassionate care, evidence-based therapy, and holistic wellness approaches',
+    backgroundImage:
+      '/banner/U_White and Black Simple Mental Health Youtube Thumbnail.png',
+    // gradient: 'from-blue-900/80 via-blue-800/70 to-indigo-900/80',
+    // textGradient: 'from-blue-400 via-indigo-300 to-purple-400',
+    // badge: 'Licensed Psychiatrist',
+    // stats: { left: '10+ Years', right: '5000+ Lives' },
+    // primaryCTA: 'Book Consultation',
+    // secondaryCTA: 'Learn More',
   },
   {
     id: 2,
-    title: 'YouTube Channel',
-    subtitle: 'Mental Health Education & Awareness',
-    description:
-      'Subscribe to our YouTube channel for weekly mental health tips, therapy sessions, and expert guidance on wellness',
-    backgroundImage: '/banner/Parenting Unveiled (2).jpg',
-    gradient: 'from-red-900/80 via-red-800/70 to-orange-900/80',
-    textGradient: 'from-red-400 via-orange-300 to-yellow-400',
-    badge: 'YouTube Creator',
-    stats: { left: '50K+ Subscribers', right: '200+ Videos' },
-    primaryCTA: 'Subscribe Now',
-    secondaryCTA: 'Watch Videos',
+    // title: 'YouTube Channel',
+    // subtitle: 'MSental Health Education & Awareness',
+    // description:
+    //   'Subscribe to our YouTube channel for weekly mental health tips, therapy sessions, and expert guidance on wellness',
+    backgroundImage:
+      '/banner/White and Black Simple Mental Health Youtube Thumbnail.png',
+    // gradient: 'from-red-900/80 via-red-800/70 to-orange-900/80',
+    // textGradient: 'from-red-400 via-orange-300 to-yellow-400',
+    // badge: 'YouTube Creator',
+    // stats: { left: '50K+ Subscribers', right: '200+ Videos' },
+    // primaryCTA: 'Subscribe Now',
+    // secondaryCTA: 'Watch Videos',
   },
   {
     id: 3,
-    title: 'Mental Health Podcast',
-    subtitle: 'Therapeutic Conversations & Healing',
-    description:
-      'Listen to our weekly podcast featuring mental health discussions, patient stories, and expert insights for your wellness journey',
+    // title: 'Mental Health Podcast',
+    // subtitle: 'Therapeutic Conversations & Healing',
+    // description:
+    //   'Listen to our weekly podcast featuring mental health discussions, patient stories, and expert insights for your wellness journey',
     backgroundImage: '/banner/Parenting Unveiled (3).jpg',
-    gradient: 'from-purple-900/80 via-indigo-800/70 to-blue-900/80',
-    textGradient: 'from-purple-400 via-indigo-300 to-blue-400',
-    badge: 'Podcast Host',
-    stats: { left: '100+ Episodes', right: '25K+ Listeners' },
-    primaryCTA: 'Listen Now',
-    secondaryCTA: 'All Episodes',
+    // gradient: 'from-purple-900/80 via-indigo-800/70 to-blue-900/80',
+    // textGradient: 'from-purple-400 via-indigo-300 to-blue-400',
+    // badge: 'Podcast Host',
+    // stats: { left: '100+ Episodes', right: '25K+ Listeners' },
+    // primaryCTA: 'Listen Now',
+    // secondaryCTA: 'All Episodes',
   },
   {
     id: 4,
-    title: 'Mental Health Awareness',
-    subtitle: 'Breaking Stigma, Building Hope',
-    description:
-      'Join our mission to promote mental health awareness, reduce stigma, and create a supportive community for healing and growth',
+    // title: 'Mental Health Awareness',
+    // subtitle: 'Breaking Stigma, Building Hope',
+    // description:
+    //   'Join our mission to promote mental health awareness, reduce stigma, and create a supportive community for healing and growth',
     backgroundImage: '/banner/Parenting Unveiled (4).jpg',
-    gradient: 'from-emerald-900/80 via-teal-800/70 to-cyan-900/80',
-    textGradient: 'from-emerald-400 via-teal-300 to-cyan-400',
-    badge: 'Mental Health Advocate',
-    stats: { left: 'Community Support', right: 'Hope & Healing' },
-    primaryCTA: 'Get Support',
-    secondaryCTA: 'Learn More',
+    // gradient: 'from-emerald-900/80 via-teal-800/70 to-cyan-900/80',
+    // textGradient: 'from-emerald-400 via-teal-300 to-cyan-400',
+    // badge: 'Mental Health Advocate',
+    // stats: { left: 'Community Support', right: 'Hope & Healing' },
+    // primaryCTA: 'Get Support',
+    // secondaryCTA: 'Learn More',
   },
   {
     id: 5,
-    title: 'Trauma & PTSD Specialist',
-    subtitle: 'Healing Through Expert Care',
-    description:
-      'Specialized trauma therapy using EMDR, cognitive approaches, and innovative healing methodologies',
+    // title: 'Trauma & PTSD Specialist',
+    // subtitle: 'Healing Through Expert Care',
+    // description:
+    //   'Specialized trauma therapy using EMDR, cognitive approaches, and innovative healing methodologies',
     backgroundImage: '/banner/Parenting Unveiled (1).jpg',
-    gradient: 'from-slate-900/80 via-gray-800/70 to-zinc-900/80',
-    textGradient: 'from-slate-400 via-gray-300 to-zinc-400',
-    badge: 'Trauma Expert',
-    stats: { left: 'EMDR Certified', right: '600+ Healed' },
-    primaryCTA: 'Get Help Now',
-    secondaryCTA: 'Learn About PTSD',
+    // gradient: 'from-slate-900/80 via-gray-800/70 to-zinc-900/80',
+    // textGradient: 'from-slate-400 via-gray-300 to-zinc-400',
+    // badge: 'Trauma Expert',
+    // stats: { left: 'EMDR Certified', right: '600+ Healed' },
+    // primaryCTA: 'Get Help Now',
+    // secondaryCTA: 'Learn About PTSD',
   },
 ];
 
@@ -172,8 +174,8 @@ export default function Hero() {
               />
             </div>
 
-            {/* Simple Dark Overlay for Text Readability */}
-            <div className='absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70' />
+            {/* Lighter Overlay for Better Background Visibility */}
+            <div className='absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/40' />
           </div>
         ))}
       </div>
@@ -208,7 +210,7 @@ export default function Hero() {
             </div>
 
             {/* Badge */}
-            <div
+            {/* <div
               className={`inline-flex items-center bg-white/30 backdrop-blur-md text-white px-3 sm:px-4 md:px-6 lg:px-8 py-1.5 sm:py-2 md:py-3 rounded-full text-xs sm:text-sm md:text-base font-semibold mb-4 sm:mb-6 md:mb-8 border border-white/40 shadow-lg ${
                 isVisible
                   ? 'animate-in fade-in slide-in-from-top duration-1000 delay-200'
@@ -218,7 +220,7 @@ export default function Hero() {
             >
               <CheckBadgeIconSolid className='w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-2' />
               {currentSlideData.badge}
-            </div>
+            </div> */}
 
             {/* Main Title */}
             <h1
@@ -330,7 +332,7 @@ export default function Hero() {
             </div> */}
 
             {/* Testimonial Preview */}
-            {testimonials[currentSlide % testimonials.length] && (
+            {/* {testimonials[currentSlide % testimonials.length] && (
               <div
                 className={`max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl mx-auto bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl lg:rounded-3xl p-3 sm:p-4 md:p-6 lg:p-8 border border-white/30 mx-4 shadow-lg ${
                   isVisible
@@ -370,7 +372,7 @@ export default function Hero() {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
