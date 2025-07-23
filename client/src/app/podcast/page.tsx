@@ -7,14 +7,12 @@ import {
   MagnifyingGlassIcon,
   PlayIcon,
   PauseIcon,
-  SpeakerWaveIcon,
   ClockIcon,
   CalendarDaysIcon,
   TagIcon,
   HeartIcon,
   ShareIcon,
   EyeIcon,
-  StarIcon,
   AdjustmentsHorizontalIcon,
   MicrophoneIcon,
   SparklesIcon,
@@ -219,7 +217,6 @@ export default function PodcastPage() {
   };
 
   const featuredEpisodes = episodes.filter((episode) => episode.featured);
-  const trendingEpisodes = episodes.filter((episode) => episode.trending);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 pt-20'>
