@@ -10,10 +10,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
-import {
-  StarIcon as StarIconSolid,
-  CheckBadgeIcon as CheckBadgeIconSolid,
-} from '@heroicons/react/24/solid';
+// Removed unused solid icons
 
 // Main Hero Carousel Data with Background Images
 const heroSlides = [
@@ -91,31 +88,7 @@ const heroSlides = [
   },
 ];
 
-// Testimonials for overlay
-const testimonials = [
-  {
-    name: 'Sarah M.',
-    role: 'Anxiety Recovery',
-    content:
-      'Dr. Quadri helped me overcome panic attacks and find peace again.',
-    rating: 5,
-    location: 'New York, NY',
-  },
-  {
-    name: 'Michael R.',
-    role: 'Depression Treatment',
-    content: 'Professional, compassionate, and truly life-changing therapy.',
-    rating: 5,
-    location: 'Los Angeles, CA',
-  },
-  {
-    name: 'Lisa K.',
-    role: 'Relationship Counseling',
-    content: 'Saved my marriage and taught us healthy communication skills.',
-    rating: 5,
-    location: 'Chicago, IL',
-  },
-];
+// Testimonials removed as they're not currently used
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -144,7 +117,7 @@ export default function Hero() {
     );
   const goToSlide = (index: number) => setCurrentSlide(index);
 
-  const currentSlideData = heroSlides[currentSlide];
+  // currentSlideData removed as it's not currently used
 
   return (
     <section
@@ -166,7 +139,7 @@ export default function Hero() {
             <div className='absolute inset-0'>
               <Image
                 src={slide.backgroundImage}
-                alt={slide.title}
+                alt={`Hero background ${slide.id}`}
                 fill
                 className='object-cover object-center'
                 priority={index === 0}
@@ -248,7 +221,7 @@ export default function Hero() {
                   filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))',
                 }}
               >
-                {currentSlideData.title}
+                Dr. Syed M Quadri
               </span>
             </h1>
 
@@ -261,7 +234,7 @@ export default function Hero() {
               }`}
               style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}
             >
-              {currentSlideData.subtitle}
+              Licensed Psychiatrist & Mental Health Expert
             </h2>
 
             {/* Description */}
@@ -273,7 +246,8 @@ export default function Hero() {
               }`}
               style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}
             >
-              {currentSlideData.description}
+              Transforming lives through compassionate care, evidence-based
+              therapy, and holistic wellness approaches
             </p>
 
             {/* CTA Buttons */}
@@ -437,9 +411,9 @@ export default function Hero() {
                   ? 'bg-white/20 border-white backdrop-blur-md'
                   : 'bg-white/10 border-white/50 hover:bg-white/20 hover:border-white'
               }`}
-              title={slide.title}
+              title={`Slide ${slide.id}`}
             >
-              <span className='sr-only'>{slide.title}</span>
+              <span className='sr-only'>{`Slide ${slide.id}`}</span>
               <div
                 className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full mx-auto ${
                   index === currentSlide ? 'bg-white' : 'bg-white/70'
