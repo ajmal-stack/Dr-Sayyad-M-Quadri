@@ -4,10 +4,8 @@ import { useState } from 'react';
 import {
   HomeIcon,
   WrenchScrewdriverIcon,
-  ChatBubbleLeftRightIcon,
   VideoCameraIcon,
   NewspaperIcon,
-  UserIcon,
   PhoneIcon,
   Bars3Icon,
   XMarkIcon,
@@ -36,13 +34,7 @@ const sectionItems: SectionItem[] = [
     color: 'from-blue-500 to-indigo-600',
     description: 'Our therapeutic services',
   },
-  {
-    id: 'testimonials',
-    name: 'Testimonials',
-    icon: ChatBubbleLeftRightIcon,
-    color: 'from-blue-500 to-indigo-600',
-    description: 'Client experiences',
-  },
+
   {
     id: 'featured-content',
     name: 'YouTube',
@@ -57,13 +49,7 @@ const sectionItems: SectionItem[] = [
     color: 'from-blue-500 to-indigo-600',
     description: 'Stay updated',
   },
-  {
-    id: 'about',
-    name: 'About',
-    icon: UserIcon,
-    color: 'from-blue-500 to-indigo-600',
-    description: 'About Dr. Quadri',
-  },
+
   {
     id: 'cta',
     name: 'Contact',
