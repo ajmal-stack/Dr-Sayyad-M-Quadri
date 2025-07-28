@@ -74,61 +74,87 @@ const services = [
 export default function Services() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
+
+    // Check if device is mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  const handleCardInteraction = (serviceId: number, isInteracting: boolean) => {
+    if (!isMobile) {
+      setHoveredCard(isInteracting ? serviceId : null);
+    }
+  };
+
+  const handleMobileCardTap = (serviceId: number) => {
+    if (isMobile) {
+      setHoveredCard(hoveredCard === serviceId ? null : serviceId);
+    }
+  };
+
   return (
-    <section className='py-16 lg:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
+    <section className='py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
       {/* Background Elements */}
       <div className='absolute inset-0 opacity-30'>
         <div className='absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-indigo-600/5' />
-        <div className='absolute top-20 left-10 w-32 h-32 bg-blue-200/20 rounded-full blur-3xl animate-pulse' />
-        <div className='absolute bottom-20 right-10 w-40 h-40 bg-indigo-200/15 rounded-full blur-3xl animate-pulse delay-1000' />
+        <div className='absolute top-10 sm:top-20 left-5 sm:left-10 w-20 sm:w-32 h-20 sm:h-32 bg-blue-200/20 rounded-full blur-2xl sm:blur-3xl animate-pulse' />
+        <div className='absolute bottom-10 sm:bottom-20 right-5 sm:right-10 w-24 sm:w-40 h-24 sm:h-40 bg-indigo-200/15 rounded-full blur-2xl sm:blur-3xl animate-pulse delay-1000' />
       </div>
 
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative'>
         {/* Header */}
         <div
-          className={`text-center mb-12 lg:mb-20 ${
+          className={`text-center mb-8 sm:mb-12 lg:mb-20 ${
             isVisible
               ? 'animate-in slide-in-from-top duration-1000'
               : 'opacity-0'
           }`}
         >
-          <div className='inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-6 py-3 rounded-full text-sm font-semibold mb-6 shadow-lg'>
-            <CheckCircleIcon className='w-5 h-5 mr-2' />
-            Comprehensive Mental Health Services
+          <div className='inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 shadow-lg'>
+            <CheckCircleIcon className='w-4 h-4 sm:w-5 sm:h-5 mr-2' />
+            <span className='truncate'>
+              Comprehensive Mental Health Services
+            </span>
           </div>
-          <h2 className='text-3xl md:text-4xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight'>
+          <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-2'>
             Transform Your Life with{' '}
             <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent'>
               Expert Care
             </span>
           </h2>
-          <p className='text-lg md:text-xl lg:text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed'>
+          <p className='text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed px-4'>
             Personalized treatment approaches designed to help you overcome
             challenges and achieve lasting mental wellness
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 mb-16 lg:mb-24'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16 lg:mb-24'>
           {services.map((service, index) => (
             <div
               key={service.id}
-              className={`group relative rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer ${
+              className={`group relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer ${
                 isVisible
                   ? 'animate-in slide-in-from-bottom duration-1000'
                   : 'opacity-0'
               }`}
               style={{ animationDelay: `${index * 100}ms` }}
-              onMouseEnter={() => setHoveredCard(service.id)}
-              onMouseLeave={() => setHoveredCard(null)}
+              onMouseEnter={() => handleCardInteraction(service.id, true)}
+              onMouseLeave={() => handleCardInteraction(service.id, false)}
+              onClick={() => handleMobileCardTap(service.id)}
             >
               {/* Image Container */}
-              <div className='relative h-64 sm:h-72 lg:h-80 overflow-hidden'>
+              <div className='relative h-48 sm:h-56 md:h-64 lg:h-72 xl:h-80 overflow-hidden'>
                 {/* SVG Background Image */}
                 <div className='w-full h-full relative'>
                   <Image
@@ -136,7 +162,8 @@ export default function Services() {
                     alt={service.name}
                     fill
                     className='object-cover object-center'
-                    sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw'
+                    sizes='(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 33vw, 25vw'
+                    priority={index < 4}
                   />
                 </div>
 
@@ -145,15 +172,15 @@ export default function Services() {
                   className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-500`}
                 />
 
-                {/* Hover Text Overlay */}
+                {/* Hover/Tap Text Overlay */}
                 <div
                   className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 transition-all duration-500 ${
                     hoveredCard === service.id ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  <div className='absolute inset-0 flex flex-col justify-center items-center text-center p-6 text-white transform transition-all duration-500'>
+                  <div className='absolute inset-0 flex flex-col justify-center items-center text-center p-3 sm:p-4 lg:p-6 text-white transform transition-all duration-500'>
                     <h3
-                      className={`text-xl lg:text-2xl font-bold mb-4 transform transition-all duration-500 ${
+                      className={`text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 transform transition-all duration-500 ${
                         hoveredCard === service.id
                           ? 'translate-y-0 opacity-100'
                           : 'translate-y-4 opacity-0'
@@ -162,7 +189,7 @@ export default function Services() {
                       {service.name}
                     </h3>
                     <p
-                      className={`text-sm lg:text-base leading-relaxed transform transition-all duration-500 delay-100 ${
+                      className={`text-xs sm:text-sm lg:text-base leading-relaxed transform transition-all duration-500 delay-100 ${
                         hoveredCard === service.id
                           ? 'translate-y-0 opacity-100'
                           : 'translate-y-4 opacity-0'
@@ -173,19 +200,26 @@ export default function Services() {
                   </div>
                 </div>
 
-                {/* Service Name at Bottom (visible when not hovering) */}
+                {/* Service Name at Bottom (visible when not hovering/tapped) */}
                 <div
-                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 transition-opacity duration-500 ${
+                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-4 lg:p-6 transition-opacity duration-500 ${
                     hoveredCard === service.id ? 'opacity-0' : 'opacity-100'
                   }`}
                 >
-                  <h3 className='text-white text-lg lg:text-xl font-bold'>
+                  <h3 className='text-white text-base sm:text-lg lg:text-xl font-bold leading-tight'>
                     {service.name}
                   </h3>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Mobile-specific instruction text */}
+        <div className='block sm:hidden text-center mb-8'>
+          <p className='text-sm text-slate-500 px-4'>
+            Tap on any service card to learn more about our treatment approaches
+          </p>
         </div>
       </div>
     </section>

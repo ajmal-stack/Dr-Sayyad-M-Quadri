@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -16,10 +16,15 @@ import {
   AdjustmentsHorizontalIcon,
   MicrophoneIcon,
   SparklesIcon,
+  SpeakerWaveIcon,
+  ForwardIcon,
+  BackwardIcon,
+  SpeakerXMarkIcon,
 } from '@heroicons/react/24/outline';
 import {
   PlayIcon as PlayIconSolid,
   HeartIcon as HeartIconSolid,
+  PauseIcon as PauseIconSolid,
 } from '@heroicons/react/24/solid';
 
 interface Episode {
@@ -59,7 +64,7 @@ const mockEpisodes: Episode[] = [
     publishDate: '2024-01-15',
     category: 'Anxiety & Stress',
     tags: ['anxiety', 'coping-strategies', 'mental-health'],
-    audioUrl: '/audio/episode-1.mp3',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
     thumbnailUrl: '/banner/Parenting Unveiled (1).jpg',
     plays: 15420,
     likes: 892,
@@ -75,7 +80,7 @@ const mockEpisodes: Episode[] = [
     publishDate: '2024-01-08',
     category: 'Relationships',
     tags: ['relationships', 'communication', 'emotional-health'],
-    audioUrl: '/audio/episode-2.mp3',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
     thumbnailUrl: '/banner/Parenting Unveiled (2).jpg',
     plays: 12350,
     likes: 756,
@@ -91,7 +96,7 @@ const mockEpisodes: Episode[] = [
     publishDate: '2024-01-01',
     category: 'Depression',
     tags: ['depression', 'recovery', 'hope', 'therapy'],
-    audioUrl: '/audio/episode-3.mp3',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
     thumbnailUrl: '/banner/Parenting Unveiled (3).jpg',
     plays: 18750,
     likes: 1240,
@@ -107,7 +112,7 @@ const mockEpisodes: Episode[] = [
     publishDate: '2023-12-25',
     category: 'Self-Care',
     tags: ['self-care', 'wellness', 'mindfulness'],
-    audioUrl: '/audio/episode-4.mp3',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
     thumbnailUrl: '/banner/Parenting Unveiled (4).jpg',
     plays: 9870,
     likes: 543,
@@ -123,7 +128,7 @@ const mockEpisodes: Episode[] = [
     publishDate: '2023-12-18',
     category: 'Life Transitions',
     tags: ['life-changes', 'resilience', 'growth'],
-    audioUrl: '/audio/episode-5.mp3',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
     thumbnailUrl:
       '/banner/White and Black Simple Mental Health Youtube Thumbnail.png',
     plays: 11200,
@@ -140,7 +145,7 @@ const mockEpisodes: Episode[] = [
     publishDate: '2023-12-11',
     category: 'Mental Wellness',
     tags: ['happiness', 'positive-psychology', 'well-being'],
-    audioUrl: '/audio/episode-6.mp3',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
     thumbnailUrl:
       '/banner/U_White and Black Simple Mental Health Youtube Thumbnail.png',
     plays: 13450,
@@ -149,6 +154,199 @@ const mockEpisodes: Episode[] = [
     trending: false,
   },
 ];
+
+// Audio Player Component
+const AudioPlayer = ({
+  episode,
+  isPlaying,
+  onPlayPause,
+}: {
+  episode: Episode;
+  isPlaying: boolean;
+  onPlayPause: () => void;
+}) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => setCurrentTime(audio.currentTime);
+    const updateDuration = () => setDuration(audio.duration);
+
+    audio.addEventListener('timeupdate', updateTime);
+    audio.addEventListener('loadedmetadata', updateDuration);
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateTime);
+      audio.removeEventListener('loadedmetadata', updateDuration);
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }, [isPlaying]);
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const newTime = (parseFloat(e.target.value) / 100) * duration;
+    audio.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value) / 100;
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+    setIsMuted(newVolume === 0);
+  };
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.volume = volume;
+        setIsMuted(false);
+      } else {
+        audioRef.current.volume = 0;
+        setIsMuted(true);
+      }
+    }
+  };
+
+  const skip = (seconds: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.max(
+        0,
+        Math.min(duration, audioRef.current.currentTime + seconds)
+      );
+    }
+  };
+
+  return (
+    <div className='bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200/60 p-3 sm:p-4 hover:shadow-xl transition-all duration-300'>
+      <audio ref={audioRef} src={episode.audioUrl} preload='metadata' />
+
+      {/* Episode Info */}
+      <div className='flex items-center space-x-3 sm:space-x-4 mb-3 sm:mb-4'>
+        <div className='relative w-12 h-12 sm:w-16 sm:h-16 rounded-xl overflow-hidden flex-shrink-0'>
+          <Image
+            src={episode.thumbnailUrl}
+            alt={episode.title}
+            fill
+            className='object-cover'
+          />
+        </div>
+        <div className='flex-1 min-w-0'>
+          <h4 className='font-semibold text-slate-800 truncate text-sm sm:text-base'>
+            {episode.title}
+          </h4>
+          <p className='text-xs sm:text-sm text-slate-600'>Dr. Syed M Quadri</p>
+        </div>
+      </div>
+
+      {/* Progress Bar */}
+      <div className='mb-3 sm:mb-4'>
+        <input
+          type='range'
+          min='0'
+          max='100'
+          value={duration ? (currentTime / duration) * 100 : 0}
+          onChange={handleSeek}
+          className='w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider'
+          style={{
+            background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${
+              duration ? (currentTime / duration) * 100 : 0
+            }%, #e2e8f0 ${
+              duration ? (currentTime / duration) * 100 : 0
+            }%, #e2e8f0 100%)`,
+          }}
+        />
+        <div className='flex justify-between text-xs sm:text-sm text-slate-500 mt-1'>
+          <span>{formatTime(currentTime)}</span>
+          <span>{duration ? formatTime(duration) : episode.duration}</span>
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center space-x-2 sm:space-x-3'>
+          <button
+            onClick={() => skip(-15)}
+            className='p-1.5 sm:p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors'
+          >
+            <BackwardIcon className='w-4 h-4 sm:w-5 sm:h-5' />
+          </button>
+
+          <button
+            onClick={onPlayPause}
+            className='p-2.5 sm:p-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl'
+          >
+            {isPlaying ? (
+              <PauseIconSolid className='w-5 h-5 sm:w-6 sm:h-6' />
+            ) : (
+              <PlayIconSolid className='w-5 h-5 sm:w-6 sm:h-6' />
+            )}
+          </button>
+
+          <button
+            onClick={() => skip(15)}
+            className='p-1.5 sm:p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors'
+          >
+            <ForwardIcon className='w-4 h-4 sm:w-5 sm:h-5' />
+          </button>
+        </div>
+
+        {/* Volume Control */}
+        <div className='flex items-center space-x-1 sm:space-x-2'>
+          <button
+            onClick={toggleMute}
+            className='p-1.5 sm:p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors'
+          >
+            {isMuted ? (
+              <SpeakerXMarkIcon className='w-4 h-4 sm:w-5 sm:h-5' />
+            ) : (
+              <SpeakerWaveIcon className='w-4 h-4 sm:w-5 sm:h-5' />
+            )}
+          </button>
+          <input
+            type='range'
+            min='0'
+            max='100'
+            value={isMuted ? 0 : volume * 100}
+            onChange={handleVolumeChange}
+            className='w-16 sm:w-20 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer hidden sm:block'
+            style={{
+              background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${
+                isMuted ? 0 : volume * 100
+              }%, #e2e8f0 ${isMuted ? 0 : volume * 100}%, #e2e8f0 100%)`,
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function PodcastPage() {
   const [episodes, setEpisodes] = useState<Episode[]>(mockEpisodes);
@@ -248,20 +446,24 @@ export default function PodcastPage() {
               </div>
 
               <div className='flex flex-col sm:flex-row gap-4'>
-                <Link
-                  href='/podcast/all-episodes'
+                <button
+                  onClick={() =>
+                    document
+                      .getElementById('episodes')
+                      ?.scrollIntoView({ behavior: 'smooth' })
+                  }
                   className='group flex items-center justify-center px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300 hover:scale-105 hover:shadow-xl'
                 >
                   <PlayIconSolid className='w-6 h-6 mr-3 group-hover:scale-110 transition-transform' />
                   Browse All Episodes
-                </Link>
-                <Link
-                  href='/podcast/trending'
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('Anxiety & Stress')}
                   className='group flex items-center justify-center px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white/30 rounded-xl font-semibold text-lg hover:bg-white/30 transition-all duration-300 hover:scale-105'
                 >
                   <SparklesIcon className='w-6 h-6 mr-3 group-hover:scale-110 transition-transform' />
                   Trending Now
-                </Link>
+                </button>
               </div>
 
               <div className='grid grid-cols-3 gap-6 pt-8 border-t border-white/20'>
@@ -310,8 +512,24 @@ export default function PodcastPage() {
         </div>
       </section>
 
+      {/* Currently Playing - Fixed Audio Player */}
+      {currentlyPlaying && (
+        <div className='fixed bottom-0 left-0 right-0 z-50 p-2 sm:p-4 bg-white/95 backdrop-blur-xl border-t border-slate-200/60 shadow-2xl'>
+          <div className='max-w-7xl mx-auto'>
+            <AudioPlayer
+              episode={episodes.find((ep) => ep.id === currentlyPlaying)!}
+              isPlaying={true}
+              onPlayPause={() => handlePlay(currentlyPlaying)}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Search and Filter Section */}
-      <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
+      <section
+        id='episodes'
+        className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'
+      >
         <div className='bg-white rounded-3xl shadow-xl border border-slate-200/60 p-8'>
           <div className='flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between mb-8'>
             <div>
@@ -460,7 +678,11 @@ export default function PodcastPage() {
       )}
 
       {/* All Episodes Grid */}
-      <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16'>
+      <section
+        className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
+          currentlyPlaying ? 'pb-28 sm:pb-32' : 'pb-16'
+        }`}
+      >
         <div className='mb-8'>
           <h2 className='text-3xl font-bold text-slate-800 mb-2'>
             {selectedCategory === 'All Episodes'
@@ -520,7 +742,7 @@ export default function PodcastPage() {
                       </div>
                     )}
                   </div>
-                  <div className='flex-1 p-6'>
+                  <div className='flex-1 p-4 sm:p-6'>
                     <div className='flex flex-col h-full'>
                       <div className='flex items-center justify-between mb-3'>
                         <span className='bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium'>
@@ -537,6 +759,16 @@ export default function PodcastPage() {
                       <p className='text-slate-600 leading-relaxed mb-4 flex-1'>
                         {episode.description}
                       </p>
+
+                      {/* Inline Audio Player for Each Episode */}
+                      <div className='mb-4'>
+                        <AudioPlayer
+                          episode={episode}
+                          isPlaying={currentlyPlaying === episode.id}
+                          onPlayPause={() => handlePlay(episode.id)}
+                        />
+                      </div>
+
                       <div className='flex flex-wrap gap-2 mb-4'>
                         {episode.tags.map((tag) => (
                           <span
@@ -600,7 +832,7 @@ export default function PodcastPage() {
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
               <Link
-                href='/podcast/membership'
+                href='/newsletter'
                 className='px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300 hover:scale-105'
               >
                 Join Our Community
@@ -615,6 +847,52 @@ export default function PodcastPage() {
           </div>
         </div>
       </section>
+
+      <style jsx>{`
+        .slider::-webkit-slider-thumb {
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: #3b82f6;
+          cursor: pointer;
+          border: 2px solid white;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+          transition: all 0.2s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .slider::-moz-range-thumb {
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: #3b82f6;
+          cursor: pointer;
+          border: 2px solid white;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+          transition: all 0.2s ease;
+        }
+
+        .slider::-moz-range-thumb:hover {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        @media (max-width: 640px) {
+          .slider::-webkit-slider-thumb {
+            width: 16px;
+            height: 16px;
+          }
+          .slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+          }
+        }
+      `}</style>
     </div>
   );
 }

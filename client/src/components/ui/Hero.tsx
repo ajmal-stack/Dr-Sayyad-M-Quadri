@@ -121,7 +121,7 @@ export default function Hero() {
 
   return (
     <section
-      className='relative h-[90vh] w-full overflow-hidden mt-20'
+      className='relative h-[30vh] sm:h-[90vh] w-full overflow-hidden mt-20'
       id='hero'
     >
       {/* Background Image Carousel */}
@@ -136,25 +136,26 @@ export default function Hero() {
             }`}
           >
             {/* Background Image */}
-            <div className='absolute inset-0'>
+            <div className='absolute inset-0 bg-slate-900'>
               <Image
                 src={slide.backgroundImage}
                 alt={`Hero background ${slide.id}`}
                 fill
-                className='object-cover object-center'
+                className='object-contain sm:object-cover object-center'
                 priority={index === 0}
                 quality={95}
+                sizes='(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw'
               />
             </div>
 
-            {/* Lighter Overlay for Better Background Visibility */}
-            <div className='absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/40' />
+            {/* Responsive Overlay for Better Background Visibility */}
+            <div className='absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50 sm:from-black/10 sm:via-black/20 sm:to-black/40' />
           </div>
         ))}
       </div>
-      {/* Main Content - Centered without navbar conflict */}
+      {/* Main Content - Responsive positioning */}
       <div className='relative z-10 h-full flex items-center justify-center'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-4 sm:py-8'>
           <div className='text-center'>
             {/* Logo */}
             <div
@@ -361,27 +362,27 @@ export default function Hero() {
       </div>
 
       {/* Navigation Controls */}
-      <div className='absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20'>
-        <div className='flex items-center space-x-2 sm:space-x-3 md:space-x-4 bg-white/20 backdrop-blur-md rounded-full px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 border border-white/30'>
+      <div className='absolute bottom-2 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20'>
+        <div className='flex items-center space-x-1 sm:space-x-3 md:space-x-4 bg-white/20 backdrop-blur-md rounded-full px-2 sm:px-4 md:px-6 py-1.5 sm:py-2.5 md:py-3 border border-white/30'>
           {/* Previous Button */}
           <button
             onClick={prevSlide}
-            className='p-1.5 sm:p-2 md:p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 group'
+            className='p-1 sm:p-2 md:p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 group'
             aria-label='Previous slide'
           >
-            <ChevronLeftIcon className='w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white group-hover:scale-110 transition-transform' />
+            <ChevronLeftIcon className='w-3 h-3 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white group-hover:scale-110 transition-transform' />
           </button>
 
           {/* Slide Indicators */}
-          <div className='flex space-x-1 sm:space-x-2 md:space-x-3'>
+          <div className='flex space-x-0.5 sm:space-x-2 md:space-x-3'>
             {heroSlides.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`h-1.5 sm:h-2 md:h-3 rounded-full transition-all duration-300 ${
+                className={`h-1 sm:h-2 md:h-3 rounded-full transition-all duration-300 ${
                   index === currentSlide
-                    ? 'bg-white w-4 sm:w-6 md:w-8 lg:w-12'
-                    : 'bg-white/50 w-1.5 sm:w-2 md:w-3 hover:bg-white/70'
+                    ? 'bg-white w-3 sm:w-6 md:w-8 lg:w-12'
+                    : 'bg-white/50 w-1 sm:w-2 md:w-3 hover:bg-white/70'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
@@ -391,10 +392,10 @@ export default function Hero() {
           {/* Next Button */}
           <button
             onClick={nextSlide}
-            className='p-1.5 sm:p-2 md:p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 group'
+            className='p-1 sm:p-2 md:p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 group'
             aria-label='Next slide'
           >
-            <ChevronRightIcon className='w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white group-hover:scale-110 transition-transform' />
+            <ChevronRightIcon className='w-3 h-3 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white group-hover:scale-110 transition-transform' />
           </button>
         </div>
       </div>

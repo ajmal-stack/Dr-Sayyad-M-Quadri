@@ -1,4 +1,5 @@
 import Hero from '@/components/ui/Hero';
+import TrustedBy from '@/components/ui/TrustedBy';
 import Services from '@/components/ui/Services';
 // import Testimonials from '@/components/ui/Testimonials';
 // import FAQ from '@/components/ui/FAQ';
@@ -16,15 +17,13 @@ export default function Home() {
         <Hero />
       </div>
 
+      <div id='trusted-by'>
+        <TrustedBy />
+      </div>
+
       <div id='services'>
         <Services />
       </div>
-
-      {/* <div id='testimonials'>
-        <Testimonials />
-      </div> */}
-
-      {/* <FAQ /> */}
 
       <div id='featured-content'>
         <FeaturedContent />
