@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 const healthcareOrganizations = [
@@ -97,9 +98,11 @@ export default function TrustedBy() {
                   className='flex-shrink-0 mx-6 sm:mx-8 lg:mx-12 flex flex-col items-center justify-center h-20 sm:h-24 lg:h-28'
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <img
+                  <Image
                     src={organization.logo}
                     alt={`${organization.name} logo`}
+                    width={120}
+                    height={48}
                     className='h-8 sm:h-10 lg:h-12 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0 mb-2'
                     onError={(e) => {
                       // Fallback to text if logo fails to load
@@ -118,9 +121,11 @@ export default function TrustedBy() {
                   key={`second-${organization.name}`}
                   className='flex-shrink-0 mx-6 sm:mx-8 lg:mx-12 flex flex-col items-center justify-center h-20 sm:h-24 lg:h-28'
                 >
-                  <img
+                  <Image
                     src={organization.logo}
                     alt={`${organization.name} logo`}
+                    width={120}
+                    height={48}
                     className='h-8 sm:h-10 lg:h-12 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0 mb-2'
                     onError={(e) => {
                       // Fallback to text if logo fails to load
