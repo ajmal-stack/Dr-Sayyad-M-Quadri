@@ -1,4 +1,5 @@
 import Hero from '@/components/ui/Hero';
+import MediaContent from '@/components/ui/MediaContent';
 import TrustedBy from '@/components/ui/TrustedBy';
 import Services from '@/components/ui/Services';
 // import Testimonials from '@/components/ui/Testimonials';
@@ -17,8 +18,8 @@ export default function Home() {
         <Hero />
       </div>
 
-      <div id='trusted-by'>
-        <TrustedBy />
+      <div id='media-content'>
+        <MediaContent />
       </div>
 
       <div id='services'>
@@ -32,7 +33,9 @@ export default function Home() {
       <div id='newsletter'>
         <Newsletter />
       </div>
-
+      <div id='trusted-by'>
+        <TrustedBy />
+      </div>
       <div id='about'>
         <About />
       </div>
