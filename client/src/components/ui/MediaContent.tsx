@@ -263,6 +263,8 @@ export default function MediaContent() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isAutoRotating, setIsAutoRotating] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
   const itemsPerPage = 3;
 
@@ -278,6 +280,22 @@ export default function MediaContent() {
 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Auto-rotation effect for tabs
+  useEffect(() => {
+    if (!isAutoRotating || isPaused) return;
+
+    const tabOrder: TabType[] = ['books', 'youtube', 'podcast'];
+    const interval = setInterval(() => {
+      setActiveTab((currentTab) => {
+        const currentIndex = tabOrder.indexOf(currentTab);
+        const nextIndex = (currentIndex + 1) % tabOrder.length;
+        return tabOrder[nextIndex];
+      });
+    }, 3000); // Change tab every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [isAutoRotating, isPaused]);
 
   const getCurrentPageItems = () => {
     if (isMobile) {
@@ -461,9 +479,15 @@ export default function MediaContent() {
 
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab);
+    setIsPaused(true); // Pause auto-rotation when user manually changes tab
     if (isMobile) {
       setShowMobileTabSelector(false);
     }
+
+    // Resume auto-rotation after 10 seconds of inactivity
+    setTimeout(() => {
+      setIsPaused(false);
+    }, 10000);
   };
 
   const toggleMobileTabSelector = () => {
@@ -522,9 +546,27 @@ export default function MediaContent() {
               : 'opacity-0'
           }`}
         >
-          <div className='inline-flex items-center bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 shadow-lg'>
-            <BookOpenIcon className='w-4 h-4 sm:w-5 sm:h-5 mr-2' />
-            <span className='truncate'>Educational Resources & Content</span>
+          <div className='flex flex-col sm:flex-row items-center gap-4 mb-4 sm:mb-6'>
+            <div className='inline-flex items-center bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg'>
+              <BookOpenIcon className='w-4 h-4 sm:w-5 sm:h-5 mr-2' />
+              <span className='truncate'>Educational Resources & Content</span>
+            </div>
+
+            <button
+              onClick={() => setIsAutoRotating(!isAutoRotating)}
+              className={`inline-flex items-center px-3 py-2 rounded-full text-xs font-semibold transition-all duration-300 ${
+                isAutoRotating
+                  ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              <span
+                className={`w-2 h-2 rounded-full mr-2 ${
+                  isAutoRotating ? 'bg-green-500' : 'bg-gray-400'
+                }`}
+              ></span>
+              Auto-rotate {isAutoRotating ? 'ON' : 'OFF'}
+            </button>
           </div>
           <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-2'>
             Explore Our{' '}
@@ -541,6 +583,8 @@ export default function MediaContent() {
               ? 'animate-in slide-in-from-bottom duration-1000 delay-200'
               : 'opacity-0'
           }`}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
           {/* Mobile Tab Selector Button */}
           <div className='block sm:hidden w-full mb-4'>
