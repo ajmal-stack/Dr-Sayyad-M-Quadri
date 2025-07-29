@@ -257,7 +257,7 @@ export default function MediaContent() {
   const [currentMobileBookIndex, setCurrentMobileBookIndex] = useState(0);
   const [currentMobileVideoIndex, setCurrentMobileVideoIndex] = useState(0);
   const [currentMobilePodcastIndex, setCurrentMobilePodcastIndex] = useState(0);
-  const [playingPodcast, setPlayingPodcast] = useState<number | null>(null);
+  const [playingAudio, setPlayingAudio] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileTabSelector, setShowMobileTabSelector] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -470,8 +470,14 @@ export default function MediaContent() {
     setShowMobileTabSelector(!showMobileTabSelector);
   };
 
-  const togglePodcastPlay = (podcastId: number) => {
-    setPlayingPodcast(playingPodcast === podcastId ? null : podcastId);
+  const toggleAudioPlay = (episodeId: number) => {
+    setPlayingAudio(playingAudio === episodeId ? null : episodeId);
+    // Here you can add actual audio playback logic
+    console.log(
+      `${
+        playingAudio === episodeId ? 'Pausing' : 'Playing'
+      } audio for episode ${episodeId}`
+    );
   };
 
   const tabs = [
@@ -736,9 +742,14 @@ export default function MediaContent() {
                       <p className='text-slate-600 text-sm mb-4 leading-relaxed'>
                         {book.description}
                       </p>
-                      <div className='flex items-center justify-between text-xs text-slate-500'>
-                        <span>{book.author}</span>
-                        <span>{book.pages} pages</span>
+                      <div className='flex items-center justify-between mb-4'>
+                        <div className='text-xs text-slate-500'>
+                          <div>{book.author}</div>
+                          <div>{book.pages} pages</div>
+                        </div>
+                        <button className='bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg'>
+                          Buy Now
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -820,9 +831,15 @@ export default function MediaContent() {
                         <p className='text-slate-600 text-sm mb-4 leading-relaxed'>
                           {video.description}
                         </p>
-                        <div className='flex items-center justify-between text-xs text-slate-500'>
-                          <span>{video.views} views</span>
-                          <span>{video.uploadDate}</span>
+                        <div className='flex items-center justify-between mb-4'>
+                          <div className='text-xs text-slate-500'>
+                            <div>{video.views} views</div>
+                            <div>{video.uploadDate}</div>
+                          </div>
+                          <button className='bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-full hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg flex items-center space-x-2'>
+                            <PlayIcon className='w-4 h-4' />
+                            <span>Play Video</span>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -896,22 +913,28 @@ export default function MediaContent() {
                           {episode.description}
                         </p>
                         <div className='flex items-center justify-between'>
+                          <div className='text-xs text-slate-500'>
+                            <div>
+                              {new Date(
+                                episode.releaseDate
+                              ).toLocaleDateString()}
+                            </div>
+                            <div>Sample Audio Available</div>
+                          </div>
                           <button
-                            onClick={() => togglePodcastPlay(episode.id)}
-                            className='flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105'
+                            onClick={() => toggleAudioPlay(episode.id)}
+                            className='flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg'
                           >
-                            {playingPodcast === episode.id ? (
+                            {playingAudio === episode.id ? (
                               <PauseIcon className='w-4 h-4' />
                             ) : (
                               <PlayIcon className='w-4 h-4' />
                             )}
-                            <span className='text-sm font-semibold'>
-                              {playingPodcast === episode.id ? 'Pause' : 'Play'}
+                            <span>
+                              {playingAudio === episode.id ? 'Pause' : 'Play'}{' '}
+                              Audio
                             </span>
                           </button>
-                          <span className='text-xs text-slate-500'>
-                            {new Date(episode.releaseDate).toLocaleDateString()}
-                          </span>
                         </div>
                       </div>
                     </div>
