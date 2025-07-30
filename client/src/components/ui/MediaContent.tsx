@@ -292,7 +292,7 @@ export default function MediaContent() {
         const nextIndex = (currentIndex + 1) % tabOrder.length;
         return tabOrder[nextIndex];
       });
-    }, 3000); // Change tab every 3 seconds
+    }, 5000); // Change tab every 5 seconds
 
     return () => clearInterval(interval);
   }, [isAutoRotating, isPaused]);

@@ -21,7 +21,7 @@ const heroSlides = [
     // description:
     //   'Transforming lives through compassionate care, evidence-based therapy, and holistic wellness approaches',
     backgroundImage:
-      '/banner/U_White and Black Simple Mental Health Youtube Thumbnail.png',
+      '/banner/Parenting Unveiled (5).jpg',
     // gradient: 'from-blue-900/80 via-blue-800/70 to-indigo-900/80',
     // textGradient: 'from-blue-400 via-indigo-300 to-purple-400',
     // badge: 'Licensed Psychiatrist',
@@ -50,7 +50,7 @@ const heroSlides = [
     // subtitle: 'Therapeutic Conversations & Healing',
     // description:
     //   'Listen to our weekly podcast featuring mental health discussions, patient stories, and expert insights for your wellness journey',
-    backgroundImage: '/banner/Parenting Unveiled (3).jpg',
+    backgroundImage: '/banner/ChatGPT Image Jul 30, 2025, 09_47_45 AM.png',
     // gradient: 'from-purple-900/80 via-indigo-800/70 to-blue-900/80',
     // textGradient: 'from-purple-400 via-indigo-300 to-blue-400',
     // badge: 'Podcast Host',
