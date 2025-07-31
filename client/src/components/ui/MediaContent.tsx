@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import {
   BookOpenIcon,
@@ -10,14 +10,7 @@ import {
   PauseIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  XMarkIcon,
-  ChevronDownIcon,
 } from '@heroicons/react/24/outline';
-import {
-  BookOpenIcon as BookOpenIconSolid,
-  VideoCameraIcon as VideoCameraIconSolid,
-  SpeakerWaveIcon as SpeakerWaveIconSolid,
-} from '@heroicons/react/24/solid';
 
 // Type definitions
 interface Book {
@@ -246,10 +239,7 @@ const podcastEpisodes: PodcastEpisode[] = [
   },
 ];
 
-type TabType = 'books' | 'youtube' | 'podcast';
-
 export default function MediaContent() {
-  const [activeTab, setActiveTab] = useState<TabType>('books');
   const [isVisible, setIsVisible] = useState(false);
   const [currentBookPage, setCurrentBookPage] = useState(0);
   const [currentVideoPage, setCurrentVideoPage] = useState(0);
@@ -259,12 +249,6 @@ export default function MediaContent() {
   const [currentMobilePodcastIndex, setCurrentMobilePodcastIndex] = useState(0);
   const [playingAudio, setPlayingAudio] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [showMobileTabSelector, setShowMobileTabSelector] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const [isAutoRotating, setIsAutoRotating] = useState(true);
-  const [isPaused, setIsPaused] = useState(false);
 
   const itemsPerPage = 3;
 
@@ -281,218 +265,105 @@ export default function MediaContent() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Auto-rotation effect for tabs
-  useEffect(() => {
-    if (!isAutoRotating || isPaused) return;
 
-    const tabOrder: TabType[] = ['books', 'youtube', 'podcast'];
-    const interval = setInterval(() => {
-      setActiveTab((currentTab) => {
-        const currentIndex = tabOrder.indexOf(currentTab);
-        const nextIndex = (currentIndex + 1) % tabOrder.length;
-        return tabOrder[nextIndex];
-      });
-    }, 5000); // Change tab every 5 seconds
 
-    return () => clearInterval(interval);
-  }, [isAutoRotating, isPaused]);
-
-  const getCurrentPageItems = () => {
+  const getBooksPageItems = () => {
     if (isMobile) {
-      // On mobile, show one item at a time
-      switch (activeTab) {
-        case 'books':
-          return [books[currentMobileBookIndex]];
-        case 'youtube':
-          return [youtubeVideos[currentMobileVideoIndex]];
-        case 'podcast':
-          return [podcastEpisodes[currentMobilePodcastIndex]];
-        default:
-          return [];
-      }
+      return [books[currentMobileBookIndex]];
     } else {
-      // On desktop, use pagination
-      switch (activeTab) {
-        case 'books':
-          const startBook = currentBookPage * itemsPerPage;
-          return books.slice(startBook, startBook + itemsPerPage);
-        case 'youtube':
-          const startVideo = currentVideoPage * itemsPerPage;
-          return youtubeVideos.slice(startVideo, startVideo + itemsPerPage);
-        case 'podcast':
-          const startPodcast = currentPodcastPage * itemsPerPage;
-          return podcastEpisodes.slice(
-            startPodcast,
-            startPodcast + itemsPerPage
-          );
-        default:
-          return [];
-      }
+      const startBook = currentBookPage * itemsPerPage;
+      return books.slice(startBook, startBook + itemsPerPage);
     }
   };
 
-  const getCurrentMobileIndex = () => {
-    switch (activeTab) {
-      case 'books':
-        return currentMobileBookIndex;
-      case 'youtube':
-        return currentMobileVideoIndex;
-      case 'podcast':
-        return currentMobilePodcastIndex;
-      default:
-        return 0;
-    }
-  };
-
-  const getTotalMobileItems = () => {
-    switch (activeTab) {
-      case 'books':
-        return books.length;
-      case 'youtube':
-        return youtubeVideos.length;
-      case 'podcast':
-        return podcastEpisodes.length;
-      default:
-        return 0;
-    }
-  };
-
-  const handleMobileNext = () => {
-    switch (activeTab) {
-      case 'books':
-        setCurrentMobileBookIndex((prev) =>
-          prev < books.length - 1 ? prev + 1 : 0
-        );
-        break;
-      case 'youtube':
-        setCurrentMobileVideoIndex((prev) =>
-          prev < youtubeVideos.length - 1 ? prev + 1 : 0
-        );
-        break;
-      case 'podcast':
-        setCurrentMobilePodcastIndex((prev) =>
-          prev < podcastEpisodes.length - 1 ? prev + 1 : 0
-        );
-        break;
-    }
-  };
-
-  const handleMobilePrev = () => {
-    switch (activeTab) {
-      case 'books':
-        setCurrentMobileBookIndex((prev) =>
-          prev > 0 ? prev - 1 : books.length - 1
-        );
-        break;
-      case 'youtube':
-        setCurrentMobileVideoIndex((prev) =>
-          prev > 0 ? prev - 1 : youtubeVideos.length - 1
-        );
-        break;
-      case 'podcast':
-        setCurrentMobilePodcastIndex((prev) =>
-          prev > 0 ? prev - 1 : podcastEpisodes.length - 1
-        );
-        break;
-    }
-  };
-
-  // Touch handlers for swipe functionality
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe) {
-      handleMobileNext();
-    }
-    if (isRightSwipe) {
-      handleMobilePrev();
-    }
-  };
-
-  const getTotalPages = () => {
-    switch (activeTab) {
-      case 'books':
-        return Math.ceil(books.length / itemsPerPage);
-      case 'youtube':
-        return Math.ceil(youtubeVideos.length / itemsPerPage);
-      case 'podcast':
-        return Math.ceil(podcastEpisodes.length / itemsPerPage);
-      default:
-        return 1;
-    }
-  };
-
-  const getCurrentPage = () => {
-    switch (activeTab) {
-      case 'books':
-        return currentBookPage;
-      case 'youtube':
-        return currentVideoPage;
-      case 'podcast':
-        return currentPodcastPage;
-      default:
-        return 0;
-    }
-  };
-
-  const handlePrevPage = () => {
-    switch (activeTab) {
-      case 'books':
-        setCurrentBookPage((prev) => Math.max(0, prev - 1));
-        break;
-      case 'youtube':
-        setCurrentVideoPage((prev) => Math.max(0, prev - 1));
-        break;
-      case 'podcast':
-        setCurrentPodcastPage((prev) => Math.max(0, prev - 1));
-        break;
-    }
-  };
-
-  const handleNextPage = () => {
-    const totalPages = getTotalPages();
-    switch (activeTab) {
-      case 'books':
-        setCurrentBookPage((prev) => Math.min(totalPages - 1, prev + 1));
-        break;
-      case 'youtube':
-        setCurrentVideoPage((prev) => Math.min(totalPages - 1, prev + 1));
-        break;
-      case 'podcast':
-        setCurrentPodcastPage((prev) => Math.min(totalPages - 1, prev + 1));
-        break;
-    }
-  };
-
-  const handleTabChange = (tab: TabType) => {
-    setActiveTab(tab);
-    setIsPaused(true); // Pause auto-rotation when user manually changes tab
+  const getVideosPageItems = () => {
     if (isMobile) {
-      setShowMobileTabSelector(false);
+      return [youtubeVideos[currentMobileVideoIndex]];
+    } else {
+      const startVideo = currentVideoPage * itemsPerPage;
+      return youtubeVideos.slice(startVideo, startVideo + itemsPerPage);
     }
-
-    // Resume auto-rotation after 10 seconds of inactivity
-    setTimeout(() => {
-      setIsPaused(false);
-    }, 10000);
   };
 
-  const toggleMobileTabSelector = () => {
-    setShowMobileTabSelector(!showMobileTabSelector);
+  const getPodcastPageItems = () => {
+    if (isMobile) {
+      return [podcastEpisodes[currentMobilePodcastIndex]];
+    } else {
+      const startPodcast = currentPodcastPage * itemsPerPage;
+      return podcastEpisodes.slice(startPodcast, startPodcast + itemsPerPage);
+    }
   };
+
+  const handleMobileBookNext = () => {
+    setCurrentMobileBookIndex((prev) =>
+      prev < books.length - 1 ? prev + 1 : 0
+    );
+  };
+
+  const handleMobileBookPrev = () => {
+    setCurrentMobileBookIndex((prev) =>
+      prev > 0 ? prev - 1 : books.length - 1
+    );
+  };
+
+  const handleMobileVideoNext = () => {
+    setCurrentMobileVideoIndex((prev) =>
+      prev < youtubeVideos.length - 1 ? prev + 1 : 0
+    );
+  };
+
+  const handleMobileVideoPrev = () => {
+    setCurrentMobileVideoIndex((prev) =>
+      prev > 0 ? prev - 1 : youtubeVideos.length - 1
+    );
+  };
+
+  const handleMobilePodcastNext = () => {
+    setCurrentMobilePodcastIndex((prev) =>
+      prev < podcastEpisodes.length - 1 ? prev + 1 : 0
+    );
+  };
+
+  const handleMobilePodcastPrev = () => {
+    setCurrentMobilePodcastIndex((prev) =>
+      prev > 0 ? prev - 1 : podcastEpisodes.length - 1
+    );
+  };
+
+
+
+  const getBooksTotalPages = () => Math.ceil(books.length / itemsPerPage);
+  const getVideosTotalPages = () => Math.ceil(youtubeVideos.length / itemsPerPage);
+  const getPodcastTotalPages = () => Math.ceil(podcastEpisodes.length / itemsPerPage);
+
+  const handleBooksPrevPage = () => {
+    setCurrentBookPage((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleBooksNextPage = () => {
+    const totalPages = getBooksTotalPages();
+    setCurrentBookPage((prev) => Math.min(totalPages - 1, prev + 1));
+  };
+
+  const handleVideosPrevPage = () => {
+    setCurrentVideoPage((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleVideosNextPage = () => {
+    const totalPages = getVideosTotalPages();
+    setCurrentVideoPage((prev) => Math.min(totalPages - 1, prev + 1));
+  };
+
+  const handlePodcastPrevPage = () => {
+    setCurrentPodcastPage((prev) => Math.max(0, prev - 1));
+  };
+
+  const handlePodcastNextPage = () => {
+    const totalPages = getPodcastTotalPages();
+    setCurrentPodcastPage((prev) => Math.min(totalPages - 1, prev + 1));
+  };
+
+
 
   const toggleAudioPlay = (episodeId: number) => {
     setPlayingAudio(playingAudio === episodeId ? null : episodeId);
@@ -504,32 +375,10 @@ export default function MediaContent() {
     );
   };
 
-  const tabs = [
-    {
-      id: 'books' as TabType,
-      label: 'Books',
-      icon: BookOpenIcon,
-      iconSolid: BookOpenIconSolid,
-      count: books.length,
-    },
-    {
-      id: 'youtube' as TabType,
-      label: 'YouTube',
-      icon: VideoCameraIcon,
-      iconSolid: VideoCameraIconSolid,
-      count: youtubeVideos.length,
-    },
-    {
-      id: 'podcast' as TabType,
-      label: 'Podcast',
-      icon: SpeakerWaveIcon,
-      iconSolid: SpeakerWaveIconSolid,
-      count: podcastEpisodes.length,
-    },
-  ];
+
 
   return (
-    <section className='py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 relative overflow-hidden'>
+    <section className='pt-8 sm:pt-12 lg:pt-16 bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 relative overflow-hidden'>
       {/* Background Elements */}
       <div className='absolute inset-0 opacity-20'>
         <div className='absolute inset-0 bg-gradient-to-br from-indigo-600/5 via-transparent to-purple-600/5' />
@@ -538,7 +387,7 @@ export default function MediaContent() {
       </div>
 
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative'>
-        {/* Header */}
+                {/* Header */}
         <div
           className={`text-center mb-8 sm:mb-12 lg:mb-16 ${
             isVisible
@@ -546,168 +395,21 @@ export default function MediaContent() {
               : 'opacity-0'
           }`}
         >
-          <div className='flex flex-col sm:flex-row items-center gap-4 mb-4 sm:mb-6'>
+          <div className='flex justify-center mb-4 sm:mb-6'>
             <div className='inline-flex items-center bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg'>
-              <BookOpenIcon className='w-4 h-4 sm:w-5 sm:h-5 mr-2' />
-              <span className='truncate'>Educational Resources & Content</span>
-            </div>
-
-            <button
-              onClick={() => setIsAutoRotating(!isAutoRotating)}
-              className={`inline-flex items-center px-3 py-2 rounded-full text-xs font-semibold transition-all duration-300 ${
-                isAutoRotating
-                  ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <span
-                className={`w-2 h-2 rounded-full mr-2 ${
-                  isAutoRotating ? 'bg-green-500' : 'bg-gray-400'
-                }`}
-              ></span>
-              Auto-rotate {isAutoRotating ? 'ON' : 'OFF'}
-            </button>
-          </div>
-          <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-2'>
+              {/* <BookOpenIcon className='w-4 h-4 sm:w-5 sm:h-5 mr-2' /> */}
+              <div className='te  xt-xl sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 leading-tight px-2'>
             Explore Our{' '}
             <span className='bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent'>
               Learning Resources
             </span>
-          </h2>
-        </div>
-
-        {/* Tab Navigation */}
-        <div
-          className={`flex flex-col sm:flex-row justify-center items-center mb-8 sm:mb-12 ${
-            isVisible
-              ? 'animate-in slide-in-from-bottom duration-1000 delay-200'
-              : 'opacity-0'
-          }`}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          {/* Mobile Tab Selector Button */}
-          <div className='block sm:hidden w-full mb-4'>
-            <button
-              onClick={toggleMobileTabSelector}
-              className='w-full bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-white/20 flex items-center justify-between'
-            >
-              <div className='flex items-center'>
-                {(() => {
-                  const activeTabData = tabs.find(
-                    (tab) => tab.id === activeTab
-                  );
-                  const Icon = activeTabData
-                    ? activeTabData.iconSolid
-                    : BookOpenIconSolid;
-                  return (
-                    <>
-                      <Icon className='w-6 h-6 text-indigo-600 mr-3' />
-                      <span className='font-semibold text-slate-900'>
-                        {activeTabData?.label || 'Select Category'}
-                      </span>
-                      <span className='ml-2 px-2 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-600'>
-                        {activeTabData?.count || 0}
-                      </span>
-                    </>
-                  );
-                })()}
-              </div>
-              <ChevronDownIcon
-                className={`w-5 h-5 text-slate-600 transform transition-transform duration-300 ${
-                  showMobileTabSelector ? 'rotate-180' : ''
-                }`}
-              />
-            </button>
           </div>
-
-          {/* Desktop Tab Navigation */}
-          <div className='hidden sm:block bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-white/20 w-full sm:w-auto'>
-            <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2'>
-              {tabs.map((tab) => {
-                const Icon = activeTab === tab.id ? tab.iconSolid : tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => handleTabChange(tab.id)}
-                    className={`flex items-center justify-center px-4 sm:px-6 lg:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 transform hover:scale-105 ${
-                      activeTab === tab.id
-                        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                        : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50'
-                    }`}
-                  >
-                    <Icon className='w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3' />
-                    <span>{tab.label}</span>
-                    <span
-                      className={`ml-2 px-2 py-1 rounded-full text-xs font-bold ${
-                        activeTab === tab.id
-                          ? 'bg-white/20 text-white'
-                          : 'bg-slate-200 text-slate-600'
-                      }`}
-                    >
-                      {tab.count}
-                    </span>
-                  </button>
-                );
-              })}
             </div>
           </div>
+          
         </div>
 
-        {/* Mobile Tab Popup Overlay */}
-        {showMobileTabSelector && (
-          <div className='fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 sm:hidden'>
-            <div className='bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden animate-in zoom-in duration-300'>
-              {/* Popup Header */}
-              <div className='bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 flex items-center justify-between'>
-                <h3 className='text-xl font-bold'>Select Category</h3>
-                <button
-                  onClick={() => setShowMobileTabSelector(false)}
-                  className='p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors duration-200'
-                >
-                  <XMarkIcon className='w-6 h-6' />
-                </button>
-              </div>
 
-              {/* Tab Options */}
-              <div className='p-4 space-y-2'>
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => handleTabChange(tab.id)}
-                      className={`w-full flex items-center p-4 rounded-2xl font-semibold text-base transition-all duration-300 transform hover:scale-105 ${
-                        activeTab === tab.id
-                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                          : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 border-2 border-slate-100'
-                      }`}
-                    >
-                      <Icon className='w-6 h-6 mr-4' />
-                      <span className='flex-1 text-left'>{tab.label}</span>
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-bold ${
-                          activeTab === tab.id
-                            ? 'bg-white/20 text-white'
-                            : 'bg-slate-200 text-slate-600'
-                        }`}
-                      >
-                        {tab.count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Popup Footer */}
-              <div className='bg-slate-50 p-4 text-center'>
-                <p className='text-sm text-slate-500'>
-                  Choose a category to explore our content
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Content Area */}
         <div
@@ -717,362 +419,558 @@ export default function MediaContent() {
               : 'opacity-0'
           }`}
         >
-          {/* Books Content */}
-          {activeTab === 'books' && (
-            <>
-              {/* Mobile Navigation Arrows - Above Card */}
-              {isMobile && (
-                <div className='flex justify-between items-center mb-4 px-4'>
-                  <button
-                    onClick={handleMobilePrev}
-                    className='flex items-center justify-center w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 active:scale-95 border border-white/20'
-                  >
-                    <ChevronLeftIcon className='w-6 h-6 text-slate-700' />
-                  </button>
+          {/* Books Section */}
+          <div className='mb-16'>
+            <div className='text-center mb-8'>
+              <h3 className='text-2xl sm:text-3xl font-bold text-slate-900 mb-4 flex items-center justify-center'>
+                <BookOpenIcon className='w-6 h-6 sm:w-7 sm:h-7 mr-3 text-indigo-600' />
+                <span className='bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
+                  Books
+                </span>
+              </h3>
+            </div>
 
-                  <div className='flex items-center space-x-1 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg'>
-                    <span className='text-sm text-slate-600 font-medium'>
-                      {getCurrentMobileIndex() + 1} of {getTotalMobileItems()}
-                    </span>
-                  </div>
 
-                  <button
-                    onClick={handleMobileNext}
-                    className='flex items-center justify-center w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 active:scale-95 border border-white/20'
-                  >
-                    <ChevronRightIcon className='w-6 h-6 text-slate-700' />
-                  </button>
-                </div>
-              )}
 
-              <div
-                ref={isMobile ? scrollContainerRef : null}
-                className={`${
-                  isMobile
-                    ? 'relative w-full h-auto flex justify-center items-center'
-                    : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'
-                } mb-8`}
-                onTouchStart={isMobile ? onTouchStart : undefined}
-                onTouchMove={isMobile ? onTouchMove : undefined}
-                onTouchEnd={isMobile ? onTouchEnd : undefined}
-              >
-                {(getCurrentPageItems() as Book[]).map((book, index) => (
+            <div
+              className={`${
+                isMobile
+                  ? 'relative w-full h-auto flex justify-center items-center'
+                  : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'
+              } `}
+            >
+              {(getBooksPageItems() as Book[]).map((book, index) => (
                   <div
                     key={book.id}
-                    className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 overflow-hidden border border-white/20 ${
+                    className={`group relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-slate-100 ${
                       isMobile ? 'w-full max-w-sm mx-auto' : ''
                     }`}
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className='relative h-64 sm:h-72 lg:h-80 overflow-hidden'>
+                    {/* Mobile Navigation Arrows - On Card */}
+                    {isMobile && (
+                      <>
+                        <button
+                          onClick={handleMobileBookPrev}
+                          className='absolute left-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                        >
+                          <ChevronLeftIcon className='w-5 h-5 text-slate-700' />
+                        </button>
+
+                        <button
+                          onClick={handleMobileBookNext}
+                          className='absolute right-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                        >
+                          <ChevronRightIcon className='w-5 h-5 text-slate-700' />
+                        </button>
+                      </>
+                    )}
+                    {/* Book Cover Image */}
+                    <div className='relative h-80 sm:h-96 overflow-hidden'>
                       <Image
                         src={book.image}
                         alt={book.title}
                         fill
-                        className='object-cover object-center group-hover:scale-110 transition-transform duration-700'
+                        className='object-cover object-center transition-transform duration-700 group-hover:scale-105'
                         sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                       />
-                      <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
-                      <div className='absolute bottom-4 left-4 right-4 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500'>
-                        <span className='inline-block bg-indigo-600 text-white px-3 py-1 rounded-full text-xs font-semibold'>
+                      
+                      {/* Clean Category Badge */}
+                      <div className='absolute top-4 left-4'>
+                        <span className='bg-white/90 backdrop-blur-sm text-indigo-700 px-3 py-1 rounded-full text-xs font-semibold shadow-sm'>
                           {book.category}
                         </span>
                       </div>
+
+                      {/* Hover Overlay Content */}
+                      <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500'>
+                        <div className='absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500'>
+                          <h3 className='text-xl font-bold mb-2 leading-tight'>
+                            {book.title}
+                          </h3>
+                          <p className='text-sm text-white/90 mb-4 leading-relaxed line-clamp-3'>
+                            {book.description}
+                          </p>
+                          <div className='flex items-center justify-between'>
+                            <div className='text-xs text-white/80'>
+                              <div className='font-medium'>{book.author}</div>
+                              <div>{book.pages} pages</div>
+                            </div>
+                            <button className='bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-50 transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg'>
+                              Buy Now
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className='p-6'>
-                      <h3 className='text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors duration-300'>
+
+                    {/* Mobile-Only Bottom Info (visible on mobile) */}
+                    <div className='block sm:hidden p-4 bg-gradient-to-r from-indigo-50 to-purple-50'>
+                      <h3 className='text-lg font-bold text-slate-900 mb-1 truncate'>
                         {book.title}
                       </h3>
-                      <p className='text-slate-600 text-sm mb-4 leading-relaxed'>
-                        {book.description}
+                      <p className='text-sm text-slate-600 mb-2'>
+                        By {book.author} • {book.pages} pages
                       </p>
-                      <div className='flex items-center justify-between mb-4'>
-                        <div className='text-xs text-slate-500'>
-                          <div>{book.author}</div>
-                          <div>{book.pages} pages</div>
-                        </div>
-                        <button className='bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg'>
-                          Buy Now
-                        </button>
-                      </div>
+                      <button className='w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 rounded-full text-sm font-semibold'>
+                        Buy Now
+                      </button>
                     </div>
                   </div>
                 ))}
-              </div>
-            </>
-          )}
+            </div>
 
-          {/* YouTube Content */}
-          {activeTab === 'youtube' && (
-            <>
-              {/* Mobile Navigation Arrows - Above Card */}
-              {isMobile && (
-                <div className='flex justify-between items-center mb-4 px-4'>
-                  <button
-                    onClick={handleMobilePrev}
-                    className='flex items-center justify-center w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 active:scale-95 border border-white/20'
-                  >
-                    <ChevronLeftIcon className='w-6 h-6 text-slate-700' />
-                  </button>
-
-                  <div className='flex items-center space-x-1 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg'>
-                    <span className='text-sm text-slate-600 font-medium'>
-                      {getCurrentMobileIndex() + 1} of {getTotalMobileItems()}
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={handleMobileNext}
-                    className='flex items-center justify-center w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 active:scale-95 border border-white/20'
-                  >
-                    <ChevronRightIcon className='w-6 h-6 text-slate-700' />
-                  </button>
+            {/* Mobile Progress Dots for Books */}
+            {isMobile && (
+              <div className='flex justify-center py-4'>
+                <div className='flex space-x-2'>
+                  {Array.from({ length: books.length }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentMobileBookIndex(i)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        currentMobileBookIndex === i
+                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 w-6'
+                          : 'bg-slate-300 hover:bg-slate-400'
+                      }`}
+                    />
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
 
-              <div
-                ref={isMobile ? scrollContainerRef : null}
-                className={`${
-                  isMobile
-                    ? 'relative w-full h-auto flex justify-center items-center'
-                    : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'
-                } mb-8`}
-                onTouchStart={isMobile ? onTouchStart : undefined}
-                onTouchMove={isMobile ? onTouchMove : undefined}
-                onTouchEnd={isMobile ? onTouchEnd : undefined}
-              >
-                {(getCurrentPageItems() as YouTubeVideo[]).map(
+            {/* Pagination - Desktop Only for Books */}
+            {!isMobile && getBooksTotalPages() > 1 && (
+              <div className='flex items-center justify-center space-x-4'>
+                <button
+                  onClick={handleBooksPrevPage}
+                  disabled={currentBookPage === 0}
+                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                >
+                  <ChevronLeftIcon className='w-5 h-5 text-slate-600' />
+                  <span className='text-sm font-semibold text-slate-600'>
+                    Previous
+                  </span>
+                </button>
+
+                <div className='flex space-x-2'>
+                  {Array.from({ length: getBooksTotalPages() }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentBookPage(i)}
+                      className={`w-10 h-10 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-110 ${
+                        currentBookPage === i
+                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                          : 'bg-white text-slate-600 hover:bg-indigo-50 shadow-lg'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleBooksNextPage}
+                  disabled={currentBookPage === getBooksTotalPages() - 1}
+                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                >
+                  <span className='text-sm font-semibold text-slate-600'>
+                    Next
+                  </span>
+                  <ChevronRightIcon className='w-5 h-5 text-slate-600' />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* YouTube Section */}
+          <div className='mb-16'>
+            <div className='text-center mb-8'>
+              <h3 className='text-2xl sm:text-3xl font-bold text-slate-900 mb-4 flex items-center justify-center'>
+                <VideoCameraIcon className='w-6 h-6 sm:w-7 sm:h-7 mr-3 text-red-600' />
+                <span className='bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent'>
+                  YouTube Videos
+                </span>
+              </h3>
+            </div>
+
+
+
+            <div
+              className={`${
+                isMobile
+                  ? 'relative w-full h-auto flex justify-center items-center'
+                  : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'
+              } mb-8`}
+            >
+              {(getVideosPageItems() as YouTubeVideo[]).map(
                   (video, index) => (
                     <div
                       key={video.id}
-                      className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 overflow-hidden border border-white/20 ${
+                      className={`group relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-slate-100 ${
                         isMobile ? 'w-full max-w-sm mx-auto' : ''
                       }`}
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
-                      <div className='relative h-48 sm:h-56 overflow-hidden'>
+                      {/* Mobile Navigation Arrows - On Card */}
+                      {isMobile && (
+                        <>
+                          <button
+                            onClick={handleMobileVideoPrev}
+                            className='absolute left-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                          >
+                            <ChevronLeftIcon className='w-5 h-5 text-slate-700' />
+                          </button>
+
+                          <button
+                            onClick={handleMobileVideoNext}
+                            className='absolute right-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                          >
+                            <ChevronRightIcon className='w-5 h-5 text-slate-700' />
+                          </button>
+                        </>
+                      )}
+                      {/* Video Thumbnail */}
+                      <div className='relative h-56 sm:h-64 overflow-hidden'>
                         <Image
                           src={video.thumbnail}
                           alt={video.title}
                           fill
-                          className='object-cover object-center group-hover:scale-110 transition-transform duration-700'
+                          className='object-cover object-center transition-transform duration-700 group-hover:scale-105'
                           sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                         />
-                        <div className='absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300' />
-                        <div className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-                          <div className='bg-red-600 rounded-full p-4 shadow-2xl transform scale-75 group-hover:scale-100 transition-transform duration-300'>
-                            <PlayIcon className='w-8 h-8 text-white ml-1' />
+                        
+                        {/* Duration Badge */}
+                        <div className='absolute top-4 right-4'>
+                          <span className='bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
+                            {video.duration}
+                          </span>
+                        </div>
+
+                        {/* Play Button */}
+                        <div className='absolute inset-0 flex items-center justify-center'>
+                          <div className='bg-red-600 rounded-full p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:bg-red-700'>
+                            <PlayIcon className='w-6 h-6 text-white ml-0.5' />
                           </div>
                         </div>
-                        <div className='absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs font-semibold'>
-                          {video.duration}
+
+                        {/* Hover Overlay Content */}
+                        <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500'>
+                          <div className='absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500'>
+                            <h3 className='text-lg font-bold mb-2 leading-tight'>
+                              {video.title}
+                            </h3>
+                            <p className='text-sm text-white/90 mb-3 leading-relaxed line-clamp-2'>
+                              {video.description}
+                            </p>
+                            <div className='flex items-center justify-between'>
+                              <div className='text-xs text-white/80'>
+                                <div className='font-medium'>{video.views} views</div>
+                                <div>{video.uploadDate}</div>
+                              </div>
+                              <button className='bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg flex items-center space-x-2'>
+                                <PlayIcon className='w-4 h-4' />
+                                <span>Watch Now</span>
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className='p-6'>
-                        <h3 className='text-lg font-bold text-slate-900 mb-2 group-hover:text-red-600 transition-colors duration-300'>
+
+                      {/* Mobile-Only Bottom Info */}
+                      <div className='block sm:hidden p-4 bg-gradient-to-r from-red-50 to-orange-50'>
+                        <h3 className='text-lg font-bold text-slate-900 mb-1 truncate'>
                           {video.title}
                         </h3>
-                        <p className='text-slate-600 text-sm mb-4 leading-relaxed'>
-                          {video.description}
+                        <p className='text-sm text-slate-600 mb-2'>
+                          {video.views} views • {video.uploadDate}
                         </p>
-                        <div className='flex items-center justify-between mb-4'>
-                          <div className='text-xs text-slate-500'>
-                            <div>{video.views} views</div>
-                            <div>{video.uploadDate}</div>
-                          </div>
-                          <button className='bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-full hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg flex items-center space-x-2'>
-                            <PlayIcon className='w-4 h-4' />
-                            <span>Play Video</span>
-                          </button>
-                        </div>
+                        <button className='w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-2 rounded-full text-sm font-semibold flex items-center justify-center space-x-2'>
+                          <PlayIcon className='w-4 h-4' />
+                          <span>Watch Now</span>
+                        </button>
                       </div>
                     </div>
                   )
                 )}
-              </div>
-            </>
-          )}
+            </div>
 
-          {/* Podcast Content */}
-          {activeTab === 'podcast' && (
-            <>
-              {/* Mobile Navigation Arrows - Above Card */}
-              {isMobile && (
-                <div className='flex justify-between items-center mb-4 px-4'>
-                  <button
-                    onClick={handleMobilePrev}
-                    className='flex items-center justify-center w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 active:scale-95 border border-white/20'
-                  >
-                    <ChevronLeftIcon className='w-6 h-6 text-slate-700' />
-                  </button>
-
-                  <div className='flex items-center space-x-1 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg'>
-                    <span className='text-sm text-slate-600 font-medium'>
-                      {getCurrentMobileIndex() + 1} of {getTotalMobileItems()}
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={handleMobileNext}
-                    className='flex items-center justify-center w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 active:scale-95 border border-white/20'
-                  >
-                    <ChevronRightIcon className='w-6 h-6 text-slate-700' />
-                  </button>
+            {/* Mobile Progress Dots for Videos */}
+            {isMobile && (
+              <div className='flex justify-center py-4'>
+                <div className='flex space-x-2'>
+                  {Array.from({ length: youtubeVideos.length }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentMobileVideoIndex(i)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        currentMobileVideoIndex === i
+                          ? 'bg-gradient-to-r from-red-600 to-red-700 w-6'
+                          : 'bg-slate-300 hover:bg-slate-400'
+                      }`}
+                    />
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
 
-              <div
-                ref={isMobile ? scrollContainerRef : null}
-                className={`${
-                  isMobile
-                    ? 'relative w-full h-auto flex justify-center items-center'
-                    : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'
-                } mb-8`}
-                onTouchStart={isMobile ? onTouchStart : undefined}
-                onTouchMove={isMobile ? onTouchMove : undefined}
-                onTouchEnd={isMobile ? onTouchEnd : undefined}
-              >
-                {(getCurrentPageItems() as PodcastEpisode[]).map(
+            {/* Pagination - Desktop Only for Videos */}
+            {!isMobile && getVideosTotalPages() > 1 && (
+              <div className='flex items-center justify-center space-x-4'>
+                <button
+                  onClick={handleVideosPrevPage}
+                  disabled={currentVideoPage === 0}
+                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                >
+                  <ChevronLeftIcon className='w-5 h-5 text-slate-600' />
+                  <span className='text-sm font-semibold text-slate-600'>
+                    Previous
+                  </span>
+                </button>
+
+                <div className='flex space-x-2'>
+                  {Array.from({ length: getVideosTotalPages() }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentVideoPage(i)}
+                      className={`w-10 h-10 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-110 ${
+                        currentVideoPage === i
+                          ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg'
+                          : 'bg-white text-slate-600 hover:bg-red-50 shadow-lg'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleVideosNextPage}
+                  disabled={currentVideoPage === getVideosTotalPages() - 1}
+                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                >
+                  <span className='text-sm font-semibold text-slate-600'>
+                    Next
+                  </span>
+                  <ChevronRightIcon className='w-5 h-5 text-slate-600' />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Podcast Section */}
+          <div className='mb-16'>
+            <div className='text-center mb-8'>
+              <h3 className='text-2xl sm:text-3xl font-bold text-slate-900 mb-4 flex items-center justify-center'>
+                <SpeakerWaveIcon className='w-6 h-6 sm:w-7 sm:h-7 mr-3 text-purple-600' />
+                <span className='bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'>
+                  Podcast Episodes
+                </span>
+              </h3>
+            </div>
+
+
+
+            <div
+              className={`${
+                isMobile
+                  ? 'relative w-full h-auto flex justify-center items-center'
+                  : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'
+              } mb-8`}
+            >
+              {(getPodcastPageItems() as PodcastEpisode[]).map(
                   (episode, index) => (
                     <div
                       key={episode.id}
-                      className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 overflow-hidden border border-white/20 ${
+                      className={`group relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-slate-100 ${
                         isMobile ? 'w-full max-w-sm mx-auto' : ''
                       }`}
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
-                      <div className='p-6'>
-                        <div className='flex items-center justify-between mb-4'>
-                          <span className='inline-block bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold'>
+                      {/* Mobile Navigation Arrows - On Card */}
+                      {isMobile && (
+                        <>
+                          <button
+                            onClick={handleMobilePodcastPrev}
+                            className='absolute left-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                          >
+                            <ChevronLeftIcon className='w-5 h-5 text-slate-700' />
+                          </button>
+
+                          <button
+                            onClick={handleMobilePodcastNext}
+                            className='absolute right-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                          >
+                            <ChevronRightIcon className='w-5 h-5 text-slate-700' />
+                          </button>
+                        </>
+                      )}
+                      {/* Podcast Visual Header */}
+                      <div className='relative h-40 sm:h-48 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 overflow-hidden'>
+                        {/* Audio Wave Pattern */}
+                        <div className='absolute inset-0 opacity-20'>
+                          <div className='flex items-end justify-center h-full space-x-1 p-8'>
+                            {Array.from({ length: 20 }, (_, i) => (
+                              <div 
+                                key={i}
+                                className='bg-white rounded-full animate-pulse'
+                                style={{
+                                  width: '3px',
+                                  height: `${Math.random() * 100 + 20}%`,
+                                  animationDelay: `${i * 0.1}s`
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Category and Duration */}
+                        <div className='absolute top-4 left-4 right-4 flex items-center justify-between'>
+                          <span className='bg-white/90 backdrop-blur-sm text-purple-700 px-3 py-1 rounded-full text-xs font-semibold'>
                             {episode.category}
                           </span>
-                          <span className='text-xs text-slate-500'>
+                          <span className='bg-black/60 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
                             {episode.duration}
                           </span>
                         </div>
-                        <h3 className='text-lg font-bold text-slate-900 mb-3 group-hover:text-purple-600 transition-colors duration-300'>
-                          {episode.title}
-                        </h3>
-                        <p className='text-slate-600 text-sm mb-6 leading-relaxed'>
-                          {episode.description}
-                        </p>
-                        <div className='flex items-center justify-between'>
-                          <div className='text-xs text-slate-500'>
-                            <div>
-                              {new Date(
-                                episode.releaseDate
-                              ).toLocaleDateString()}
-                            </div>
-                            <div>Sample Audio Available</div>
-                          </div>
+
+                        {/* Play Button */}
+                        <div className='absolute inset-0 flex items-center justify-center'>
                           <button
                             onClick={() => toggleAudioPlay(episode.id)}
-                            className='flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg'
+                            className='bg-white/90 backdrop-blur-sm rounded-full p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110 hover:bg-white'
                           >
                             {playingAudio === episode.id ? (
-                              <PauseIcon className='w-4 h-4' />
+                              <PauseIcon className='w-6 h-6 text-purple-600' />
                             ) : (
-                              <PlayIcon className='w-4 h-4' />
+                              <PlayIcon className='w-6 h-6 text-purple-600 ml-0.5' />
                             )}
-                            <span>
-                              {playingAudio === episode.id ? 'Pause' : 'Play'}{' '}
-                              Audio
-                            </span>
                           </button>
                         </div>
+
+                        {/* Hover Overlay Content */}
+                        <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500'>
+                          <div className='absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500'>
+                            <h3 className='text-lg font-bold mb-2 leading-tight'>
+                              {episode.title}
+                            </h3>
+                            <p className='text-sm text-white/90 mb-3 leading-relaxed line-clamp-2'>
+                              {episode.description}
+                            </p>
+                            <div className='flex items-center justify-between'>
+                              <div className='text-xs text-white/80'>
+                                <div className='font-medium'>
+                                  {new Date(episode.releaseDate).toLocaleDateString()}
+                                </div>
+                                <div>Sample Audio Available</div>
+                              </div>
+                              <button
+                                onClick={() => toggleAudioPlay(episode.id)}
+                                className='bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg flex items-center space-x-2'
+                              >
+                                {playingAudio === episode.id ? (
+                                  <PauseIcon className='w-4 h-4' />
+                                ) : (
+                                  <PlayIcon className='w-4 h-4' />
+                                )}
+                                <span>
+                                  {playingAudio === episode.id ? 'Pause' : 'Listen Now'}
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Mobile-Only Bottom Info */}
+                      <div className='block sm:hidden p-4 bg-gradient-to-r from-purple-50 to-pink-50'>
+                        <h3 className='text-lg font-bold text-slate-900 mb-1 truncate'>
+                          {episode.title}
+                        </h3>
+                        <p className='text-sm text-slate-600 mb-2'>
+                          {new Date(episode.releaseDate).toLocaleDateString()} • {episode.duration}
+                        </p>
+                        <button
+                          onClick={() => toggleAudioPlay(episode.id)}
+                          className='w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-full text-sm font-semibold flex items-center justify-center space-x-2'
+                        >
+                          {playingAudio === episode.id ? (
+                            <PauseIcon className='w-4 h-4' />
+                          ) : (
+                            <PlayIcon className='w-4 h-4' />
+                          )}
+                          <span>
+                            {playingAudio === episode.id ? 'Pause' : 'Listen Now'}
+                          </span>
+                        </button>
                       </div>
                     </div>
                   )
                 )}
-              </div>
-            </>
-          )}
-
-          {/* Mobile Progress Dots */}
-          {isMobile && (
-            <div className='flex justify-center py-4'>
-              <div className='flex space-x-2'>
-                {Array.from({ length: getTotalMobileItems() }, (_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      switch (activeTab) {
-                        case 'books':
-                          setCurrentMobileBookIndex(i);
-                          break;
-                        case 'youtube':
-                          setCurrentMobileVideoIndex(i);
-                          break;
-                        case 'podcast':
-                          setCurrentMobilePodcastIndex(i);
-                          break;
-                      }
-                    }}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      getCurrentMobileIndex() === i
-                        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 w-6'
-                        : 'bg-slate-300 hover:bg-slate-400'
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
-          )}
 
-          {/* Pagination - Desktop Only */}
-          {!isMobile && getTotalPages() > 1 && (
-            <div className='flex items-center justify-center space-x-4'>
-              <button
-                onClick={handlePrevPage}
-                disabled={getCurrentPage() === 0}
-                className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
-              >
-                <ChevronLeftIcon className='w-5 h-5 text-slate-600' />
-                <span className='text-sm font-semibold text-slate-600'>
-                  Previous
-                </span>
-              </button>
-
-              <div className='flex space-x-2'>
-                {Array.from({ length: getTotalPages() }, (_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      switch (activeTab) {
-                        case 'books':
-                          setCurrentBookPage(i);
-                          break;
-                        case 'youtube':
-                          setCurrentVideoPage(i);
-                          break;
-                        case 'podcast':
-                          setCurrentPodcastPage(i);
-                          break;
-                      }
-                    }}
-                    className={`w-10 h-10 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-110 ${
-                      getCurrentPage() === i
-                        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                        : 'bg-white text-slate-600 hover:bg-indigo-50 shadow-lg'
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+            {/* Mobile Progress Dots for Podcast */}
+            {isMobile && (
+              <div className='flex justify-center py-4'>
+                <div className='flex space-x-2'>
+                  {Array.from({ length: podcastEpisodes.length }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentMobilePodcastIndex(i)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        currentMobilePodcastIndex === i
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 w-6'
+                          : 'bg-slate-300 hover:bg-slate-400'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
+            )}
 
-              <button
-                onClick={handleNextPage}
-                disabled={getCurrentPage() === getTotalPages() - 1}
-                className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
-              >
-                <span className='text-sm font-semibold text-slate-600'>
-                  Next
-                </span>
-                <ChevronRightIcon className='w-5 h-5 text-slate-600' />
-              </button>
-            </div>
-          )}
+            {/* Pagination - Desktop Only for Podcast */}
+            {!isMobile && getPodcastTotalPages() > 1 && (
+              <div className='flex items-center justify-center space-x-4'>
+                <button
+                  onClick={handlePodcastPrevPage}
+                  disabled={currentPodcastPage === 0}
+                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                >
+                  <ChevronLeftIcon className='w-5 h-5 text-slate-600' />
+                  <span className='text-sm font-semibold text-slate-600'>
+                    Previous
+                  </span>
+                </button>
+
+                <div className='flex space-x-2'>
+                  {Array.from({ length: getPodcastTotalPages() }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPodcastPage(i)}
+                      className={`w-10 h-10 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-110 ${
+                        currentPodcastPage === i
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                          : 'bg-white text-slate-600 hover:bg-purple-50 shadow-lg'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={handlePodcastNextPage}
+                  disabled={currentPodcastPage === getPodcastTotalPages() - 1}
+                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                >
+                  <span className='text-sm font-semibold text-slate-600'>
+                    Next
+                  </span>
+                  <ChevronRightIcon className='w-5 h-5 text-slate-600' />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
