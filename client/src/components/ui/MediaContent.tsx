@@ -460,7 +460,7 @@ export default function MediaContent() {
                   <h3 className='text-2xl sm:text-3xl font-bold text-slate-900 mb-2 flex items-center justify-center'>
                     <BookOpenIcon className='w-6 h-6 sm:w-7 sm:h-7 mr-3 text-indigo-600' />
                     <span className='bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-                      Books
+                      Books & Audio Books
                     </span>
                   </h3>
                   <div className='h-1 w-30 mx-auto bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full'></div>
@@ -494,7 +494,7 @@ export default function MediaContent() {
                       width: isMobile ? '100%' : '100%',
                       height: '400px',
                       borderRadius: '14px',
-                      zIndex: 1111,
+                      zIndex: 10,
                       overflow: 'hidden',
                       display: 'flex',
                       flexDirection: 'column',
