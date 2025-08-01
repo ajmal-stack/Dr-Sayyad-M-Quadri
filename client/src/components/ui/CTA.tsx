@@ -6,7 +6,7 @@ import {
 
 export default function CTA() {
   return (
-    <section className='py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
+    <section className='py-4 sm:py-8 lg:py-12 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
       {/* Background Pattern */}
       <div className='absolute inset-0 opacity-5'>
         <div

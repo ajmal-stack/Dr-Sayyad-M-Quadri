@@ -54,7 +54,7 @@ export default function TrustedBy() {
   }, []);
 
   return (
-    <section className='py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden'>
+    <section className='py-4 sm:py-8 lg:py-12 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden'>
       {/* Background Elements */}
       <div className='absolute inset-0 opacity-20'>
         <div className='absolute top-10 left-1/4 w-20 h-20 bg-blue-200/30 rounded-full blur-2xl animate-pulse' />
@@ -64,7 +64,7 @@ export default function TrustedBy() {
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative'>
         {/* Header */}
         <div
-          className={`text-center mb-8 sm:mb-12 lg:mb-16 ${
+          className={`text-center mb-8 sm:mb-12 lg:mb-8 ${
             isVisible
               ? 'animate-in slide-in-from-top duration-1000'
               : 'opacity-0'
@@ -144,7 +144,7 @@ export default function TrustedBy() {
 
         {/* Bottom Text */}
         <div
-          className={`text-center mt-8 sm:mt-12 lg:mt-16 ${
+          className={`text-center mt-8 sm:mt-12 lg:mt-8 ${
             isVisible
               ? 'animate-in slide-in-from-bottom duration-1000 delay-500'
               : 'opacity-0'

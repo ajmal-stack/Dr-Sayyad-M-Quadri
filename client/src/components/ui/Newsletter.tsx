@@ -158,7 +158,7 @@ const Newsletter = () => {
 
   if (isSubscribed) {
     return (
-      <section className='py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
+      <section className='py-4 sm:py-8 lg:py-12 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
         {/* Animated Background */}
         <div className='absolute inset-0 opacity-30'>
           <div className='absolute top-0 left-0 w-full h-full bg-gradient-to-br from-green-100/50 via-transparent to-emerald-100/50'></div>
@@ -218,7 +218,7 @@ const Newsletter = () => {
   }
 
   return (
-    <section className='py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
+    <section className='py-4 sm:py-8 lg:py-12 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
       {/* Animated Background Elements */}
       <div className='absolute inset-0 opacity-30'>
         <div className='absolute top-0 left-0 w-full h-full bg-gradient-to-br from-green-100/50 via-transparent to-emerald-100/50'></div>
@@ -229,7 +229,7 @@ const Newsletter = () => {
 
       <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative'>
         {/* Main Newsletter Section */}
-        <div className='text-center mb-16'>
+        <div className='text-center mb-8'>
           <div className='bg-white/90 backdrop-blur-sm rounded-3xl p-12 border border-green-100 shadow-2xl'>
             <div className='inline-flex items-center bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold mb-6'>
               <EnvelopeIcon className='w-4 h-4 mr-2' />
@@ -355,7 +355,7 @@ const Newsletter = () => {
         </div>
 
         {/* Benefits Section */}
-        <div className='grid md:grid-cols-2 gap-8 mb-16'>
+        <div className='grid md:grid-cols-2 gap-8 mb-8'>
           <div className='bg-white/90 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 shadow-xl'>
             <h3 className='text-2xl font-bold text-slate-900 mb-6 flex items-center'>
               <SparklesIcon className='w-6 h-6 mr-2 text-yellow-500' />

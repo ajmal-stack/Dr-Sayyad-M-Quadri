@@ -4,7 +4,7 @@ import TrustedBy from '@/components/ui/TrustedBy';
 import Services from '@/components/ui/Services';
 // import Testimonials from '@/components/ui/Testimonials';
 // import FAQ from '@/components/ui/FAQ';
-import FeaturedContent from '@/components/ui/FeaturedContent';
+// import FeaturedContent from '@/components/ui/FeaturedContent';
 import Newsletter from '@/components/ui/Newsletter';
 import About from '@/components/ui/About';
 import CTA from '@/components/ui/CTA';
@@ -26,9 +26,9 @@ export default function Home() {
         <Services />
       </div>
 
-      <div id='featured-content'>
+      {/* <div id='featured-content'>
         <FeaturedContent />
-      </div>
+      </div> */}
 
       <div id='newsletter'>
         <Newsletter />

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
+// import { CheckCircleIcon } from '@heroicons/react/24/outline';
 
 const services = [
   {
@@ -103,7 +103,7 @@ export default function Services() {
   };
 
   return (
-    <section className='py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
+    <section className='py-4 sm:py-8 lg:py-12 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden'>
       {/* Background Elements */}
       <div className='absolute inset-0 opacity-30'>
         <div className='absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-indigo-600/5' />
@@ -114,18 +114,18 @@ export default function Services() {
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative'>
         {/* Header */}
         <div
-          className={`text-center mb-8 sm:mb-12 lg:mb-20 ${
+          className={`text-center mb-4 sm:mb-8 lg:mb-12 ${
             isVisible
               ? 'animate-in slide-in-from-top duration-1000'
               : 'opacity-0'
           }`}
         >
-          <div className='inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 shadow-lg'>
+          {/* <div className='inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 shadow-lg'>
             <CheckCircleIcon className='w-4 h-4 sm:w-5 sm:h-5 mr-2' />
             <span className='truncate'>
               Comprehensive Mental Health Services
             </span>
-          </div>
+          </div> */}
           <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-2'>
             Transform Your Life with{' '}
             <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent'>
@@ -139,7 +139,7 @@ export default function Services() {
         </div>
 
         {/* Services Grid */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16 lg:mb-24'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-0'>
           {services.map((service, index) => (
             <div
               key={service.id}
