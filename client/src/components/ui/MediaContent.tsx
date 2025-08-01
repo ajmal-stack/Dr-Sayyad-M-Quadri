@@ -675,7 +675,7 @@ export default function MediaContent() {
                 </div>
               </div>
               <button
-                onClick={() => window.location.href = '/videos'}
+                onClick={() => window.location.href = '/youtube'}
                 className='bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-full text-sm font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center space-x-2'
               >
                 <span>See More</span>
@@ -860,7 +860,7 @@ export default function MediaContent() {
                 </div>
               </div>
               <button
-                onClick={() => window.location.href = '/podcasts'}
+                onClick={() => window.location.href = '/podcast'}
                 className='bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center space-x-2'
               >
                 <span>See More</span>
