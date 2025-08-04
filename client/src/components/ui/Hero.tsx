@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { ContentLoader } from './Loader';
 
 const heroSlides = [
   {
@@ -49,6 +50,7 @@ export default function Hero() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [currentX, setCurrentX] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -187,6 +189,10 @@ export default function Hero() {
     setTimeout(() => setIsPaused(false), 1000);
   };
 
+  const handleImageLoad = () => {
+    setIsLoading(false);
+  };
+
   return (
     <section
       className='relative h-[185px] xs:h-[180px] sm:h-[240px] md:h-[300px] lg:h-[380px] xl:h-[420px] 2xl:h-[480px] w-full overflow-hidden mt-20 cursor-grab active:cursor-grabbing select-none'
@@ -202,6 +208,18 @@ export default function Hero() {
       onContextMenu={handleContextMenu}
       style={{ touchAction: 'pan-y pinch-zoom' }}
     >
+      {/* Loading overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 z-30 bg-slate-100">
+          <ContentLoader 
+            variant="spinner" 
+            size="xl" 
+            message="Loading hero images..." 
+            className="h-full"
+          />
+        </div>
+      )}
+
       <div className='absolute inset-0'>
         {heroSlides.map((slide, index) => (
           <div
@@ -224,11 +242,13 @@ export default function Hero() {
                 alt={`Hero banner ${slide.id}`}
                 fill
                 className='object-cover object-center pointer-events-none'
-                priority={index === 0}
-                quality={90}
+                priority={index <= 1} // Load first 2 images with priority
+                quality={95}
                 sizes='100vw'
-                unoptimized={true}
                 draggable={false}
+                onLoad={handleImageLoad}
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
               />
             </div>
             <div className='absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50 sm:from-black/10 sm:via-black/20 sm:to-black/40' />

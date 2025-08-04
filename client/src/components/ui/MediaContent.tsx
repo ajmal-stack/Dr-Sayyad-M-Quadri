@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import {
   BookOpenIcon,
   VideoCameraIcon,
@@ -12,6 +11,8 @@ import {
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from './Button';
+import Image from 'next/image';
+import { ContentLoader } from './Loader';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -272,6 +273,7 @@ export default function MediaContent() {
   const [currentMobilePodcastIndex, setCurrentMobilePodcastIndex] = useState(0);
   const [playingAudio, setPlayingAudio] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const itemsPerPage = 4;
 
@@ -409,10 +411,36 @@ export default function MediaContent() {
     );
   };
 
+  const handleImageLoad = () => {
+    // Simple loading completion handler
+    setIsLoading(false);
+  };
+
+  // Simulate initial loading completion
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
 
 
   return (
     <section className='pt-4 sm:pt-6 lg:pt-8 bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 relative overflow-hidden'>
+      {/* Main Loading Overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 z-40 bg-white/80 backdrop-blur-sm">
+          <ContentLoader 
+            variant="dots" 
+            size="xl" 
+            message="Loading media content..." 
+            className="min-h-[400px]"
+          />
+        </div>
+      )}
+
       {/* Background Elements */}
       <div className='absolute inset-0 opacity-20'>
         <div className='absolute inset-0 bg-gradient-to-br from-indigo-600/5 via-transparent to-purple-600/5' />
@@ -552,6 +580,10 @@ export default function MediaContent() {
                           fill
                           className='object-contain transition-transform duration-700 group-hover:scale-105'
                           sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                          onLoad={handleImageLoad}
+                          priority={index === 0} // First book loads with priority
+                          placeholder="blur"
+                          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                         />
                         
                         {/* Clean Category Badge */}
@@ -723,6 +755,10 @@ export default function MediaContent() {
                           fill
                           className='object-cover object-center transition-transform duration-700 group-hover:scale-105'
                           sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                          onLoad={handleImageLoad}
+                          priority={index === 0} // First video loads with priority
+                          placeholder="blur"
+                          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                         />
                         
                         {/* Duration Badge */}
