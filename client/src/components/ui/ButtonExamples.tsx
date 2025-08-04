@@ -14,7 +14,6 @@ import {
   BookmarkIcon,
   ShareIcon,
   PlayIcon,
-  PauseIcon,
   CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
 
