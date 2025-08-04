@@ -396,7 +396,7 @@ export default function PodcastPage() {
         {/* Background Image */}
         <div className='absolute inset-0'>
           <img 
-            src='/banner/Podcast Banner.png' 
+            src='/banner/Podcast Banner 2.png'
             alt='Podcast Banner' 
             className='w-full h-full object-cover object-center'
           />

@@ -11,6 +11,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import { Button } from './Button';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -421,7 +422,7 @@ export default function MediaContent() {
 
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative'>
                 {/* Header */}
-        <div
+        {/* <div
           className={`text-center mb-4 sm:mb-6 lg:mb-8 ${
             isVisible
               ? 'animate-in slide-in-from-top duration-1000'
@@ -430,9 +431,8 @@ export default function MediaContent() {
         >
           <div className='flex justify-center mb-4 sm:mb-6'>
             <div className='inline-flex items-center bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg'>
-              {/* <BookOpenIcon className='w-4 h-4 sm:w-5 sm:h-5 mr-2' /> */}
               <div className='text-xl sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 leading-tight px-2'>
-            Explore Our{' '}
+            Explore Our
             <span className='bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent'>
               Learning Resources
             </span>
@@ -440,7 +440,7 @@ export default function MediaContent() {
             </div>
           </div>
           
-        </div>
+        </div> */}
 
 
 
@@ -466,13 +466,14 @@ export default function MediaContent() {
                   <div className='h-1 w-30 mx-auto bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full'></div>
                 </div>
               </div>
-              <button
+              <Button
                 onClick={() => window.location.href = '/books'}
-                className='bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center space-x-2'
+                variant="primary"
+                size="sm"
+                rightIcon={<ChevronRightIcon className='w-4 h-4' />}
               >
-                <span>See More</span>
-                <ChevronRightIcon className='w-4 h-4' />
-              </button>
+                See More
+              </Button>
             </div>
 
             <div
@@ -574,9 +575,9 @@ export default function MediaContent() {
                             <div className='font-medium'>{book.author}</div>
                             <div>{book.pages} pages</div>
                           </div>
-                          <button className='w-full bg-white text-indigo-600 py-2 rounded-full hover:bg-indigo-50 transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg'>
+                          <Button variant="secondary" size="sm" fullWidth>
                             Buy Now
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -589,9 +590,9 @@ export default function MediaContent() {
                       <p className='text-xs text-white/80 mb-2'>
                         By {book.author} • {book.pages} pages
                       </p>
-                      <button className='w-full bg-white text-indigo-600 py-1.5 rounded-full text-xs font-semibold shadow-lg'>
+                      <Button variant="secondary" size="xs" fullWidth>
                         Buy Now
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -619,43 +620,39 @@ export default function MediaContent() {
             {/* Pagination - Desktop Only for Books */}
             {!isMobile && getBooksTotalPages() > 1 && (
               <div className='flex items-center justify-center space-x-4 mt-8'>
-                <button
+                <Button
                   onClick={handleBooksPrevPage}
                   disabled={currentBookPage === 0}
-                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<ChevronLeftIcon className='w-5 h-5' />}
                 >
-                  <ChevronLeftIcon className='w-5 h-5 text-slate-600' />
-                  <span className='text-sm font-semibold text-slate-600'>
-                    Previous
-                  </span>
-                </button>
+                  Previous
+                </Button>
 
                 <div className='flex space-x-2'>
                   {Array.from({ length: getBooksTotalPages() }, (_, i) => (
-                    <button
+                    <Button
                       key={i}
                       onClick={() => setCurrentBookPage(i)}
-                      className={`w-10 h-10 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-110 ${
-                        currentBookPage === i
-                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                          : 'bg-white text-slate-600 hover:bg-indigo-50 shadow-lg'
-                      }`}
+                      variant={currentBookPage === i ? "primary" : "secondary"}
+                      size="icon"
+                      className="w-10 h-10"
                     >
                       {i + 1}
-                    </button>
+                    </Button>
                   ))}
                 </div>
 
-                <button
+                <Button
                   onClick={handleBooksNextPage}
                   disabled={currentBookPage === getBooksTotalPages() - 1}
-                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                  variant="secondary"
+                  size="sm"
+                  rightIcon={<ChevronRightIcon className='w-5 h-5' />}
                 >
-                  <span className='text-sm font-semibold text-slate-600'>
-                    Next
-                  </span>
-                  <ChevronRightIcon className='w-5 h-5 text-slate-600' />
-                </button>
+                  Next
+                </Button>
               </div>
             )}
           </div>
@@ -674,13 +671,14 @@ export default function MediaContent() {
                   <div className='h-1 w-32 mx-auto bg-gradient-to-r from-red-600 via-red-600 to-red-700 rounded-full'></div>
                 </div>
               </div>
-              <button
+              <Button
                 onClick={() => window.location.href = '/youtube'}
-                className='bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-full text-sm font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center space-x-2'
+                variant="primary"
+                size="sm"
+                rightIcon={<ChevronRightIcon className='w-4 h-4' />}
               >
-                <span>See More</span>
-                <ChevronRightIcon className='w-4 h-4' />
-              </button>
+                See More
+              </Button>
             </div>
 
             <div
@@ -755,10 +753,13 @@ export default function MediaContent() {
                                 <div className='font-medium'>{video.views} views</div>
                                 <div>{video.uploadDate}</div>
                               </div>
-                              <button className='bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg flex items-center space-x-2'>
-                                <PlayIcon className='w-4 h-4' />
-                                <span>Watch Now</span>
-                              </button>
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                leftIcon={<PlayIcon className='w-4 h-4' />}
+                              >
+                                Watch Now
+                              </Button>
                             </div>
                           </div>
                         </div>
@@ -772,10 +773,14 @@ export default function MediaContent() {
                         <p className='text-sm text-slate-600 mb-2'>
                           {video.views} views • {video.uploadDate}
                         </p>
-                        <button className='w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-2 rounded-full text-sm font-semibold flex items-center justify-center space-x-2'>
-                          <PlayIcon className='w-4 h-4' />
-                          <span>Watch Now</span>
-                        </button>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          fullWidth
+                          leftIcon={<PlayIcon className='w-4 h-4' />}
+                        >
+                          Watch Now
+                        </Button>
                       </div>
                     </div>
                   )
@@ -804,43 +809,39 @@ export default function MediaContent() {
             {/* Pagination - Desktop Only for Videos */}
             {!isMobile && getVideosTotalPages() > 1 && (
               <div className='flex items-center justify-center space-x-4 mt-8'>
-                <button
+                <Button
                   onClick={handleVideosPrevPage}
                   disabled={currentVideoPage === 0}
-                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<ChevronLeftIcon className='w-5 h-5' />}
                 >
-                  <ChevronLeftIcon className='w-5 h-5 text-slate-600' />
-                  <span className='text-sm font-semibold text-slate-600'>
-                    Previous
-                  </span>
-                </button>
+                  Previous
+                </Button>
 
                 <div className='flex space-x-2'>
                   {Array.from({ length: getVideosTotalPages() }, (_, i) => (
-                    <button
+                    <Button
                       key={i}
                       onClick={() => setCurrentVideoPage(i)}
-                      className={`w-10 h-10 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-110 ${
-                        currentVideoPage === i
-                          ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg'
-                          : 'bg-white text-slate-600 hover:bg-red-50 shadow-lg'
-                      }`}
+                      variant={currentVideoPage === i ? "primary" : "secondary"}
+                      size="icon"
+                      className="w-10 h-10"
                     >
                       {i + 1}
-                    </button>
+                    </Button>
                   ))}
                 </div>
 
-                <button
+                <Button
                   onClick={handleVideosNextPage}
                   disabled={currentVideoPage === getVideosTotalPages() - 1}
-                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                  variant="secondary"
+                  size="sm"
+                  rightIcon={<ChevronRightIcon className='w-5 h-5' />}
                 >
-                  <span className='text-sm font-semibold text-slate-600'>
-                    Next
-                  </span>
-                  <ChevronRightIcon className='w-5 h-5 text-slate-600' />
-                </button>
+                  Next
+                </Button>
               </div>
             )}
           </div>
@@ -859,13 +860,14 @@ export default function MediaContent() {
                   <div className='h-1 w-36 mx-auto bg-gradient-to-r from-purple-600 via-purple-600 to-pink-600 rounded-full'></div>
                 </div>
               </div>
-              <button
+              <Button
                 onClick={() => window.location.href = '/podcast'}
-                className='bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center space-x-2'
+                variant="primary"
+                size="sm"
+                rightIcon={<ChevronRightIcon className='w-4 h-4' />}
               >
-                <span>See More</span>
-                <ChevronRightIcon className='w-4 h-4' />
-              </button>
+                See More
+              </Button>
             </div>
 
 
@@ -934,16 +936,18 @@ export default function MediaContent() {
 
                         {/* Play Button */}
                         <div className='absolute inset-0 flex items-center justify-center'>
-                          <button
+                          <Button
                             onClick={() => toggleAudioPlay(episode.id)}
-                            className='bg-white/90 backdrop-blur-sm rounded-full p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110 hover:bg-white'
+                            variant="secondary"
+                            size="icon-lg"
+                            className='bg-white/90 backdrop-blur-sm hover:bg-white shadow-2xl group-hover:scale-110'
                           >
                             {playingAudio === episode.id ? (
-                              <PauseIcon className='w-6 h-6 text-purple-600' />
+                              <PauseIcon className='w-6 h-6 text-blue-600' />
                             ) : (
-                              <PlayIcon className='w-6 h-6 text-purple-600 ml-0.5' />
+                              <PlayIcon className='w-6 h-6 text-blue-600 ml-0.5' />
                             )}
-                          </button>
+                          </Button>
                         </div>
 
                         {/* Hover Overlay Content */}
@@ -962,19 +966,20 @@ export default function MediaContent() {
                                 </div>
                                 <div>Sample Audio Available</div>
                               </div>
-                              <button
+                              <Button
                                 onClick={() => toggleAudioPlay(episode.id)}
-                                className='bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105 text-sm font-semibold shadow-lg flex items-center space-x-2'
+                                variant="primary"
+                                size="sm"
+                                leftIcon={
+                                  playingAudio === episode.id ? (
+                                    <PauseIcon className='w-4 h-4' />
+                                  ) : (
+                                    <PlayIcon className='w-4 h-4' />
+                                  )
+                                }
                               >
-                                {playingAudio === episode.id ? (
-                                  <PauseIcon className='w-4 h-4' />
-                                ) : (
-                                  <PlayIcon className='w-4 h-4' />
-                                )}
-                                <span>
-                                  {playingAudio === episode.id ? 'Pause' : 'Listen Now'}
-                                </span>
-                              </button>
+                                {playingAudio === episode.id ? 'Pause' : 'Listen Now'}
+                              </Button>
                             </div>
                           </div>
                         </div>
@@ -988,19 +993,21 @@ export default function MediaContent() {
                         <p className='text-sm text-slate-600 mb-2'>
                           {new Date(episode.releaseDate).toLocaleDateString()} • {episode.duration}
                         </p>
-                        <button
+                        <Button
                           onClick={() => toggleAudioPlay(episode.id)}
-                          className='w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-full text-sm font-semibold flex items-center justify-center space-x-2'
+                          variant="primary"
+                          size="sm"
+                          fullWidth
+                          leftIcon={
+                            playingAudio === episode.id ? (
+                              <PauseIcon className='w-4 h-4' />
+                            ) : (
+                              <PlayIcon className='w-4 h-4' />
+                            )
+                          }
                         >
-                          {playingAudio === episode.id ? (
-                            <PauseIcon className='w-4 h-4' />
-                          ) : (
-                            <PlayIcon className='w-4 h-4' />
-                          )}
-                          <span>
-                            {playingAudio === episode.id ? 'Pause' : 'Listen Now'}
-                          </span>
-                        </button>
+                          {playingAudio === episode.id ? 'Pause' : 'Listen Now'}
+                        </Button>
                       </div>
                     </div>
                   )
@@ -1029,43 +1036,39 @@ export default function MediaContent() {
             {/* Pagination - Desktop Only for Podcast */}
             {!isMobile && getPodcastTotalPages() > 1 && (
               <div className='flex items-center justify-center space-x-4 mt-8'>
-                <button
+                <Button
                   onClick={handlePodcastPrevPage}
                   disabled={currentPodcastPage === 0}
-                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<ChevronLeftIcon className='w-5 h-5' />}
                 >
-                  <ChevronLeftIcon className='w-5 h-5 text-slate-600' />
-                  <span className='text-sm font-semibold text-slate-600'>
-                    Previous
-                  </span>
-                </button>
+                  Previous
+                </Button>
 
                 <div className='flex space-x-2'>
                   {Array.from({ length: getPodcastTotalPages() }, (_, i) => (
-                    <button
+                    <Button
                       key={i}
                       onClick={() => setCurrentPodcastPage(i)}
-                      className={`w-10 h-10 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-110 ${
-                        currentPodcastPage === i
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                          : 'bg-white text-slate-600 hover:bg-purple-50 shadow-lg'
-                      }`}
+                      variant={currentPodcastPage === i ? "primary" : "secondary"}
+                      size="icon"
+                      className="w-10 h-10"
                     >
                       {i + 1}
-                    </button>
+                    </Button>
                   ))}
                 </div>
 
-                <button
+                <Button
                   onClick={handlePodcastNextPage}
                   disabled={currentPodcastPage === getPodcastTotalPages() - 1}
-                  className='flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105'
+                  variant="secondary"
+                  size="sm"
+                  rightIcon={<ChevronRightIcon className='w-5 h-5' />}
                 >
-                  <span className='text-sm font-semibold text-slate-600'>
-                    Next
-                  </span>
-                  <ChevronRightIcon className='w-5 h-5 text-slate-600' />
-                </button>
+                  Next
+                </Button>
               </div>
             )}
           </div>

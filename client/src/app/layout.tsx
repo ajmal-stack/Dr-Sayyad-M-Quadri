@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/ui/Navbar';
+import Footer from '@/components/ui/Footer';
 
 export const metadata: Metadata = {
   title: 'Dr. Syed M Quadri - Psychiatrist & Mental Health Specialist',
@@ -15,12 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang='en'>
-      <body
-        suppressHydrationWarning
-        className={`antialiased min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 text-slate-800`}
-      >
+      <body suppressHydrationWarning >
         <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

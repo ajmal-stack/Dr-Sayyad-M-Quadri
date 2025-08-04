@@ -8,8 +8,8 @@ import Services from '@/components/ui/Services';
 import Newsletter from '@/components/ui/Newsletter';
 import About from '@/components/ui/About';
 import CTA from '@/components/ui/CTA';
-import Footer from '@/components/ui/Footer';
-import SectionToggle from '@/components/ui/SectionToggle';
+
+// import SectionToggle from '@/components/ui/SectionToggle';
 
 export default function Home() {
   return (
@@ -39,14 +39,10 @@ export default function Home() {
       <div id='about'>
         <About />
       </div>
-
       <div id='cta'>
         <CTA />
       </div>
-
-      <Footer />
-
-      <SectionToggle />
+      {/* <SectionToggle /> */}
     </div>
   );
 }
