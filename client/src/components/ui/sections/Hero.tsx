@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ContentLoader } from './Loader';
+import { ContentLoader } from '../primitives/Loader';
 
 const heroSlides = [
   {
@@ -195,7 +195,7 @@ export default function Hero() {
 
   return (
     <section
-      className='relative h-[185px] xs:h-[180px] sm:h-[240px] md:h-[300px] lg:h-[380px] xl:h-[420px] 2xl:h-[480px] w-full overflow-hidden mt-20 cursor-grab active:cursor-grabbing select-none'
+      className='relative h-[200px] xs:h-[180px] sm:h-[240px] md:h-[300px] lg:h-[380px] xl:h-[420px] 2xl:h-[480px] w-full overflow-hidden mt-20 cursor-grab active:cursor-grabbing select-none'
       id='hero'
       ref={containerRef}
       onMouseDown={handleMouseDown}

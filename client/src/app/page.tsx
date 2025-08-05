@@ -1,25 +1,21 @@
-import Hero from '@/components/ui/Hero';
-import MediaContent from '@/components/ui/MediaContent';
-import TrustedBy from '@/components/ui/TrustedBy';
-import Services from '@/components/ui/Services';
-// import Testimonials from '@/components/ui/Testimonials';
-// import FAQ from '@/components/ui/FAQ';
-// import FeaturedContent from '@/components/ui/FeaturedContent';
-import Newsletter from '@/components/ui/Newsletter';
-import About from '@/components/ui/About';
-import CTA from '@/components/ui/CTA';
 
-// import SectionToggle from '@/components/ui/SectionToggle';
+import MediaContent from "@/components/ui/media/MediaContent";
+import About from "@/components/ui/sections/About";
+import CTA from "@/components/ui/sections/CTA";
+import Hero from "@/components/ui/sections/Hero";
+import Blogs from "@/components/ui/sections/Blogs";
+import Services from "@/components/ui/sections/Services";
+import TrustedBy from "@/components/ui/sections/TrustedBy";
 
 export default function Home() {
   return (
     <div className='min-h-screen'>
       <div id='hero'>
-        <Hero />
+        <Hero/>
       </div>
 
       <div id='media-content'>
-        <MediaContent />
+        <MediaContent/>
       </div>
 
       <div id='services'>
@@ -31,7 +27,7 @@ export default function Home() {
       </div> */}
 
       <div id='newsletter'>
-        <Newsletter />
+        <Blogs />
       </div>
       <div id='trusted-by'>
         <TrustedBy />

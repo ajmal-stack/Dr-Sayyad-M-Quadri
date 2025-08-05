@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Navbar from '@/components/ui/Navbar';
-import Footer from '@/components/ui/Footer';
+import Navbar from '@/components/ui/layout/Navbar';
+import Footer from '@/components/ui/layout/Footer';
+
 
 export const metadata: Metadata = {
   title: 'Dr. Syed M Quadri - Psychiatrist & Mental Health Specialist',

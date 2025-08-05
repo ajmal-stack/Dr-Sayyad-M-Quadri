@@ -10,9 +10,9 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
-import { Button } from './Button';
+import { Button } from '../primitives/Button';
 import Image from 'next/image';
-import { ContentLoader } from './Loader';
+import { ContentLoader } from '../primitives/Loader';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -460,8 +460,8 @@ export default function MediaContent() {
           <div className='flex justify-center mb-4 sm:mb-6'>
             <div className='inline-flex items-center bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg'>
               <div className='text-xl sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 leading-tight px-2'>
-            Explore Our
-            <span className='bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent'>
+            Explore Our {'  '}
+            <span className='text-black'>
               Learning Resources
             </span>
           </div>
@@ -482,26 +482,28 @@ export default function MediaContent() {
         >
           {/* Books Section */}
           <div className='mb-8'>
-            <div className='flex items-center justify-between mb-8'>
-              <div className='flex-1 text-center'>
-                <div className='relative inline-block'>
-                  <h3 className='text-2xl sm:text-3xl font-bold text-slate-900 mb-2 flex items-center justify-center'>
-                    <BookOpenIcon className='w-6 h-6 sm:w-7 sm:h-7 mr-3 text-indigo-600' />
-                    <span className='bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-                      Books & Audio Books
+            <div className='flex flex-row items-center justify-between mb-6 sm:mb-8'>
+              <div className='flex-1'>
+                <div className='relative'>
+                  <h3 className='text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 mb-2 flex items-center'>
+                    <BookOpenIcon className='w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 mr-2 sm:mr-3 text-black' />
+                    <span className='text-black'>
+                      Books & Audiobooks
                     </span>
                   </h3>
-                  <div className='h-1 w-30 mx-auto bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full'></div>
+                  <div className='h-1 w-20 sm:w-36 bg-black rounded-full'></div>
                 </div>
               </div>
-              <Button
-                onClick={() => window.location.href = '/books'}
-                variant="primary"
-                size="sm"
-                rightIcon={<ChevronRightIcon className='w-4 h-4' />}
-              >
-                See More
-              </Button>
+              <div className='flex-shrink-0 ml-4'>
+                <Button
+                  onClick={() => window.location.href = '/books'}
+                  variant="outline"
+                  size="sm"
+                  rightIcon={<ChevronRightIcon className='w-4 h-4' />}
+                >
+                  See More
+                </Button>
+              </div>
             </div>
 
             <div
@@ -521,15 +523,17 @@ export default function MediaContent() {
                       animationDelay: `${index * 100}ms`,
                       position: 'relative',
                       width: isMobile ? '100%' : '100%',
-                      height: '400px',
-                      borderRadius: '14px',
+                      height: isMobile ? '280px' : '400px', // Reduced height for mobile
+                      borderRadius: isMobile ? '12px' : '14px',
                       zIndex: 10,
                       overflow: 'hidden',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: '20px 20px 60px #bebebe, -20px -20px 60px #ffffff',
+                      boxShadow: isMobile 
+                        ? '8px 8px 25px rgba(0,0,0,0.1), -8px -8px 25px rgba(255,255,255,0.9)' 
+                        : '20px 20px 60px #bebebe, -20px -20px 60px #ffffff',
                     }}
                   >
                     {/* Mobile Navigation Arrows - On Card */}
@@ -537,16 +541,16 @@ export default function MediaContent() {
                       <>
                         <button
                           onClick={handleMobileBookPrev}
-                          className='absolute left-2 top-1/2 transform -translate-y-1/2 z-[9999] flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                          className='absolute left-1 top-1/2 transform -translate-y-1/2 z-[9999] flex items-center justify-center w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 border border-white/30'
                         >
-                          <ChevronLeftIcon className='w-5 h-5 text-slate-700' />
+                          <ChevronLeftIcon className='w-4 h-4 text-slate-700' />
                         </button>
 
                         <button
                           onClick={handleMobileBookNext}
-                          className='absolute right-2 top-1/2 transform -translate-y-1/2 z-[9999] flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                          className='absolute right-1 top-1/2 transform -translate-y-1/2 z-[9999] flex items-center justify-center w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 border border-white/30'
                         >
-                          <ChevronRightIcon className='w-5 h-5 text-slate-700' />
+                          <ChevronRightIcon className='w-4 h-4 text-slate-700' />
                         </button>
                       </>
                     )}
@@ -689,221 +693,32 @@ export default function MediaContent() {
             )}
           </div>
 
-          {/* YouTube Section */}
-          <div className='mb-8'>
-            <div className='flex items-center justify-between mb-8'>
-              <div className='flex-1 text-center'>
-                <div className='relative inline-block'>
-                  <h3 className='text-2xl sm:text-3xl font-bold text-slate-900 mb-2 flex items-center justify-center'>
-                  <VideoCameraIcon className='w-6 h-6 sm:w-7 sm:h-7 mr-3 text-red-600' />
-                  <span className='bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent'>
-                    YouTube Videos
-                    </span>
-                  </h3>
-                  <div className='h-1 w-32 mx-auto bg-gradient-to-r from-red-600 via-red-600 to-red-700 rounded-full'></div>
-                </div>
-              </div>
-              <Button
-                onClick={() => window.location.href = '/youtube'}
-                variant="primary"
-                size="sm"
-                rightIcon={<ChevronRightIcon className='w-4 h-4' />}
-              >
-                See More
-              </Button>
-            </div>
-
-            <div
-              className={`${
-                isMobile
-                  ? 'relative w-full h-auto flex justify-center items-center'
-                  : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'
-              } mb-8`}
-            >
-              {(getVideosPageItems() as YouTubeVideo[]).map(
-                  (video, index) => (
-                    <div
-                      key={video.id}
-                      className={`group relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-slate-100 ${
-                        isMobile ? 'w-full max-w-sm mx-auto' : ''
-                      }`}
-                      style={{ animationDelay: `${index * 100}ms` }}
-                    >
-                      {/* Mobile Navigation Arrows - On Card */}
-                      {isMobile && (
-                        <>
-                          <button
-                            onClick={handleMobileVideoPrev}
-                            className='absolute left-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
-                          >
-                            <ChevronLeftIcon className='w-5 h-5 text-slate-700' />
-                          </button>
-
-                          <button
-                            onClick={handleMobileVideoNext}
-                            className='absolute right-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
-                          >
-                            <ChevronRightIcon className='w-5 h-5 text-slate-700' />
-                          </button>
-                        </>
-                      )}
-                      {/* Video Thumbnail */}
-                      <div className='relative h-56 sm:h-64 overflow-hidden'>
-                        <Image
-                          src={video.thumbnail}
-                          alt={video.title}
-                          fill
-                          className='object-cover object-center transition-transform duration-700 group-hover:scale-105'
-                          sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
-                          onLoad={handleImageLoad}
-                          priority={index === 0} // First video loads with priority
-                          placeholder="blur"
-                          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                        />
-                        
-                        {/* Duration Badge */}
-                        <div className='absolute top-4 right-4'>
-                          <span className='bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
-                            {video.duration}
-                          </span>
-                        </div>
-
-                        {/* Play Button */}
-                        <div className='absolute inset-0 flex items-center justify-center'>
-                          <div className='bg-red-600 rounded-full p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:bg-red-700'>
-                            <PlayIcon className='w-6 h-6 text-white ml-0.5' />
-                          </div>
-                        </div>
-
-                        {/* Hover Overlay Content */}
-                        <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500'>
-                          <div className='absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500'>
-                            <h3 className='text-lg font-bold mb-2 leading-tight'>
-                              {video.title}
-                            </h3>
-                            <p className='text-sm text-white/90 mb-3 leading-relaxed line-clamp-2'>
-                              {video.description}
-                            </p>
-                            <div className='flex items-center justify-between'>
-                              <div className='text-xs text-white/80'>
-                                <div className='font-medium'>{video.views} views</div>
-                                <div>{video.uploadDate}</div>
-                              </div>
-                              <Button
-                                variant="primary"
-                                size="sm"
-                                leftIcon={<PlayIcon className='w-4 h-4' />}
-                              >
-                                Watch Now
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Mobile-Only Bottom Info */}
-                      <div className='block sm:hidden p-4 bg-gradient-to-r from-red-50 to-orange-50'>
-                        <h3 className='text-lg font-bold text-slate-900 mb-1 truncate'>
-                          {video.title}
-                        </h3>
-                        <p className='text-sm text-slate-600 mb-2'>
-                          {video.views} views • {video.uploadDate}
-                        </p>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          fullWidth
-                          leftIcon={<PlayIcon className='w-4 h-4' />}
-                        >
-                          Watch Now
-                        </Button>
-                      </div>
-                    </div>
-                  )
-                )}
-            </div>
-
-            {/* Mobile Progress Dots for Videos */}
-            {isMobile && (
-              <div className='flex justify-center py-4'>
-                <div className='flex space-x-2'>
-                  {Array.from({ length: youtubeVideos.length }, (_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setCurrentMobileVideoIndex(i)}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        currentMobileVideoIndex === i
-                          ? 'bg-gradient-to-r from-red-600 to-red-700 w-6'
-                          : 'bg-slate-300 hover:bg-slate-400'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Pagination - Desktop Only for Videos */}
-            {!isMobile && getVideosTotalPages() > 1 && (
-              <div className='flex items-center justify-center space-x-4 mt-8'>
-                <Button
-                  onClick={handleVideosPrevPage}
-                  disabled={currentVideoPage === 0}
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<ChevronLeftIcon className='w-5 h-5' />}
-                >
-                  Previous
-                </Button>
-
-                <div className='flex space-x-2'>
-                  {Array.from({ length: getVideosTotalPages() }, (_, i) => (
-                    <Button
-                      key={i}
-                      onClick={() => setCurrentVideoPage(i)}
-                      variant={currentVideoPage === i ? "primary" : "secondary"}
-                      size="icon"
-                      className="w-10 h-10"
-                    >
-                      {i + 1}
-                    </Button>
-                  ))}
-                </div>
-
-                <Button
-                  onClick={handleVideosNextPage}
-                  disabled={currentVideoPage === getVideosTotalPages() - 1}
-                  variant="secondary"
-                  size="sm"
-                  rightIcon={<ChevronRightIcon className='w-5 h-5' />}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
-          </div>
+         
 
           {/* Podcast Section */}
           <div className='mb-0'>
-            <div className='flex items-center justify-between mb-8'>
-              <div className='flex-1 text-center'>
-                <div className='relative inline-block'>
-                  <h3 className='text-2xl sm:text-3xl font-bold text-slate-900 mb-2 flex items-center justify-center'>
-                  <SpeakerWaveIcon className='w-6 h-6 sm:w-7 sm:h-7 mr-3 text-purple-600' />
-                  <span className='bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent'>
-                    Podcast Episodes
+            <div className='flex flex-row items-center justify-between mb-6 sm:mb-8'>
+              <div className='flex-1'>
+                <div className='relative'>
+                  <h3 className='text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 mb-2 flex items-center'>
+                  <SpeakerWaveIcon className='w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 mr-2 sm:mr-3 text-black' />
+                  <span className='text-black'>
+                    Podcast & Audio
                     </span>
                   </h3>
-                  <div className='h-1 w-36 mx-auto bg-gradient-to-r from-purple-600 via-purple-600 to-pink-600 rounded-full'></div>
+                  <div className='h-1 w-20 sm:w-36 bg-black rounded-full'></div>
                 </div>
               </div>
-              <Button
-                onClick={() => window.location.href = '/podcast'}
-                variant="primary"
-                size="sm"
-                rightIcon={<ChevronRightIcon className='w-4 h-4' />}
-              >
-                See More
-              </Button>
+              <div className='flex-shrink-0 ml-4'>
+                <Button
+                  onClick={() => window.location.href = '/podcast'}
+                  variant="outline"
+                  size="sm"
+                  rightIcon={<ChevronRightIcon className='w-4 h-4' />}
+                >
+                  See More
+                </Button>
+              </div>
             </div>
 
 
@@ -928,21 +743,21 @@ export default function MediaContent() {
                         <>
                           <button
                             onClick={handleMobilePodcastPrev}
-                            className='absolute left-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                            className='absolute left-1 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 border border-white/30'
                           >
-                            <ChevronLeftIcon className='w-5 h-5 text-slate-700' />
+                            <ChevronLeftIcon className='w-4 h-4 text-slate-700' />
                           </button>
 
                           <button
                             onClick={handleMobilePodcastNext}
-                            className='absolute right-2 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 border border-white/20'
+                            className='absolute right-1 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 border border-white/30'
                           >
-                            <ChevronRightIcon className='w-5 h-5 text-slate-700' />
+                            <ChevronRightIcon className='w-4 h-4 text-slate-700' />
                           </button>
                         </>
                       )}
                       {/* Podcast Visual Header */}
-                      <div className='relative h-40 sm:h-48 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 overflow-hidden'>
+                      <div className={`relative bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 overflow-hidden ${isMobile ? 'h-36' : 'h-40 sm:h-48'}`}>
                         {/* Audio Wave Pattern */}
                         <div className='absolute inset-0 opacity-20'>
                           <div className='flex items-end justify-center h-full space-x-1 p-8'>
@@ -1099,6 +914,201 @@ export default function MediaContent() {
                 <Button
                   onClick={handlePodcastNextPage}
                   disabled={currentPodcastPage === getPodcastTotalPages() - 1}
+                  variant="secondary"
+                  size="sm"
+                  rightIcon={<ChevronRightIcon className='w-5 h-5' />}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </div>
+
+           {/* YouTube Section */}
+           <div className='mb-8'>
+            <div className='flex flex-row items-center justify-between mb-6 sm:mb-8'>
+              <div className='flex-1'>
+                <div className='relative'>
+                  <h3 className='text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 mb-2 flex items-center'>
+                  <VideoCameraIcon className='w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 mr-2 sm:mr-3 text-black' />
+                  <span className='text-black'> 
+                    YouTube & Videos
+                    </span>
+                  </h3>
+                  <div className='h-1 w-20 sm:w-32 bg-black rounded-full'></div>
+                </div>
+              </div>
+              <div className='flex-shrink-0 ml-4'>
+                <Button
+                  onClick={() => window.location.href = '/youtube'}
+                  variant="outline"
+                  size="sm"
+                  rightIcon={<ChevronRightIcon className='w-4 h-4' />}
+                >
+                  See More
+                </Button>
+              </div>
+            </div>
+
+            <div
+              className={`${
+                isMobile
+                  ? 'relative w-full h-auto flex justify-center items-center'
+                  : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'
+              } mb-8`}
+            >
+              {(getVideosPageItems() as YouTubeVideo[]).map(
+                  (video, index) => (
+                    <div
+                      key={video.id}
+                      className={`group relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-slate-100 ${
+                        isMobile ? 'w-full max-w-sm mx-auto' : ''
+                      }`}
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
+                      {/* Mobile Navigation Arrows - On Card */}
+                      {isMobile && (
+                        <>
+                          <button
+                            onClick={handleMobileVideoPrev}
+                            className='absolute left-1 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 border border-white/30'
+                          >
+                            <ChevronLeftIcon className='w-4 h-4 text-slate-700' />
+                          </button>
+
+                          <button
+                            onClick={handleMobileVideoNext}
+                            className='absolute right-1 top-1/2 transform -translate-y-1/2 z-20 flex items-center justify-center w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 border border-white/30'
+                          >
+                            <ChevronRightIcon className='w-4 h-4 text-slate-700' />
+                          </button>
+                        </>
+                      )}
+                      {/* Video Thumbnail */}
+                      <div className={`relative overflow-hidden ${isMobile ? 'h-44' : 'h-56 sm:h-64'}`}>
+                        <Image
+                          src={video.thumbnail}
+                          alt={video.title}
+                          fill
+                          className='object-cover object-center transition-transform duration-700 group-hover:scale-105'
+                          sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                          onLoad={handleImageLoad}
+                          priority={index === 0} // First video loads with priority
+                          placeholder="blur"
+                          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                        />
+                        
+                        {/* Duration Badge */}
+                        <div className='absolute top-4 right-4'>
+                          <span className='bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
+                            {video.duration}
+                          </span>
+                        </div>
+
+                        {/* Play Button */}
+                        <div className='absolute inset-0 flex items-center justify-center'>
+                          <div className='bg-red-600 rounded-full p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:bg-red-700'>
+                            <PlayIcon className='w-6 h-6 text-white ml-0.5' />
+                          </div>
+                        </div>
+
+                        {/* Hover Overlay Content */}
+                        <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500'>
+                          <div className='absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500'>
+                            <h3 className='text-lg font-bold mb-2 leading-tight'>
+                              {video.title}
+                            </h3>
+                            <p className='text-sm text-white/90 mb-3 leading-relaxed line-clamp-2'>
+                              {video.description}
+                            </p>
+                            <div className='flex items-center justify-between'>
+                              <div className='text-xs text-white/80'>
+                                <div className='font-medium'>{video.views} views</div>
+                                <div>{video.uploadDate}</div>
+                              </div>
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                leftIcon={<PlayIcon className='w-4 h-4' />}
+                              >
+                                Watch Now
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Mobile-Only Bottom Info */}
+                      <div className='block sm:hidden p-4 bg-gradient-to-r from-red-50 to-orange-50'>
+                        <h3 className='text-lg font-bold text-slate-900 mb-1 truncate'>
+                          {video.title}
+                        </h3>
+                        <p className='text-sm text-slate-600 mb-2'>
+                          {video.views} views • {video.uploadDate}
+                        </p>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          fullWidth
+                          leftIcon={<PlayIcon className='w-4 h-4' />}
+                        >
+                          Watch Now
+                        </Button>
+                      </div>
+                    </div>
+                  )
+                )}
+            </div>
+
+            {/* Mobile Progress Dots for Videos */}
+            {isMobile && (
+              <div className='flex justify-center py-4'>
+                <div className='flex space-x-2'>
+                  {Array.from({ length: youtubeVideos.length }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentMobileVideoIndex(i)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        currentMobileVideoIndex === i
+                          ? 'bg-gradient-to-r from-red-600 to-red-700 w-6'
+                          : 'bg-slate-300 hover:bg-slate-400'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Pagination - Desktop Only for Videos */}
+            {!isMobile && getVideosTotalPages() > 1 && (
+              <div className='flex items-center justify-center space-x-4 mt-8'>
+                <Button
+                  onClick={handleVideosPrevPage}
+                  disabled={currentVideoPage === 0}
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<ChevronLeftIcon className='w-5 h-5' />}
+                >
+                  Previous
+                </Button>
+
+                <div className='flex space-x-2'>
+                  {Array.from({ length: getVideosTotalPages() }, (_, i) => (
+                    <Button
+                      key={i}
+                      onClick={() => setCurrentVideoPage(i)}
+                      variant={currentVideoPage === i ? "primary" : "secondary"}
+                      size="icon"
+                      className="w-10 h-10"
+                    >
+                      {i + 1}
+                    </Button>
+                  ))}
+                </div>
+
+                <Button
+                  onClick={handleVideosNextPage}
+                  disabled={currentVideoPage === getVideosTotalPages() - 1}
                   variant="secondary"
                   size="sm"
                   rightIcon={<ChevronRightIcon className='w-5 h-5' />}

@@ -448,7 +448,7 @@ const About = () => {
         )}
 
         {/* Contact Information */}
-        <div className='mt-16 bg-gradient-to-r from-blue-100/80 to-indigo-100/80 backdrop-blur-sm rounded-3xl p-8 border border-blue-200 shadow-lg'>
+        {/* <div className='mt-16 bg-gradient-to-r from-blue-100/80 to-indigo-100/80 backdrop-blur-sm rounded-3xl p-8 border border-blue-200 shadow-lg'>
           <div className='text-center mb-8'>
             <h3 className='text-2xl font-bold text-slate-900 mb-4'>
               Ready to Start Your Journey?
@@ -484,7 +484,7 @@ const About = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );
