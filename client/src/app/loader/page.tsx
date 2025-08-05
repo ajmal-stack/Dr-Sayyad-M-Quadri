@@ -1,5 +1,5 @@
-import ButtonExamples from "@/components/ui/ButtonExamples";
-import LoaderExamples from "@/components/ui/LoaderExamples";
+import ButtonExamples from "@/components/ui/examples/ButtonExamples";
+import LoaderExamples from "@/components/ui/examples/LoaderExamples";
 
 export default function LoaderPage() {
   return (

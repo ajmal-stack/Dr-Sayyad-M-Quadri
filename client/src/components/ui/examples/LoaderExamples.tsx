@@ -7,14 +7,14 @@ import {
   ContentLoader, 
   SkeletonLoader, 
   ImageLoader 
-} from './Loader';
+} from '../primitives/Loader';
 import { 
   OptimizedImage, 
   BannerImage, 
   GalleryImage, 
   AvatarImage 
-} from './OptimizedImage';
-import { Button } from './Button';
+} from '../primitives/OptimizedImage';
+import { Button } from '../primitives/Button';
 
 /**
  * Comprehensive examples of the Loader and OptimizedImage components

@@ -16,7 +16,7 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   HeartIcon as HeartIconSolid,
-  StarIcon as StarIconSolid,
+  // StarIcon as StarIconSolid,
 } from '@heroicons/react/24/solid';
 import Image from 'next/image';
 

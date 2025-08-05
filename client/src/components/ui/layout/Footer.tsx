@@ -2,10 +2,6 @@
 
 import Link from 'next/link';
 import {
-  PhoneIcon,
-  EnvelopeIcon,
-  MapPinIcon,
-  ClockIcon,
   ShieldCheckIcon,
   BookOpenIcon,
   MicrophoneIcon,

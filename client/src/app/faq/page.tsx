@@ -1,4 +1,4 @@
-import FAQ from '@/components/ui/FAQ';
+import FAQ from '@/components/ui/sections/FAQ';
 
 export default function FAQPage() {
   return (

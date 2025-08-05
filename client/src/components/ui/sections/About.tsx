@@ -11,9 +11,7 @@ import {
   TrophyIcon,
   ShieldCheckIcon,
   ArrowRightIcon,
-  PhoneIcon,
-  EnvelopeIcon,
-  CalendarIcon,
+
   BeakerIcon,
   LightBulbIcon,
 } from '@heroicons/react/24/outline';

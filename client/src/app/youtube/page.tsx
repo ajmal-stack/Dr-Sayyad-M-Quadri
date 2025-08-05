@@ -1,4 +1,4 @@
-import YouTubeContent from "@/components/ui/FeaturedContent";
+import YouTubeContent from "@/components/ui/sections/FeaturedContent";
 
 export default function YoutubePage() {
   return (
