@@ -103,30 +103,11 @@ export default function Footer() {
                   <span className='text-slate-300'>Mon-Fri: 9AM-6PM</span>
                 </div>
               </div> */}
-               {/* Newsletter */}
-          <div className='mt-12 pt-8 border-t border-slate-700'>
-            <div className='max-w-md'>
-              <h4 className='text-lg font-semibold mb-4 text-white'>
-                Stay Updated
-              </h4>
-              <p className='text-slate-300 mb-4 text-sm'>
-                Get weekly mental health tips delivered to your inbox
-              </p>
-              <div className='flex gap-3'>
-                <input
-                  type='email'
-                  placeholder='Enter your email'
-                  className='flex-1 px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
-                />
-                <button className='bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors'>
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
+           
             </div>
 
             {/* Quick Links */}
+            
             <div>
               <h4 className='text-lg font-semibold mb-6 text-white'>
                 Quick Links
@@ -164,9 +145,31 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
+           
+             
           </div>
 
-         
+            {/* Newsletter */}
+            <div className='mt-12 pt-8 border-t border-slate-700'>
+            <div className='max-w-md'>
+              <h4 className='text-lg font-semibold mb-4 text-white'>
+                Stay Updated
+              </h4>
+              <p className='text-slate-300 mb-4 text-sm'>
+                Get weekly mental health tips delivered to your inbox
+              </p>
+              <div className='flex gap-3'>
+                <input
+                  type='email'
+                  placeholder='Enter your email'
+                  className='flex-1 px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                />
+                <button className='bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors'>
+                  Subscribe
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Stats */}
           {/* <div className='mt-12 pt-8 border-t border-slate-700'>
