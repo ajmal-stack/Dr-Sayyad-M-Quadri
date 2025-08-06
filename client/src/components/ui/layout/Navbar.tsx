@@ -26,6 +26,8 @@ import {
 
 } from '@heroicons/react/24/outline';
 import MobileNavigation from './MobileNavigation';
+import { SearchDropdown } from '../primitives/SearchComponent';
+import MobileSearch from '../primitives/MobileSearch';
 
 interface BookItem {
   id: string;
@@ -560,30 +562,37 @@ export default function Navbar() {
             </div>
 
             {/* Search and Mobile Menu - Far Right */}
-            <div className='flex items-center space-x-3 ml-auto'>
-              <button
-                onClick={() => setSearchOpen(!searchOpen)}
-                className='relative text-slate-600 hover:text-blue-700 p-3 rounded-xl hover:bg-blue-50 transition-all duration-300 hover:shadow-md border border-transparent hover:border-blue-100'
-              >
-                <MagnifyingGlassIcon className='w-5 h-5' />
-                {searchOpen && (
-                  <div className='absolute right-0 mt-2 w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-blue-100/50 p-4 z-10'>
-                    <input
-                      type='text'
-                      placeholder='Search podcasts, books, topics...'
-                      className='w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
-                      autoFocus
-                    />
-                  </div>
-                )}
-              </button>
+            <div className='flex items-center space-x-2 sm:space-x-3 ml-auto'>
+              {/* Mobile Search Button (visible only on mobile) */}
+              <div className='sm:hidden'>
+                <button
+                  onClick={() => setSearchOpen(!searchOpen)}
+                  className='text-slate-600 hover:text-blue-700 p-2 rounded-xl hover:bg-blue-50 transition-all duration-300 hover:shadow-md border border-transparent hover:border-blue-100'
+                >
+                  <MagnifyingGlassIcon className='w-5 h-5' />
+                </button>
+              </div>
+
+              {/* Desktop Search (visible only on desktop) */}
+              <div className='hidden sm:block relative'>
+                <button
+                  onClick={() => setSearchOpen(!searchOpen)}
+                  className='text-slate-600 hover:text-blue-700 p-3 rounded-xl hover:bg-blue-50 transition-all duration-300 hover:shadow-md border border-transparent hover:border-blue-100'
+                >
+                  <MagnifyingGlassIcon className='w-5 h-5' />
+                </button>
+                <SearchDropdown 
+                  isOpen={searchOpen} 
+                  onClose={() => setSearchOpen(false)} 
+                />
+              </div>
 
               <div className='lg:hidden'>
                 <button
                   onClick={() => setIsOpen(!isOpen)}
-                  className='text-slate-600 hover:text-blue-700 p-3 rounded-xl hover:bg-blue-50 transition-all duration-300 hover:shadow-md border border-transparent hover:border-blue-100'
+                  className='text-slate-600 hover:text-blue-700 p-2 sm:p-3 rounded-xl hover:bg-blue-50 transition-all duration-300 hover:shadow-md border border-transparent hover:border-blue-100'
                 >
-                  <Bars3Icon className='w-6 h-6' />
+                  <Bars3Icon className='w-5 h-5 sm:w-6 sm:h-6' />
                 </button>
               </div>
             </div>
@@ -598,6 +607,14 @@ export default function Navbar() {
         navItems={navItems}
         bookItems={bookItems}
       />
+
+      {/* Mobile Search Overlay (only visible on mobile) */}
+      <div className='sm:hidden'>
+        <MobileSearch 
+          isOpen={searchOpen} 
+          onClose={() => setSearchOpen(false)} 
+        />
+      </div>
     </>
   );
 }

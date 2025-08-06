@@ -197,7 +197,7 @@ export default function Hero() {
     <section
       className='relative h-[220px] xs:h-[180px] sm:h-[240px] md:h-[300px] lg:h-[380px] xl:h-[420px] 2xl:h-[480px] w-full overflow-hidden mt-20 cursor-grab active:cursor-grabbing select-none'
       id='hero'
-      ref={containerRef}
+      ref={containerRef}  
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
