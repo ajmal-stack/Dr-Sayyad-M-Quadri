@@ -179,21 +179,16 @@ export default function MediaContentDesktop() {
   const itemsPerPage = 4;
 
   useEffect(() => {
-    // Inject blob animation styles
-    const styleElement = document.createElement('style');
-    styleElement.textContent = blobStyles;
-    document.head.appendChild(styleElement);
+    // Inject blob animation styles only once
+    if (!document.getElementById('blob-animations-desktop')) {
+      const styleElement = document.createElement('style');
+      styleElement.id = 'blob-animations-desktop';
+      styleElement.textContent = blobStyles;
+      document.head.appendChild(styleElement);
+    }
 
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    
-    return () => {
-      clearTimeout(timer);
-      if (styleElement.parentNode) {
-        styleElement.parentNode.removeChild(styleElement);
-      }
-    };
+    // Remove artificial delay - load instantly
+    setIsLoading(false);
   }, []);
 
   const getBooksPageItems = () => {
@@ -334,8 +329,12 @@ export default function MediaContentDesktop() {
                       src={book.image}
                       alt={book.title}
                       fill
-                      className='object-contain transition-transform duration-700 group-hover:scale-105'
+                      className='object-contain transition-transform duration-300 group-hover:scale-105'
                       sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                      loading={index === 0 ? "eager" : "lazy"}
+                      priority={index === 0}
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+E="
                     />
                     
                     {/* Category Badge */}
@@ -592,8 +591,12 @@ export default function MediaContentDesktop() {
                     src={video.thumbnail}
                     alt={video.title}
                     fill
-                    className='object-cover object-center transition-transform duration-700 group-hover:scale-105'
+                    className='object-cover object-center transition-transform duration-300 group-hover:scale-105'
                     sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                    loading={index === 0 ? "eager" : "lazy"}
+                    priority={index === 0}
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+E="
                   />
                   
                   {/* Duration Badge */}

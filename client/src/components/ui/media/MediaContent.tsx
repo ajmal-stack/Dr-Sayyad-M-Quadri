@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import MediaContentMobile from './MediaContentMobile';
 import MediaContentDesktop from './MediaContentDesktop';
-import { ContentLoader } from '../primitives/Loader';
+// import { ContentLoader } from '../primitives/Loader';
 
 
 
@@ -19,29 +19,25 @@ export default function MediaContent() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
-    // Simulate initial loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    // Remove artificial delay - load instantly
+    setIsLoading(false);
 
     return () => {
       window.removeEventListener('resize', checkMobile);
-      clearTimeout(timer);
     };
   }, []);
 
-
-  // Loading state
+  // Skip loading state for instant rendering
   if (isLoading) {
     return (
       <section className='pt-8 pb-12 bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 relative overflow-hidden'>
-        <div className="absolute inset-0 z-40 bg-white/80 backdrop-blur-sm">
-          <ContentLoader 
-            variant="dots" 
-            size="xl" 
-            message="Loading media content..." 
-            className="min-h-[400px]"
-          />
+        {/* Simple skeleton instead of spinner */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-slate-200 animate-pulse rounded-xl h-64"></div>
+            ))}
+          </div>
         </div>
       </section>
     );
