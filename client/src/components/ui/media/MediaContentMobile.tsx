@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   BookOpenIcon,
   VideoCameraIcon,
   SpeakerWaveIcon,
   PlayIcon,
   PauseIcon,
-  ChevronLeftIcon,
   ChevronRightIcon,
+  HandRaisedIcon,
+  ArrowRightIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '../primitives/Button';
 import Image from 'next/image';
@@ -174,8 +175,19 @@ export default function MediaContentMobile() {
   const [currentPodcastPage, setCurrentPodcastPage] = useState(0);
   const [playingAudio, setPlayingAudio] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showSwipeHint, setShowSwipeHint] = useState(true);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const itemsPerPage = 2; // 2 cards per page for mobile
+  
+  // Refs for swipe containers
+  const booksContainerRef = useRef<HTMLDivElement>(null);
+  const videosContainerRef = useRef<HTMLDivElement>(null);
+  const podcastsContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Touch handling state
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     // Inject blob animation styles
@@ -214,36 +226,94 @@ export default function MediaContentMobile() {
   const getVideosTotalPages = () => Math.ceil(youtubeVideos.length / itemsPerPage);
   const getPodcastTotalPages = () => Math.ceil(podcastEpisodes.length / itemsPerPage);
 
-  const handleBooksPrevPage = () => {
-    setCurrentBookPage((prev) => Math.max(0, prev - 1));
-  };
+  // Swipe handling functions
+  const minSwipeDistance = 50;
 
-  const handleBooksNextPage = () => {
-    const totalPages = getBooksTotalPages();
-    setCurrentBookPage((prev) => Math.min(totalPages - 1, prev + 1));
-  };
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY,
+    });
+  }, []);
 
-  const handleVideosPrevPage = () => {
-    setCurrentVideoPage((prev) => Math.max(0, prev - 1));
-  };
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    setTouchEnd({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY,
+    });
+  }, []);
 
-  const handleVideosNextPage = () => {
-    const totalPages = getVideosTotalPages();
-    setCurrentVideoPage((prev) => Math.min(totalPages - 1, prev + 1));
-  };
+  const onTouchEnd = useCallback((sectionType: 'books' | 'videos' | 'podcasts') => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distanceX = touchStart.x - touchEnd.x;
+    const distanceY = touchStart.y - touchEnd.y;
+    const isHorizontalSwipe = Math.abs(distanceX) > Math.abs(distanceY);
+    const isSwipe = Math.abs(distanceX) > minSwipeDistance;
+    
+    if (isHorizontalSwipe && isSwipe) {
+      setHasInteracted(true);
+      setShowSwipeHint(false);
+      
+      if (sectionType === 'books') {
+        const totalPages = getBooksTotalPages();
+        if (distanceX > 0 && currentBookPage < totalPages - 1) {
+          setCurrentBookPage(prev => prev + 1);
+        } else if (distanceX < 0 && currentBookPage > 0) {
+          setCurrentBookPage(prev => prev - 1);
+        }
+      } else if (sectionType === 'videos') {
+        const totalPages = getVideosTotalPages();
+        if (distanceX > 0 && currentVideoPage < totalPages - 1) {
+          setCurrentVideoPage(prev => prev + 1);
+        } else if (distanceX < 0 && currentVideoPage > 0) {
+          setCurrentVideoPage(prev => prev - 1);
+        }
+      } else if (sectionType === 'podcasts') {
+        const totalPages = getPodcastTotalPages();
+        if (distanceX > 0 && currentPodcastPage < totalPages - 1) {
+          setCurrentPodcastPage(prev => prev + 1);
+        } else if (distanceX < 0 && currentPodcastPage > 0) {
+          setCurrentPodcastPage(prev => prev - 1);
+        }
+      }
+    }
+  }, [touchStart, touchEnd, currentBookPage, currentVideoPage, currentPodcastPage]);
 
-  const handlePodcastPrevPage = () => {
-    setCurrentPodcastPage((prev) => Math.max(0, prev - 1));
-  };
+  // Hide swipe hint after some time
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!hasInteracted) {
+        setShowSwipeHint(false);
+      }
+    }, 5000); // Hide after 5 seconds if no interaction
 
-  const handlePodcastNextPage = () => {
-    const totalPages = getPodcastTotalPages();
-    setCurrentPodcastPage((prev) => Math.min(totalPages - 1, prev + 1));
-  };
+    return () => clearTimeout(timer);
+  }, [hasInteracted]);
 
   const toggleAudioPlay = (episodeId: number) => {
     setPlayingAudio(playingAudio === episodeId ? null : episodeId);
   };
+
+  // Swipe Hint Component
+  const SwipeHint = ({ show }: { show: boolean }) => (
+    <div 
+      className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ${
+        show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+      }`}
+    >
+      <div className='bg-black/80 backdrop-blur-sm text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 animate-pulse'>
+        <HandRaisedIcon className='w-5 h-5 text-blue-400' />
+        <span className='text-sm font-medium'>Swipe left or right for more</span>
+        <div className='flex space-x-1'>
+          <ArrowRightIcon className='w-4 h-4 text-blue-400 animate-bounce' style={{ animationDelay: '0s' }} />
+          <ArrowRightIcon className='w-4 h-4 text-blue-400 animate-bounce' style={{ animationDelay: '0.2s' }} />
+          <ArrowRightIcon className='w-4 h-4 text-blue-400 animate-bounce' style={{ animationDelay: '0.4s' }} />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <section className='pt-4 pb-6 bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 relative overflow-hidden'>
@@ -288,8 +358,14 @@ export default function MediaContentMobile() {
             </Button>
           </div>
 
-          {/* Books Grid - 2 columns */}
-          <div className='grid grid-cols-2 gap-4 mb-6'>
+          {/* Books Grid - 2 columns with swipe */}
+          <div 
+            ref={booksContainerRef}
+            className='grid grid-cols-2 gap-4 mb-6 touch-pan-y'
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={() => onTouchEnd('books')}
+          >
             {getBooksPageItems().map((book, index) => (
               <div
                 key={book.id}
@@ -380,30 +456,6 @@ export default function MediaContentMobile() {
               ))}
             </div>
           )}
-
-          {/* Navigation Arrows */}
-          {getBooksTotalPages() > 1 && (
-            <div className='flex justify-center space-x-4'>
-              <Button
-                onClick={handleBooksPrevPage}
-                disabled={currentBookPage === 0}
-                variant="secondary"
-                size="sm"
-                leftIcon={<ChevronLeftIcon className='w-4 h-4' />}
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={handleBooksNextPage}
-                disabled={currentBookPage === getBooksTotalPages() - 1}
-                variant="secondary"
-                size="sm"
-                rightIcon={<ChevronRightIcon className='w-4 h-4' />}
-              >
-                Next
-              </Button>
-            </div>
-          )}
         </div>
 
         {/* Podcast Section */}
@@ -427,8 +479,14 @@ export default function MediaContentMobile() {
             </Button>
           </div>
 
-          {/* Podcast Grid - 2 columns */}
-          <div className='grid grid-cols-2 gap-4 mb-6'>
+          {/* Podcast Grid - 2 columns with swipe */}
+          <div 
+            ref={podcastsContainerRef}
+            className='grid grid-cols-2 gap-4 mb-6 touch-pan-y'
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={() => onTouchEnd('podcasts')}
+          >
             {getPodcastPageItems().map((episode, index) => (
               <div
                 key={episode.id}
@@ -525,30 +583,6 @@ export default function MediaContentMobile() {
               ))}
             </div>
           )}
-
-          {/* Navigation Arrows */}
-          {getPodcastTotalPages() > 1 && (
-            <div className='flex justify-center space-x-4'>
-              <Button
-                onClick={handlePodcastPrevPage}
-                disabled={currentPodcastPage === 0}
-                variant="secondary"
-                size="sm"
-                leftIcon={<ChevronLeftIcon className='w-4 h-4' />}
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={handlePodcastNextPage}
-                disabled={currentPodcastPage === getPodcastTotalPages() - 1}
-                variant="secondary"
-                size="sm"
-                rightIcon={<ChevronRightIcon className='w-4 h-4' />}
-              >
-                Next
-              </Button>
-            </div>
-          )}
         </div>
 
         {/* YouTube Section */}
@@ -572,8 +606,14 @@ export default function MediaContentMobile() {
             </Button>
           </div>
 
-          {/* Videos Grid - 2 columns */}
-          <div className='grid grid-cols-2 gap-4 mb-6'>
+          {/* Videos Grid - 2 columns with swipe */}
+          <div 
+            ref={videosContainerRef}
+            className='grid grid-cols-2 gap-4 mb-6 touch-pan-y'
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={() => onTouchEnd('videos')}
+          >
             {getVideosPageItems().map((video, index) => (
               <div
                 key={video.id}
@@ -642,32 +682,11 @@ export default function MediaContentMobile() {
               ))}
             </div>
           )}
-
-          {/* Navigation Arrows */}
-          {getVideosTotalPages() > 1 && (
-            <div className='flex justify-center space-x-4'>
-              <Button
-                onClick={handleVideosPrevPage}
-                disabled={currentVideoPage === 0}
-                variant="secondary"
-                size="sm"
-                leftIcon={<ChevronLeftIcon className='w-4 h-4' />}
-              >
-                Previous
-              </Button>
-              <Button
-                onClick={handleVideosNextPage}
-                disabled={currentVideoPage === getVideosTotalPages() - 1}
-                variant="secondary"
-                size="sm"
-                rightIcon={<ChevronRightIcon className='w-4 h-4' />}
-              >
-                Next
-              </Button>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Swipe Hint */}
+      <SwipeHint show={showSwipeHint && !isLoading} />
     </section>
   );
 }
