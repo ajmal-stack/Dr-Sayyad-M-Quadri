@@ -66,21 +66,35 @@ export default function Footer() {
 
   return (
     <footer className='bg-gradient-to-br from-slate-900 to-slate-800 text-white'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8'>
         {/* Main Content */}
-        <div className='py-12 lg:py-16'>
-          <div className='grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12'>
+        <div className='py-8 sm:py-12 lg:py-16'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12'>
             {/* Brand Section */}
-            <div className='lg:col-span-2'>
-              <h3 className='text-2xl lg:text-3xl font-bold mb-4'>
+            <div className='sm:col-span-2 lg:col-span-2'>
+              <h3 className='text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4'>
                 <span className='bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'>
                   Dr. Syed M Quadri
                 </span>
               </h3>
-              <p className='text-slate-300 mb-8 leading-relaxed max-w-lg'>
+              <p className='text-slate-300 mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base max-w-lg'>
                 Board-certified psychiatrist providing compassionate,
                 evidence-based mental health care for over 10 years.
               </p>
+              
+              {/* Mobile-first social links - shown on small screens */}
+              <div className='flex justify-center sm:justify-start space-x-3 mb-6 sm:hidden'>
+                {socialLinks.map((social) => (
+                  <Link
+                    key={social.name}
+                    href={social.href}
+                    className='w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors'
+                    aria-label={social.name}
+                  >
+                    <social.icon className='w-4 h-4' />
+                  </Link>
+                ))}   
+              </div>
 
               {/* Contact Info */}
               {/* <div className='space-y-4'>
@@ -107,17 +121,16 @@ export default function Footer() {
             </div>
 
             {/* Quick Links */}
-            
-            <div>
-              <h4 className='text-lg font-semibold mb-6 text-white'>
+            <div className='sm:col-span-1'>
+              <h4 className='text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-white'>
                 Quick Links
               </h4>
-              <ul className='space-y-3'>
+              <ul className='space-y-2 sm:space-y-3'>
                 {quickLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className='text-slate-300 hover:text-white transition-colors duration-200'
+                      className='text-slate-300 hover:text-white transition-colors duration-200 text-sm sm:text-base block py-1'
                     >
                       {link.name}
                     </Link>
@@ -127,19 +140,19 @@ export default function Footer() {
             </div>
 
             {/* Resources */}
-            <div>
-              <h4 className='text-lg font-semibold mb-6 text-white'>
+            <div className='sm:col-span-1'>
+              <h4 className='text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-white'>
                 Resources
               </h4>
-              <ul className='space-y-3'>
+              <ul className='space-y-2 sm:space-y-3'>
                 {resources.map((resource) => (
                   <li key={resource.name}>
                     <Link
                       href={resource.href}
-                      className='text-slate-300 hover:text-white transition-colors duration-200 flex items-center'
+                      className='text-slate-300 hover:text-white transition-colors duration-200 flex items-center text-sm sm:text-base py-1'
                     >
-                      <resource.icon className='w-4 h-4 mr-2 text-blue-400' />
-                      {resource.name}
+                      <resource.icon className='w-3 h-3 sm:w-4 sm:h-4 mr-2 text-blue-400 flex-shrink-0' />
+                      <span className='truncate'>{resource.name}</span>
                     </Link>
                   </li>
                 ))}
@@ -149,22 +162,22 @@ export default function Footer() {
              
           </div>
 
-            {/* Newsletter */}
-            <div className='mt-12 pt-8 border-t border-slate-700'>
-            <div className='max-w-md'>
-              <h4 className='text-lg font-semibold mb-4 text-white'>
+          {/* Newsletter */}
+          <div className='mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-700'>
+            <div className='max-w-md mx-auto sm:mx-0'>
+              <h4 className='text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-white text-center sm:text-left'>
                 Stay Updated
               </h4>
-              <p className='text-slate-300 mb-4 text-sm'>
+              <p className='text-slate-300 mb-4 text-xs sm:text-sm text-center sm:text-left leading-relaxed'>
                 Get weekly mental health tips delivered to your inbox
               </p>
-              <div className='flex gap-3'>
+              <div className='flex flex-col sm:flex-row gap-2 sm:gap-3'>
                 <input
                   type='email'
                   placeholder='Enter your email'
-                  className='flex-1 px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base transition-colors'
                 />
-                <button className='bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors'>
+                <button className='bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm sm:text-base whitespace-nowrap'>
                   Subscribe
                 </button>
               </div>
@@ -203,55 +216,60 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className='border-t border-slate-700 py-6'>
-          <div className='flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0'>
-            {/* Copyright */}
-            <div className='flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-slate-400 text-sm'>
-              <p>&copy; 2024 Dr. Syed M Quadri. All rights reserved.</p>
-              <div className='flex space-x-4'>
+        <div className='border-t border-slate-700 py-4 sm:py-6'>
+          <div className='flex flex-col space-y-4 sm:space-y-6 lg:space-y-0 lg:flex-row lg:justify-between lg:items-center'>
+            {/* Copyright and Legal Links */}
+            <div className='flex flex-col space-y-3 sm:space-y-4 lg:space-y-0'>
+              <p className='text-slate-400 text-xs sm:text-sm text-center sm:text-left'>
+                &copy; 2024 Dr. Syed M Quadri. All rights reserved.
+              </p>
+              <div className='flex flex-wrap justify-center sm:justify-start gap-3 sm:gap-4 lg:gap-6'>
                 <Link
                   href='/privacy'
-                  className='hover:text-white transition-colors'
+                  className='text-slate-400 hover:text-white transition-colors text-xs sm:text-sm'
                 >
                   Privacy Policy
                 </Link>
                 <Link
                   href='/terms'
-                  className='hover:text-white transition-colors'
+                  className='text-slate-400 hover:text-white transition-colors text-xs sm:text-sm'
                 >
                   Terms
                 </Link>
                 <Link
                   href='/hipaa'
-                  className='hover:text-white transition-colors'
+                  className='text-slate-400 hover:text-white transition-colors text-xs sm:text-sm'
                 >
                   HIPAA
                 </Link>
               </div>
             </div>
 
-            {/* Social Links */}
-            <div className='flex space-x-4'>
-              {socialLinks.map((social) => (
-                <Link
-                  key={social.name}
-                  href={social.href}
-                  className='w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors'
-                >
-                  <social.icon className='w-5 h-5' />
-                </Link>
-              ))}
+            {/* Social Links - Hidden on mobile, shown on larger screens */}
+            <div className='hidden sm:flex justify-center lg:justify-end'>
+              <div className='flex space-x-3 sm:space-x-4'>
+                {socialLinks.map((social) => (
+                  <Link
+                    key={social.name}
+                    href={social.href}
+                    className='w-8 h-8 sm:w-10 sm:h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors'
+                    aria-label={social.name}
+                  >
+                    <social.icon className='w-4 h-4 sm:w-5 sm:h-5' />
+                  </Link>
+                ))}
+              </div>
             </div>
 
             {/* Trust Badges */}
-            <div className='flex items-center space-x-4 text-slate-400 text-sm'>
+            <div className='flex flex-col sm:flex-row items-center justify-center lg:justify-end space-y-2 sm:space-y-0 sm:space-x-3 lg:space-x-4 text-slate-400 order-first lg:order-last'>
               <div className='flex items-center space-x-1'>
-                <CheckBadgeIcon className='w-4 h-4 text-green-400' />
-                <span>Licensed</span>
+                <CheckBadgeIcon className='w-3 h-3 sm:w-4 sm:h-4 text-green-400' />
+                <span className='text-xs sm:text-sm'>Licensed</span>
               </div>
               <div className='flex items-center space-x-1'>
-                <ShieldCheckIcon className='w-4 h-4 text-blue-400' />
-                <span>HIPAA Compliant</span>
+                <ShieldCheckIcon className='w-3 h-3 sm:w-4 sm:h-4 text-blue-400' />
+                <span className='text-xs sm:text-sm'>HIPAA Compliant</span>
               </div>
             </div>
           </div>

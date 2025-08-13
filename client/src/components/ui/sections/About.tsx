@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   CheckCircleIcon,
   AcademicCapIcon,
@@ -282,12 +283,12 @@ const About = () => {
                   Learn More About Dr. Quadri
                   <ArrowRightIcon className='w-5 h-5 ml-2' />
                 </a>
-                <a
+                <Link
                   href='/books'
                   className='inline-flex items-center justify-center px-8 py-4 bg-white text-slate-700 rounded-2xl font-semibold hover:bg-slate-50 transition-all duration-300 shadow-lg hover:shadow-xl border border-slate-200'
                 >
                   View Publications
-                </a>
+                </Link>
               </div>
             </div>
 

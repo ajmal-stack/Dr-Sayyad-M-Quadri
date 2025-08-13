@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import podcastData from '@/data/podcasts.json';
 import {
   PlayIcon,
   PauseIcon,
@@ -37,13 +39,12 @@ interface Podcast {
 
 const categories = [
   'All',
-  'Health',
-  'Nutrition',
-  'Self-Development',
   'Mental Health',
+  'Nutrition', 
+  'Self-Development',
+  'Health',
   'Wellness',
-  'Medicine',
-  'Psychology',
+  'Psychology'
 ];
 
 
@@ -64,129 +65,12 @@ export default function PodcastPage() {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Mock data with real audio URLs and thumbnails
+  // Load podcast data from JSON
   useEffect(() => {
-    const mockPodcasts: Podcast[] = [
-      {
-        id: 1,
-        title: 'Understanding Anxiety: A Deep Dive into Mental Wellness',
-        description:
-          'Explore the complexities of anxiety disorders and discover practical strategies for managing stress and promoting mental well-being in daily life.',
-        duration: '45:30',
-        publishDate: '2024-01-15',
-        category: 'Mental Health',
-        audioUrl:
-          'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
-        coverImage:
-          'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop&crop=center',
-        featured: true,
-        views: 12500,
-        likes: 890,
-        downloads: 3200,
-        host: 'Dr. Syed M Quadri',
-        episodeNumber: 42,
-      },
-      {
-        id: 2,
-        title: 'Nutrition and Brain Health: The Science Connection',
-        description:
-          'Discover how proper nutrition directly impacts cognitive function, mood regulation, and overall brain health throughout different life stages.',
-        duration: '38:15',
-        publishDate: '2024-01-08',
-        category: 'Nutrition',
-        audioUrl: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
-        coverImage:
-          'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop&crop=center',
-        featured: false,
-        views: 8900,
-        likes: 650,
-        downloads: 2100,
-        host: 'Dr. Syed M Quadri',
-        episodeNumber: 41,
-      },
-      {
-        id: 3,
-        title:
-          'Mastering Public Speaking: Overcoming Fear and Building Confidence',
-        description:
-          'Transform your public speaking abilities with proven techniques for managing stage fright and delivering compelling presentations.',
-        duration: '52:20',
-        publishDate: '2024-01-01',
-        category: 'Self-Development',
-        audioUrl:
-          'https://file-examples.com/storage/fe68c8a7c4a1e7a5f09f5c2/2017/11/file_example_MP3_700KB.mp3',
-        coverImage:
-          'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&h=400&fit=crop&crop=center',
-        featured: true,
-        views: 15600,
-        likes: 1200,
-        downloads: 4500,
-        host: 'Dr. Syed M Quadri',
-        episodeNumber: 40,
-      },
-      {
-        id: 4,
-        title: 'Sleep Disorders: Diagnosis and Treatment Approaches',
-        description:
-          'Comprehensive overview of common sleep disorders, their impact on health, and evidence-based treatment methodologies.',
-        duration: '41:45',
-        publishDate: '2023-12-25',
-        category: 'Medicine',
-        audioUrl:
-          'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
-        coverImage:
-          'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=400&h=400&fit=crop&crop=center',
-        featured: false,
-        views: 7200,
-        likes: 480,
-        downloads: 1800,
-        host: 'Dr. Syed M Quadri',
-        episodeNumber: 39,
-      },
-      {
-        id: 5,
-        title: 'Mindfulness and Meditation: Ancient Wisdom for Modern Life',
-        description:
-          'Learn practical mindfulness techniques and meditation practices that can enhance your daily life and mental clarity.',
-        duration: '35:10',
-        publishDate: '2023-12-18',
-        category: 'Wellness',
-        audioUrl:
-          'https://file-examples.com/storage/fe68c8a7c4a1e7a5f09f5c2/2017/11/file_example_MP3_1MG.mp3',
-        coverImage:
-          'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&crop=center',
-        featured: true,
-        views: 11800,
-        likes: 920,
-        downloads: 3600,
-        host: 'Dr. Syed M Quadri',
-        episodeNumber: 38,
-      },
-      {
-        id: 6,
-        title: 'Understanding Depression: Breaking the Stigma',
-        description:
-          'An honest conversation about depression, its various forms, treatment options, and the importance of seeking help.',
-        duration: '48:30',
-        publishDate: '2023-12-11',
-        category: 'Mental Health',
-        audioUrl: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
-        coverImage:
-          'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop&crop=center',
-        featured: false,
-        views: 9400,
-        likes: 710,
-        downloads: 2800,
-        host: 'Dr. Syed M Quadri',
-        episodeNumber: 37,
-      },
-    ];
-
-    setTimeout(() => {
-      setPodcasts(mockPodcasts);
-      setFilteredPodcasts(mockPodcasts);
-      setLoading(false);
-    }, 1000);
+    const episodes = podcastData.episodes as Podcast[];
+    setPodcasts(episodes);
+    setFilteredPodcasts(episodes);
+    setLoading(false);
   }, []);
 
   // Audio event handlers
@@ -263,11 +147,19 @@ export default function PodcastPage() {
     setLikedEpisodes(newLikedEpisodes);
   };
 
-  const handleCardClick = (id: number) => {
-    // On mobile, activate/deactivate the card
+  const handleCardClick = (id: number, event: React.MouseEvent) => {
+    // On mobile, activate/deactivate the card for first click
     if (window.innerWidth < 768) {
-      setActiveCard(activeCard === id ? null : id);
+      if (activeCard === id) {
+        // Second click - let Link handle navigation
+        return;
+      } else {
+        // First click - activate card and prevent navigation
+        setActiveCard(id);
+        event.preventDefault();
+      }
     }
+    // On desktop, let Link handle navigation
   };
 
   const handleVolumeChange = (newVolume: number) => {
@@ -413,199 +305,131 @@ export default function PodcastPage() {
 
       {/* Featured Episodes */}
       {featuredPodcasts.length > 0 && (
-        <section className='py-6 xs:py-8 sm:py-10 md:py-12 lg:py-16'>
-          <div className='max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8'>
-            <div className='grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 md:gap-5 lg:gap-6'>
+        <section className='py-8 sm:py-12 md:py-16 lg:py-20'>
+          <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+            <div className='mb-8 sm:mb-12'>
+              <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3'>
+                Featured Episodes
+              </h2>
+              <p className='text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl'>
+                Handpicked episodes covering the most important topics in mental health and wellness
+              </p>
+            </div>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8'>
               {featuredPodcasts.map((podcast) => (
-                <div
+                <Link
                   key={podcast.id}
-                  onClick={() => handleCardClick(podcast.id)}
-                  className='group relative aspect-square rounded-lg xs:rounded-xl sm:rounded-2xl overflow-hidden shadow-sm xs:shadow-md hover:shadow-lg xs:hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] active:scale-[0.98]'
+                  href={`/podcast/${podcast.id}`}
+                  onClick={(e) => handleCardClick(podcast.id, e)}
+                  className='group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:-translate-y-1 border border-gray-100 block'
                 >
-                  {/* Main Image */}
-                  <img
-                    src={podcast.coverImage}
-                    alt={podcast.title}
-                    className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-700'
-                  />
-
-                  {/* Gradient Overlay - Always visible but subtle */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20'></div>
-
-                  {/* Episode Number - Always visible */}
-                  <div className='absolute top-1 left-1 xs:top-1.5 xs:left-1.5 sm:top-2 sm:left-2 md:top-3 md:left-3'>
-                    <span className='px-1 py-0.5 xs:px-1.5 xs:py-0.5 sm:px-2 sm:py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white'>
-                      #{podcast.episodeNumber}
-                    </span>
-                  </div>
-
-                  {/* Featured Badge - Always visible */}
-                  <div className='absolute top-1 right-1 xs:top-1.5 xs:right-1.5 sm:top-2 sm:right-2 md:top-3 md:right-3'>
-                    <span className='px-1 py-0.5 xs:px-1.5 xs:py-0.5 sm:px-2 sm:py-1 bg-red-500/90 backdrop-blur-sm rounded-full text-xs font-medium text-white'>
-                      Featured
-                    </span>
-                  </div>
-
-                  {/* Category Badge - Always visible */}
-                  <div className='absolute top-1 left-1 xs:top-1.5 xs:left-1.5 sm:top-2 sm:left-2 md:top-3 md:left-3'>
-                    <span className='px-1.5 py-0.5 xs:px-2 xs:py-1 bg-blue-500/80 backdrop-blur-sm text-white rounded-full text-xs font-medium'>
-                      {podcast.category}
-                    </span>
-                  </div>
-
-                  {/* Mobile Active / Desktop Hover Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 transition-all duration-500 flex flex-col justify-end p-2 xs:p-3 sm:p-4 ${
-                    activeCard === podcast.id ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'
-                  }`}>
-                    {/* Play Button - Center (Desktop Only) */}
-                    <div className='absolute inset-0 items-center justify-center hidden md:flex'>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePlay(podcast.id);
-                        }}
-                        className='w-16 h-16 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 transform hover:scale-110 shadow-xl opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0'
-                        style={{ transitionDelay: '100ms' }}
-                      >
-                        {currentlyPlaying === podcast.id && isPlaying ? (
-                          <PauseIcon className='w-8 h-8 text-blue-600' />
-                        ) : (
-                          <PlayIcon className='w-8 h-8 text-blue-600 ml-0.5' />
-                        )}
-                      </button>
+                  {/* Card Image */}
+                  <div className='relative aspect-[4/3] overflow-hidden'>
+                    <img
+                      src={podcast.coverImage}
+                      alt={podcast.title}
+                      className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
+                    />
+                    
+                    {/* Badges */}
+                    <div className='absolute top-3 left-3'>
+                      <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-sm'>
+                        Featured
+                      </span>
+                    </div>
+                    
+                    <div className='absolute top-3 right-3'>
+                      <span className='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-white/90 text-gray-700 backdrop-blur-sm'>
+                        #{podcast.episodeNumber}
+                      </span>
                     </div>
 
-                    {/* Content Details - Bottom */}
-                    <div
-                      className={`transform transition-all duration-500 ${
-                        activeCard === podcast.id ? 'translate-y-0' : 'translate-y-4 md:group-hover:translate-y-0'
-                      }`}
-                      style={{ transitionDelay: '200ms' }}
-                    >
-                      {/* Desktop Metadata (hidden on mobile) */}
-                      <div className='hidden md:block'>
-                        {/* Category and Duration */}
-                        <div className='flex items-center gap-2 mb-2'>
-                          <span className='px-2 py-1 bg-blue-500/80 backdrop-blur-sm text-white rounded-full text-xs font-medium'>
-                            {podcast.category}
-                          </span>
-                          <div className='flex items-center text-white/80 text-xs'>
-                            <ClockIcon className='w-3 h-3 mr-1' />
-                            {podcast.duration}
-                          </div>
+                    {/* Category Badge */}
+                    <div className='absolute bottom-3 left-3'>
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium text-white backdrop-blur-sm shadow-sm ${
+                        podcast.category === 'Mental Health' ? 'bg-purple-500/90' :
+                        podcast.category === 'Nutrition' ? 'bg-green-500/90' :
+                        podcast.category === 'Self-Development' ? 'bg-blue-500/90' :
+                        podcast.category === 'Health' ? 'bg-teal-500/90' :
+                        podcast.category === 'Wellness' ? 'bg-indigo-500/90' :
+                        podcast.category === 'Psychology' ? 'bg-orange-500/90' :
+                        'bg-gray-500/90'
+                      }`}>
+                        {podcast.category}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
+                  <div className='p-4 sm:p-5 lg:p-6'>
+                    {/* Title and Description */}
+                    <div className='mb-4'>
+                      <h3 className='text-lg sm:text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors'>
+                        {podcast.title}
+                      </h3>
+                      <p className='text-sm text-gray-600 line-clamp-2 leading-relaxed'>
+                        {podcast.description}
+                      </p>
+                    </div>
+
+                    {/* Meta Information */}
+                    <div className='flex items-center justify-between text-sm text-gray-500 mb-4'>
+                      <div className='flex items-center space-x-1'>
+                        <ClockIcon className='w-4 h-4' />
+                        <span>{podcast.duration}</span>
+                      </div>
+                      <div className='flex items-center space-x-1'>
+                        <CalendarIcon className='w-4 h-4' />
+                        <span>
+                          {new Date(podcast.publishDate).toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric' 
+                          })}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Stats and Actions */}
+                    <div className='flex items-center justify-between pt-4 border-t border-gray-100'>
+                      <div className='flex items-center space-x-4 text-xs text-gray-500'>
+                        <div className='flex items-center space-x-1'>
+                          <EyeIcon className='w-4 h-4' />
+                          <span>{podcast.views?.toLocaleString()}</span>
                         </div>
-
-                        {/* Title */}
-                        <h3 className='text-white font-bold text-sm mb-2 line-clamp-2 leading-tight'>
-                          {podcast.title}
-                        </h3>
-
-                        {/* Stats */}
-                        <div className='flex items-center justify-between text-white/70 text-xs mb-3'>
-                          <div className='flex items-center gap-3'>
-                            <div className='flex items-center'>
-                              <EyeIcon className='w-3 h-3 mr-1' />
-                              {podcast.views?.toLocaleString()}
-                            </div>
-                            <div className='flex items-center'>
-                              <HeartIcon className='w-3 h-3 mr-1' />
-                              {podcast.likes}
-                            </div>
-                          </div>
-                          <div className='flex items-center'>
-                            <CalendarIcon className='w-3 h-3 mr-1' />
-                            {new Date(podcast.publishDate).toLocaleDateString('en-US', { 
-                              month: 'long', 
-                              day: 'numeric' 
-                            })}
-                          </div>
+                        <div className='flex items-center space-x-1'>
+                          <HeartIcon className='w-4 h-4' />
+                          <span>{podcast.likes}</span>
                         </div>
                       </div>
-
-                      {/* Mobile Simplified Controls */}
-                      <div className='md:hidden'>
-                        {/* Title */}
-                        <h3 className='text-white font-bold text-sm mb-2 line-clamp-2 leading-tight'>
-                          {podcast.title}
-                        </h3>
-                        
-                        {/* Play/Pause and Date */}
-                        <div className='flex items-center justify-between'>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handlePlay(podcast.id);
-                            }}
-                            className='flex items-center gap-2 px-3 py-1.5 bg-blue-600/90 backdrop-blur-sm text-white rounded-lg hover:bg-blue-600 transition-colors text-xs font-medium'
-                          >
-                            {currentlyPlaying === podcast.id && isPlaying ? (
-                              <>
-                                <PauseIcon className='w-4 h-4' />
-                                Pause
-                              </>
-                            ) : (
-                              <>
-                                <PlayIcon className='w-4 h-4' />
-                                Play
-                              </>
-                            )}
-                          </button>
-                          
-                          <div className='flex items-center text-white/80 text-xs'>
-                            <CalendarIcon className='w-3 h-3 mr-1' />
-                            {new Date(podcast.publishDate).toLocaleDateString('en-US', { 
-                              month: 'short', 
-                              day: 'numeric' 
-                            })}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Desktop Full Controls */}
-                      <div className='hidden md:flex md:items-center md:justify-between'>
-                        <div className='flex items-center gap-1'>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleLike(podcast.id);
-                            }}
-                            className='p-1.5 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors'
-                          >
-                            {likedEpisodes.has(podcast.id) ? (
-                              <HeartSolidIcon className='w-4 h-4 text-red-400' />
-                            ) : (
-                              <HeartIcon className='w-4 h-4 text-white/70' />
-                            )}
-                          </button>
-
-                          <button
-                            onClick={(e) => e.stopPropagation()}
-                            className='p-1.5 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors'
-                          >
-                            <ShareIcon className='w-4 h-4 text-white/70' />
-                          </button>
-
-                          <button
-                            onClick={(e) => e.stopPropagation()}
-                            className='p-1.5 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors'
-                          >
-                            <ArrowDownTrayIcon className='w-4 h-4 text-white/70' />
-                          </button>
-                        </div>
-
+                      
+                      <div className='flex items-center space-x-1'>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handlePlay(podcast.id);
+                            e.preventDefault();
+                            handleLike(podcast.id);
                           }}
-                          className='px-3 py-1.5 bg-blue-600/90 backdrop-blur-sm text-white rounded-lg hover:bg-blue-600 transition-colors text-xs font-medium'
+                          className='p-1.5 rounded-lg hover:bg-gray-100 transition-colors'
                         >
-                          {currentlyPlaying === podcast.id && isPlaying ? 'Pause' : 'Play'}
+                          {likedEpisodes.has(podcast.id) ? (
+                            <HeartSolidIcon className='w-4 h-4 text-red-500' />
+                          ) : (
+                            <HeartIcon className='w-4 h-4 text-gray-400 hover:text-red-500' />
+                          )}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                          }}
+                          className='p-1.5 rounded-lg hover:bg-gray-100 transition-colors'
+                        >
+                          <ShareIcon className='w-4 h-4 text-gray-400 hover:text-gray-600' />
                         </button>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -652,8 +476,16 @@ export default function PodcastPage() {
       </section>
 
       {/* All Episodes */}
-      <section className={`py-6 xs:py-8 sm:py-10 md:py-12 lg:py-16 ${currentlyPlaying ? 'pb-20 xs:pb-24 sm:pb-28 md:pb-32' : ''}`}>
-        <div className='max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8'>
+      <section className={`py-8 sm:py-12 md:py-16 lg:py-20 ${currentlyPlaying ? 'pb-20 xs:pb-24 sm:pb-28 md:pb-32' : ''}`}>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='mb-8 sm:mb-12'>
+            <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3'>
+              All Episodes
+            </h2>
+            <p className='text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl'>
+              Browse our complete collection of mental health and wellness episodes
+            </p>
+          </div>
           {filteredPodcasts.length === 0 ? (
             <div className='text-center py-8 xs:py-10 sm:py-12 md:py-16'>
               <div className='w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 xs:mb-4'>
@@ -667,22 +499,50 @@ export default function PodcastPage() {
               </p>
             </div>
           ) : (
-            <div className='grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 md:gap-5 lg:gap-6'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8'>
               {filteredPodcasts.map((podcast) => (
-                <div
+                <Link
                   key={podcast.id}
-                  onClick={() => handleCardClick(podcast.id)}
-                  className='group relative aspect-square rounded-lg xs:rounded-xl sm:rounded-2xl overflow-hidden shadow-sm xs:shadow-md hover:shadow-lg xs:hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] active:scale-[0.98]'
+                  href={`/podcast/${podcast.id}`}
+                  onClick={(e) => handleCardClick(podcast.id, e)}
+                  className='group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:-translate-y-1 border border-gray-100 block'
                 >
-                  {/* Main Image */}
-                  <img
-                    src={podcast.coverImage}
-                    alt={podcast.title}
-                    className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-700'
-                  />
+                  {/* Card Image */}
+                  <div className='relative aspect-[4/3] overflow-hidden'>
+                    <img
+                      src={podcast.coverImage}
+                      alt={podcast.title}
+                      className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
+                    />
+                    
+                    {/* Badges */}
+                    <div className='absolute top-3 left-3'>
+                      <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-sm'>
+                        Featured
+                      </span>
+                    </div>
+                    
+                    <div className='absolute top-3 right-3'>
+                      <span className='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-white/90 text-gray-700 backdrop-blur-sm'>
+                        #{podcast.episodeNumber}
+                      </span>
+                    </div>
 
-                  {/* Gradient Overlay - Always visible but subtle */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20'></div>
+                    {/* Category Badge */}
+                    <div className='absolute bottom-3 left-3'>
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium text-white backdrop-blur-sm shadow-sm ${
+                        podcast.category === 'Mental Health' ? 'bg-purple-500/90' :
+                        podcast.category === 'Nutrition' ? 'bg-green-500/90' :
+                        podcast.category === 'Self-Development' ? 'bg-blue-500/90' :
+                        podcast.category === 'Health' ? 'bg-teal-500/90' :
+                        podcast.category === 'Wellness' ? 'bg-indigo-500/90' :
+                        podcast.category === 'Psychology' ? 'bg-orange-500/90' :
+                        'bg-gray-500/90'
+                      }`}>
+                        {podcast.category}
+                      </span>
+                    </div>
+                  </div>
 
                   {/* Episode Number - Always visible */}
                   <div className='absolute top-1 left-1 xs:top-1.5 xs:left-1.5 sm:top-2 sm:left-2 md:top-3 md:left-3'>
@@ -704,23 +564,7 @@ export default function PodcastPage() {
                   <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 transition-all duration-500 flex flex-col justify-end p-2 xs:p-3 sm:p-4 ${
                     activeCard === podcast.id ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'
                   }`}>
-                    {/* Play Button - Center (Desktop Only) */}
-                    <div className='absolute inset-0 items-center justify-center hidden md:flex'>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePlay(podcast.id);
-                        }}
-                        className='w-16 h-16 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 transform hover:scale-110 shadow-xl opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0'
-                        style={{ transitionDelay: '100ms' }}
-                      >
-                        {currentlyPlaying === podcast.id && isPlaying ? (
-                          <PauseIcon className='w-8 h-8 text-blue-600' />
-                        ) : (
-                          <PlayIcon className='w-8 h-8 text-blue-600 ml-0.5' />
-                        )}
-                      </button>
-                    </div>
+
 
                     {/* Content Details - Bottom */}
                     <div
@@ -776,28 +620,8 @@ export default function PodcastPage() {
                           {podcast.title}
                         </h3>
                         
-                        {/* Play/Pause and Date */}
-                        <div className='flex items-center justify-between'>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handlePlay(podcast.id);
-                            }}
-                            className='flex items-center gap-2 px-3 py-1.5 bg-blue-600/90 backdrop-blur-sm text-white rounded-lg hover:bg-blue-600 transition-colors text-xs font-medium'
-                          >
-                            {currentlyPlaying === podcast.id && isPlaying ? (
-                              <>
-                                <PauseIcon className='w-4 h-4' />
-                                Pause
-                              </>
-                            ) : (
-                              <>
-                                <PlayIcon className='w-4 h-4' />
-                                Play
-                              </>
-                            )}
-                          </button>
-                          
+                        {/* Date */}
+                        <div className='flex items-center justify-end'>
                           <div className='flex items-center text-white/80 text-xs'>
                             <CalendarIcon className='w-3 h-3 mr-1' />
                             {new Date(podcast.publishDate).toLocaleDateString('en-US', { 
@@ -840,19 +664,11 @@ export default function PodcastPage() {
                           </button>
                         </div>
 
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handlePlay(podcast.id);
-                          }}
-                          className='px-3 py-1.5 bg-blue-600/90 backdrop-blur-sm text-white rounded-lg hover:bg-blue-600 transition-colors text-xs font-medium'
-                        >
-                          {currentlyPlaying === podcast.id && isPlaying ? 'Pause' : 'Play'}
-                        </button>
+
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}

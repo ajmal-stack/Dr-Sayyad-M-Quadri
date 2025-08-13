@@ -13,7 +13,10 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '../primitives/Button';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ContentLoader } from '../primitives/Loader';
+import booksData from '@/data/books.json';
+import podcastData from '@/data/podcasts.json';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -40,11 +43,25 @@ const blobStyles = `
 interface Book {
   id: number;
   title: string;
-  description: string;
-  image: string;
+  subtitle: string;
   author: string;
+  description: string;
   category: string;
-  pages: number;
+  type: 'Books' | 'Audiobook';
+  price: string;
+  originalPrice: string;
+  rating: number;
+  reviews: number;
+  pages?: number;
+  duration?: string;
+  narrator?: string;
+  publishDate: string;
+  isbn: string;
+  format: string[];
+  image: string;
+  featured: boolean;
+  bestseller: boolean;
+  tags: string[];
 }
 
 interface YouTubeVideo {
@@ -62,50 +79,21 @@ interface PodcastEpisode {
   title: string;
   description: string;
   duration: string;
-  releaseDate: string;
+  publishDate: string;
   category: string;
   audioUrl: string;
+  coverImage: string;
+  featured: boolean;
+  views?: number;
+  likes?: number;
+  downloads?: number;
+  host?: string;
+  episodeNumber?: number;
 }
 
-// Sample data for books
-const books: Book[] = [
-  {
-    id: 1,
-    title: 'Public Speaking Mastery',
-    description: 'Overcome anxiety and master the art of confident public speaking with proven strategies.',
-    image: '/books/Blue & Orange Playful Illustrative Public Speaking Book Cover.jpg',
-    author: 'Dr. Syed M Quadri',
-    category: 'Self-Help',
-    pages: 280,
-  },
-  {
-    id: 2,
-    title: 'Mind Matters: Mental Wellness',
-    description: 'Essential guide to maintaining mental health and building resilience in daily life.',
-    image: '/books/Navy and Pink Illustrated Mind Matters Book Cover.jpg',
-    author: 'Dr. Syed M Quadri',
-    category: 'Mental Health',
-    pages: 350,
-  },
-  {
-    id: 3,
-    title: 'Daily Food Journal',
-    description: 'Track your nutrition and build healthy eating habits for better mental and physical wellness.',
-    image: '/books/Red Simple Food Journal Book Cover.jpg',
-    author: 'Dr. Syed M Quadri',
-    category: 'Wellness',
-    pages: 200,
-  },
-  {
-    id: 4,
-    title: 'Modern Psychology Insights',
-    description: 'Comprehensive guide to understanding modern psychological approaches and therapeutic techniques.',
-    image: '/books/Black and White Modern Psychology Book Cover.jpg',
-    author: 'Dr. Syed M Quadri',
-    category: 'Psychology',
-    pages: 320,
-  },
-];
+// Get books data from JSON
+const allBooks = [...booksData.featuredBooks, ...booksData.otherBooks] as Book[];
+const books = allBooks.slice(0, 6); // Show first 6 books
 
 // Sample YouTube videos data
 const youtubeVideos: YouTubeVideo[] = [
@@ -138,36 +126,8 @@ const youtubeVideos: YouTubeVideo[] = [
   },
 ];
 
-// Sample podcast episodes data
-const podcastEpisodes: PodcastEpisode[] = [
-  {
-    id: 1,
-    title: 'Mental Health in the Digital Age',
-    description: 'Exploring how technology impacts our mental health and strategies for digital wellness.',
-    duration: '45:30',
-    releaseDate: '2024-01-15',
-    category: 'Mental Health',
-    audioUrl: '#',
-  },
-  {
-    id: 2,
-    title: 'Trauma Recovery: A Journey of Healing',
-    description: 'Understanding trauma responses and the path to recovery with expert insights.',
-    duration: '52:20',
-    releaseDate: '2024-01-08',
-    category: 'Trauma',
-    audioUrl: '#',
-  },
-  {
-    id: 3,
-    title: 'Anxiety Management Strategies',
-    description: 'Practical techniques and therapeutic approaches for managing anxiety disorders.',
-    duration: '38:45',
-    releaseDate: '2024-01-01',
-    category: 'Anxiety',
-    audioUrl: '#',
-  },
-];
+// Get podcast episodes from JSON data
+const podcastEpisodes: PodcastEpisode[] = podcastData.episodes.slice(0, 6); // Show first 6 episodes
 
 export default function MediaContentMobile() {
   const [currentBookPage, setCurrentBookPage] = useState(0);
@@ -428,11 +388,13 @@ export default function MediaContentMobile() {
                       {book.title}
                     </h3>
                     <p className='text-xs text-white/80 mb-2'>
-                      By {book.author} • {book.pages} pages
+                      By {book.author} • {book.pages ? `${book.pages} pages` : book.duration || book.type}
                     </p>
-                    <Button variant="secondary" size="xs" fullWidth>
-                      Buy Now
-                    </Button>
+                    <Link href={`/books/${book.id}`}>
+                      <Button variant="secondary" size="xs" fullWidth>
+                        View Details
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -487,9 +449,10 @@ export default function MediaContentMobile() {
             onTouchEnd={() => onTouchEnd('podcasts')}
           >
             {getPodcastPageItems().map((episode, index) => (
-              <div
+              <Link
                 key={episode.id}
-                className='group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 overflow-hidden border border-slate-100'
+                href={`/podcast/${episode.id}`}
+                className='group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 overflow-hidden border border-slate-100 block'
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Podcast Visual Header */}
@@ -524,7 +487,11 @@ export default function MediaContentMobile() {
                   {/* Play Button */}
                   <div className='absolute inset-0 flex items-center justify-center'>
                     <Button
-                      onClick={() => toggleAudioPlay(episode.id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleAudioPlay(episode.id);
+                      }}
                       variant="secondary"
                       size="icon"
                       className='bg-white/90 backdrop-blur-sm hover:bg-white shadow-xl group-hover:scale-110'
@@ -544,10 +511,14 @@ export default function MediaContentMobile() {
                     {episode.title}
                   </h4>
                   <p className='text-xs text-slate-600 mb-2'>
-                    {new Date(episode.releaseDate).toLocaleDateString()}
+                    {new Date(episode.publishDate).toLocaleDateString()}
                   </p>
                   <Button
-                    onClick={() => toggleAudioPlay(episode.id)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleAudioPlay(episode.id);
+                    }}
                     variant="primary"
                     size="xs"
                     fullWidth
@@ -562,7 +533,7 @@ export default function MediaContentMobile() {
                     {playingAudio === episode.id ? 'Pause' : 'Listen Now'}
                   </Button>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

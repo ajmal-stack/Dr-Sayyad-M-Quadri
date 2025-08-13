@@ -12,7 +12,10 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '../primitives/Button';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ContentLoader } from '../primitives/Loader';
+import booksData from '@/data/books.json';
+import podcastData from '@/data/podcasts.json';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -39,11 +42,25 @@ const blobStyles = `
 interface Book {
   id: number;
   title: string;
-  description: string;
-  image: string;
+  subtitle: string;
   author: string;
+  description: string;
   category: string;
-  pages: number;
+  type: 'Books' | 'Audiobook';
+  price: string;
+  originalPrice: string;
+  rating: number;
+  reviews: number;
+  pages?: number;
+  duration?: string;
+  narrator?: string;
+  publishDate: string;
+  isbn: string;
+  format: string[];
+  image: string;
+  featured: boolean;
+  bestseller: boolean;
+  tags: string[];
 }
 
 interface YouTubeVideo {
@@ -61,50 +78,21 @@ interface PodcastEpisode {
   title: string;
   description: string;
   duration: string;
-  releaseDate: string;
+  publishDate: string;
   category: string;
   audioUrl: string;
+  coverImage: string;
+  featured: boolean;
+  views?: number;
+  likes?: number;
+  downloads?: number;
+  host?: string;
+  episodeNumber?: number;
 }
 
-// Sample data for books
-const books: Book[] = [
-  {
-    id: 1,
-    title: 'Public Speaking Mastery',
-    description: 'Overcome anxiety and master the art of confident public speaking with proven strategies.',
-    image: '/books/Blue & Orange Playful Illustrative Public Speaking Book Cover.jpg',
-    author: 'Dr. Syed M Quadri',
-    category: 'Self-Help',
-    pages: 280,
-  },
-  {
-    id: 2,
-    title: 'Mind Matters: Mental Wellness',
-    description: 'Essential guide to maintaining mental health and building resilience in daily life.',
-    image: '/books/Navy and Pink Illustrated Mind Matters Book Cover.jpg',
-    author: 'Dr. Syed M Quadri',
-    category: 'Mental Health',
-    pages: 350,
-  },
-  {
-    id: 3,
-    title: 'Daily Food Journal',
-    description: 'Track your nutrition and build healthy eating habits for better mental and physical wellness.',
-    image: '/books/Red Simple Food Journal Book Cover.jpg',
-    author: 'Dr. Syed M Quadri',
-    category: 'Wellness',
-    pages: 200,
-  },
-  {
-    id: 4,
-    title: 'Modern Psychology Insights',
-    description: 'Comprehensive guide to understanding modern psychological approaches and therapeutic techniques.',
-    image: '/books/Black and White Modern Psychology Book Cover.jpg',
-    author: 'Dr. Syed M Quadri',
-    category: 'Psychology',
-    pages: 320,
-  },
-];
+// Get books data from JSON
+const allBooks = [...booksData.featuredBooks, ...booksData.otherBooks] as Book[];
+const books = allBooks.slice(0, 6); // Show first 6 books
 
 // Sample YouTube videos data
 const youtubeVideos: YouTubeVideo[] = [
@@ -137,42 +125,12 @@ const youtubeVideos: YouTubeVideo[] = [
   },
 ];
 
-// Sample podcast episodes data
-const podcastEpisodes: PodcastEpisode[] = [
-  {
-    id: 1,
-    title: 'Mental Health in the Digital Age',
-    description: 'Exploring how technology impacts our mental health and strategies for digital wellness.',
-    duration: '45:30',
-    releaseDate: '2024-01-15',
-    category: 'Mental Health',
-    audioUrl: '#',
-  },
-  {
-    id: 2,
-    title: 'Trauma Recovery: A Journey of Healing',
-    description: 'Understanding trauma responses and the path to recovery with expert insights.',
-    duration: '52:20',
-    releaseDate: '2024-01-08',
-    category: 'Trauma',
-    audioUrl: '#',
-  },
-  {
-    id: 3,
-    title: 'Anxiety Management Strategies',
-    description: 'Practical techniques and therapeutic approaches for managing anxiety disorders.',
-    duration: '38:45',
-    releaseDate: '2024-01-01',
-    category: 'Anxiety',
-    audioUrl: '#',
-  },
-];
+// Get podcast episodes from JSON data
+const podcastEpisodes: PodcastEpisode[] = podcastData.episodes.slice(0, 6); // Show first 6 episodes
 
 export default function MediaContentDesktop() {
 
-  const [currentBookPage, setCurrentBookPage] = useState(0);
   const [currentVideoPage, setCurrentVideoPage] = useState(0);
-  const [currentPodcastPage, setCurrentPodcastPage] = useState(0);
   const [playingAudio, setPlayingAudio] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -192,8 +150,7 @@ export default function MediaContentDesktop() {
   }, []);
 
   const getBooksPageItems = () => {
-    const startBook = currentBookPage * itemsPerPage;
-    return books.slice(startBook, startBook + itemsPerPage);
+    return books.slice(0, itemsPerPage);
   };
 
   const getVideosPageItems = () => {
@@ -202,22 +159,12 @@ export default function MediaContentDesktop() {
   };
 
   const getPodcastPageItems = () => {
-    const startPodcast = currentPodcastPage * itemsPerPage;
-    return podcastEpisodes.slice(startPodcast, startPodcast + itemsPerPage);
+    return podcastEpisodes.slice(0, 3); 
   };
 
-  const getBooksTotalPages = () => Math.ceil(books.length / itemsPerPage);
   const getVideosTotalPages = () => Math.ceil(youtubeVideos.length / itemsPerPage);
-  const getPodcastTotalPages = () => Math.ceil(podcastEpisodes.length / itemsPerPage);
 
-  const handleBooksPrevPage = () => {
-    setCurrentBookPage((prev) => Math.max(0, prev - 1));
-  };
 
-  const handleBooksNextPage = () => {
-    const totalPages = getBooksTotalPages();
-    setCurrentBookPage((prev) => Math.min(totalPages - 1, prev + 1));
-  };
 
   const handleVideosPrevPage = () => {
     setCurrentVideoPage((prev) => Math.max(0, prev - 1));
@@ -228,14 +175,7 @@ export default function MediaContentDesktop() {
     setCurrentVideoPage((prev) => Math.min(totalPages - 1, prev + 1));
   };
 
-  const handlePodcastPrevPage = () => {
-    setCurrentPodcastPage((prev) => Math.max(0, prev - 1));
-  };
 
-  const handlePodcastNextPage = () => {
-    const totalPages = getPodcastTotalPages();
-    setCurrentPodcastPage((prev) => Math.min(totalPages - 1, prev + 1));
-  };
 
   const toggleAudioPlay = (episodeId: number) => {
     setPlayingAudio(playingAudio === episodeId ? null : episodeId);
@@ -356,11 +296,13 @@ export default function MediaContentDesktop() {
                       </p>
                       <div className='text-xs text-white/80 mb-4'>
                         <div className='font-medium'>{book.author}</div>
-                        <div>{book.pages} pages</div>
+                        <div>{book.pages ? `${book.pages} pages` : book.duration || book.type}</div>
                       </div>
-                      <Button variant="secondary" size="sm" fullWidth>
-                        Buy Now
-                      </Button>
+                      <Link href={`/books/${book.id}`}>
+                        <Button variant="secondary" size="sm" fullWidth>
+                          View Details
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -369,7 +311,7 @@ export default function MediaContentDesktop() {
           </div>
 
           {/* Pagination for Books */}
-          {getBooksTotalPages() > 1 && (
+          {/* {getBooksTotalPages() > 1 && (
             <div className='flex items-center justify-center space-x-4 mt-8'>
               <Button
                 onClick={handleBooksPrevPage}
@@ -405,7 +347,7 @@ export default function MediaContentDesktop() {
                 Next
               </Button>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Podcast Section */}
@@ -428,60 +370,75 @@ export default function MediaContentDesktop() {
             </Button>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8'>
+          <div className='grid grid-cols-3 gap-8 mb-8'>
             {getPodcastPageItems().map((episode, index) => (
-              <div
+              <Link
                 key={episode.id}
-                className='group relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-slate-100'
+                href={`/podcast/${episode.id}`}
+                className='group relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-slate-100 block'
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Podcast Visual Header */}
-                <div className='relative bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 overflow-hidden h-48'>
-                  {/* Audio Wave Pattern */}
-                  <div className='absolute inset-0 opacity-20'>
-                    <div className='flex items-end justify-center h-full space-x-1 p-8'>
-                      {Array.from({ length: 20 }, (_, i) => (
-                        <div 
-                          key={i}
-                          className='bg-white rounded-full animate-pulse'
-                          style={{
-                            width: '3px',
-                            height: `${Math.random() * 100 + 20}%`,
-                            animationDelay: `${i * 0.1}s`
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                {/* Animated Blob Background */}
+                <div 
+                  className="absolute z-[1] top-1/2 left-1/2 w-[120px] h-[120px] rounded-full opacity-60 blur-[8px]"
+                  style={{
+                    backgroundColor: index % 3 === 0 ? '#7c3aed' : index % 3 === 1 ? '#ec4899' : '#8b5cf6',
+                    animation: 'blob-bounce 5s infinite ease',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
 
-                  {/* Category and Duration */}
-                  <div className='absolute top-4 left-4 right-4 flex items-center justify-between'>
-                    <span className='bg-white/90 backdrop-blur-sm text-purple-700 px-3 py-1 rounded-full text-xs font-semibold'>
+                {/* Podcast Thumbnail with Glassmorphism */}
+                <div className='relative overflow-hidden h-64'>
+                  {/* Glass overlay */}
+                  <div className="absolute inset-0 z-[2] " />
+                  
+                  <Image
+                    src={episode.coverImage}
+                    alt={episode.title}
+                    fill
+                    className='object-cover object-center transition-transform duration-300 group-hover:scale-105'
+                    sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                    loading={index === 0 ? "eager" : "lazy"}
+                    priority={index === 0}
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+E="
+                  />
+                  
+                  {/* Category Badge */}
+                  <div className='absolute top-4 left-4 z-[3]'>
+                    <span className='bg-white/90 backdrop-blur-sm text-purple-700 px-3 py-1 rounded-full text-xs font-semibold shadow-sm'>
                       {episode.category}
                     </span>
-                    <span className='bg-black/60 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
+                  </div>
+
+                  {/* Duration Badge */}
+                  <div className='absolute top-4 right-4 z-[3]'>
+                    <span className='bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
                       {episode.duration}
                     </span>
                   </div>
 
                   {/* Play Button */}
-                  <div className='absolute inset-0 flex items-center justify-center'>
-                    <Button
-                      onClick={() => toggleAudioPlay(episode.id)}
-                      variant="secondary"
-                      size="icon-lg"
-                      className='bg-white/90 backdrop-blur-sm hover:bg-white shadow-2xl group-hover:scale-110'
+                  <div className='absolute inset-0 flex items-center justify-center z-[3]'>
+                    <div 
+                      className='bg-purple-600 rounded-full p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:bg-purple-700 cursor-pointer'
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleAudioPlay(episode.id);
+                      }}
                     >
                       {playingAudio === episode.id ? (
-                        <PauseIcon className='w-6 h-6 text-blue-600' />
+                        <PauseIcon className='w-6 h-6 text-white' />
                       ) : (
-                        <PlayIcon className='w-6 h-6 text-blue-600 ml-0.5' />
+                        <PlayIcon className='w-6 h-6 text-white ml-0.5' />
                       )}
-                    </Button>
+                    </div>
                   </div>
 
                   {/* Hover Overlay */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500'>
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-[4]'>
                     <div className='absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500'>
                       <h3 className='text-lg font-bold mb-2 leading-tight'>
                         {episode.title}
@@ -492,12 +449,16 @@ export default function MediaContentDesktop() {
                       <div className='flex items-center justify-between'>
                         <div className='text-xs text-white/80'>
                           <div className='font-medium'>
-                            {new Date(episode.releaseDate).toLocaleDateString()}
+                            {new Date(episode.publishDate).toLocaleDateString()}
                           </div>
-                          <div>Sample Audio Available</div>
+                          <div>Duration: {episode.duration}</div>
                         </div>
                         <Button
-                          onClick={() => toggleAudioPlay(episode.id)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleAudioPlay(episode.id);
+                          }}
                           variant="primary"
                           size="sm"
                           leftIcon={
@@ -514,12 +475,12 @@ export default function MediaContentDesktop() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
           {/* Pagination for Podcast */}
-          {getPodcastTotalPages() > 1 && (
+          {/* {getPodcastTotalPages() > 1 && (
             <div className='flex items-center justify-center space-x-4 mt-8'>
               <Button
                 onClick={handlePodcastPrevPage}
@@ -555,7 +516,7 @@ export default function MediaContentDesktop() {
                 Next
               </Button>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* YouTube Section */}

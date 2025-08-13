@@ -8,6 +8,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import booksData from '@/data/books.json';
 import {
   ChevronDownIcon,
   Bars3Icon,
@@ -30,64 +31,32 @@ import { SearchDropdown } from '../primitives/SearchComponent';
 import MobileSearch from '../primitives/MobileSearch';
 
 interface BookItem {
-  id: string;
+  id: number;
   title: string;
-  image: string;
+  subtitle: string;
+  author: string;
   description: string;
-  href: string;
+  category: string;
+  type: 'Books' | 'Audiobook';
+  price: string;
+  originalPrice: string;
+  rating: number;
+  reviews: number;
+  pages?: number;
+  duration?: string;
+  narrator?: string;
+  publishDate: string;
+  isbn: string;
+  format: string[];
+  image: string;
+  featured: boolean;
+  bestseller: boolean;
+  tags: string[];
 }
 
-const bookItems: BookItem[] = [
-  {
-    id: '1',
-    title: 'Mind Matters',
-    image: '/books/Navy and Pink Illustrated Mind Matters Book Cover.jpg',
-    description:
-      'Understanding mental health and wellness through comprehensive insights',
-    href: '/books/mind-matters',
-  },
-  {
-    id: '2',
-    title: 'Public Speaking Mastery',
-    image:
-      '/books/Blue & Orange Playful Illustrative Public Speaking Book Cover.jpg',
-    description: 'Overcome anxiety and speak with confidence in any situation',
-    href: '/books/public-speaking',
-  },
-
-  {
-    id: '3',
-    title: 'Simple Food Journal',
-    image: '/books/Red Simple Food Journal Book Cover.jpg',
-    description: 'Mindful eating practices for better mental health',
-    href: '/books/simple-food-journal',
-  },
-  {
-    id: '4',
-    title: 'Love & Healing',
-    image: '/books/Romantic Doctor Love Story Ebook Cover.png',
-    description:
-      'A therapeutic journey through relationships and emotional healing',
-    href: '/books/love-healing',
-  },
-  {
-    id: '5',
-    title: 'Daily Food Journal',
-    image:
-      '/books/Red and Green Seamless Pattern Printable Daily Food Journal Cover.jpg',
-    description: 'Track your nutrition and discover the mind-body connection',
-    href: '/books/food-journal',
-  },
-  {
-    id: '6',
-    title: 'Modern Psychology Guide',
-    image:
-      '/books/Black%20and%20White%20Modern%20Psychology%20Book%20Cover.jpg',
-    description:
-      'Contemporary approaches to understanding human behavior and mental wellness',
-    href: '/books/modern-psychology',
-  },
-];
+// Get books data from JSON
+const allBooks = [...booksData.featuredBooks, ...booksData.otherBooks] as BookItem[];
+const bookItems = allBooks.slice(0, 8); // Show first 8 books in navbar
 
 interface NavItem {
   name: string;
@@ -304,6 +273,10 @@ export default function Navbar() {
     setActiveDropdown(null);
   };
 
+  const handleDropdownClose = () => {
+    setActiveDropdown(null);
+  };
+
   const renderBooksDropdown = () => {
     return (
       <div className='absolute left-1/2 -translate-x-1/2 mt-0 w-[800px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-blue-200/60 hover:border-blue-300/80 py-6 z-10 animate-in slide-in-from-top-2 duration-300 transition-all'>
@@ -361,7 +334,8 @@ export default function Navbar() {
               {bookItems.map((book) => (
                 <SwiperSlide key={book.id}>
                   <Link
-                    href={book.href}
+                    href={`/books/${book.id}`}
+                    onClick={handleDropdownClose}
                     className='group block bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/20 rounded-2xl p-5 hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-blue-200/60 hover:border-blue-300'
                   >
                     <div className='aspect-[3/4] mb-4 overflow-hidden rounded-xl bg-white shadow-lg group-hover:shadow-xl transition-shadow duration-300'>
@@ -409,6 +383,7 @@ export default function Navbar() {
           <div className='px-8 mt-4 pt-4 border-t border-emerald-100/50'>
             <Link
               href='/books'
+              onClick={handleDropdownClose}
               className='flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl text-xs font-semibold hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 hover:shadow-lg hover:scale-105'
             >
               <BookOpenIcon className='w-4 h-4 mr-2' />
@@ -519,6 +494,7 @@ export default function Navbar() {
                               <Link
                                 key={dropdownItem.name}
                                 href={dropdownItem.href}
+                                onClick={handleDropdownClose}
                                 className={`group flex items-start mt-1 px-6 py-4 text-sm transition-all duration-300 mx-2 rounded-2xl ${
                                   dropdownItem.featured
                                     ? 'text-blue-700 bg-blue-100/60 hover:bg-blue-200/90 hover:text-blue-800 border-l-4 border-blue-500 shadow-sm'

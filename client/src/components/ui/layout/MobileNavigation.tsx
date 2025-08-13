@@ -12,11 +12,27 @@ import {
 import Image from 'next/image';
 
 interface BookItem {
-  id: string;
+  id: number;
   title: string;
-  image: string;
+  subtitle: string;
+  author: string;
   description: string;
-  href: string;
+  category: string;
+  type: 'Books' | 'Audiobook';
+  price: string;
+  originalPrice: string;
+  rating: number;
+  reviews: number;
+  pages?: number;
+  duration?: string;
+  narrator?: string;
+  publishDate: string;
+  isbn: string;
+  format: string[];
+  image: string;
+  featured: boolean;
+  bestseller: boolean;
+  tags: string[];
 }
 
 interface NavItem {
@@ -97,13 +113,15 @@ export default function MobileNavigation({
                 book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 book.description
                   .toLowerCase()
-                  .includes(searchQuery.toLowerCase())
+                  .includes(searchQuery.toLowerCase()) ||
+                book.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                book.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
             )
             .slice(0, 4)
             .map((book) => (
               <Link
                 key={book.id}
-                href={book.href}
+                href={`/books/${book.id}`}
                 onClick={handleLinkClick}
                 className='flex items-center space-x-3 p-3 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 hover:border-blue-200 transition-colors'
               >
