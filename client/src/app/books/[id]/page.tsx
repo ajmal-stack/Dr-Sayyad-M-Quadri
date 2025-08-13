@@ -923,7 +923,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
                 <div className="space-y-6">
                   <h3 className="text-lg font-semibold text-gray-900">Recent Reviews</h3>
                   
-                  {book.type === 'Audiobook' ? [
+                  {(book.type === 'Audiobook' ? [
                     {
                       name: "Sarah M.", 
                       rating: 5,
@@ -961,7 +961,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
                       date: "2 weeks ago",
                       review: "This book came at exactly the right time in my life. The author's insights into trauma recovery are profound. I love being able to highlight and take notes digitally."
                     }
-                  ].map((review, index) => (
+                  ]).map((review, index) => (
                     <div key={index} className="border-b border-gray-200 pb-6 last:border-b-0">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center space-x-3">
@@ -980,7 +980,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
                       <p className="text-gray-700 leading-relaxed">{review.review}</p>
                     </div>
                   ))}
-                </div>
+                </div>)
               </div>
             )}
           </div>
