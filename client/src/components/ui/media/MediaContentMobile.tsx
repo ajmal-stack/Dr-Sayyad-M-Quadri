@@ -629,8 +629,9 @@ export default function MediaContentMobile() {
             onClick={() => setActiveVideo(null)}
           />
 
-          {/* Modal */}
+                    {/* Modal */}
           <div className='fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 pointer-events-none'>
+            <div className='relative w-full h-full sm:h-auto max-w-4xl max-h-[95vh] bg-white rounded-none sm:rounded-2xl shadow-2xl overflow-hidden pointer-events-auto flex flex-col'>
               {/* Close Button */}
               <button
                 onClick={() => setActiveVideo(null)}
@@ -664,6 +665,14 @@ export default function MediaContentMobile() {
                   className='w-full h-full'
                 ></iframe>
               </div>
+
+              {/* Video Title */}
+              <div className='p-4 border-t border-gray-200 bg-gray-50'>
+                <h3 className='text-sm font-bold text-slate-900 leading-tight line-clamp-2'>
+                  {youtubeVideos.find((v) => v.id === activeVideo)?.title}
+                </h3>
+              </div>
+            </div>
           </div>
         </>
       )}
