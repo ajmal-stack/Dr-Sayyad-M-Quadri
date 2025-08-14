@@ -454,59 +454,43 @@ export default function MediaContentMobile() {
             onTouchEnd={() => onTouchEnd('podcasts')}
           >
             {getPodcastPageItems().map((episode, index) => (
-              <Link
+              <div
                 key={episode.id}
-                href={`/podcast/${episode.id}`}
-                className='group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 overflow-hidden border border-slate-100 block'
-                style={{ animationDelay: `${index * 100}ms` }}
+                className='group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 border border-purple-100 cursor-pointer'
               >
-                {/* Podcast Visual Header */}
-                <div className='relative bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 overflow-hidden h-32'>
-                  {/* Audio Wave Pattern */}
-                  <div className='absolute inset-0 opacity-20'>
-                    <div className='flex items-end justify-center h-full space-x-1 p-4'>
-                      {Array.from({ length: 12 }, (_, i) => (
-                        <div 
-                          key={i}
-                          className='bg-white rounded-full animate-pulse'
-                          style={{
-                            width: '2px',
-                            height: `${Math.random() * 60 + 20}%`,
-                            animationDelay: `${i * 0.1}s`
-                          }}
-                        />
-                      ))}
-                    </div>
+                {/* Podcast Thumbnail */}
+                <div className='relative aspect-video bg-slate-200 overflow-hidden'>
+                  <Image
+                    src={episode.coverImage}
+                    alt={episode.title}
+                    fill
+                    className='object-cover'
+                    sizes='(max-width: 768px) 50vw, 33vw'
+                    loading={index === 0 ? "eager" : "lazy"}
+                    priority={index === 0}
+                  />
+                  
+                  {/* Duration Badge */}
+                  <div className='absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs font-medium'>
+                    {episode.duration}
                   </div>
 
-                  {/* Category and Duration */}
-                  <div className='absolute top-2 left-2 right-2 flex items-center justify-between'>
-                    <span className='bg-white/90 backdrop-blur-sm text-purple-700 px-2 py-1 rounded-full text-xs font-semibold'>
-                      {episode.category}
-                    </span>
-                    <span className='bg-black/60 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
-                      {episode.duration}
-                    </span>
-                  </div>
-
-                  {/* Play Button */}
-                  <div className='absolute inset-0 flex items-center justify-center'>
-                    <Button
+                  {/* Play Button Overlay */}
+                  <div className='absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-200 flex items-center justify-center'>
+                    <button 
+                      className='w-12 h-12 bg-purple-600 hover:bg-purple-700 rounded-full flex items-center justify-center text-white transition-colors duration-200'
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         toggleAudioPlay(episode.id);
                       }}
-                      variant="secondary"
-                      size="icon"
-                      className='bg-white/90 backdrop-blur-sm hover:bg-white shadow-xl group-hover:scale-110'
                     >
                       {playingAudio === episode.id ? (
-                        <PauseIcon className='w-4 h-4 text-blue-600' />
+                        <PauseIcon className='w-6 h-6' />
                       ) : (
-                        <PlayIcon className='w-4 h-4 text-blue-600 ml-0.5' />
+                        <PlayIcon className='w-6 h-6 ml-0.5' />
                       )}
-                    </Button>
+                    </button>
                   </div>
                 </div>
 
@@ -516,29 +500,10 @@ export default function MediaContentMobile() {
                     {episode.title}
                   </h4>
                   <p className='text-xs text-slate-600 mb-2'>
-                    {new Date(episode.publishDate).toLocaleDateString()}
+                    {formatDate(episode.publishDate)} • {episode.duration}
                   </p>
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggleAudioPlay(episode.id);
-                    }}
-                    variant="primary"
-                    size="xs"
-                    fullWidth
-                    leftIcon={
-                      playingAudio === episode.id ? (
-                        <PauseIcon className='w-3 h-3' />
-                      ) : (
-                        <PlayIcon className='w-3 h-3' />
-                      )
-                    }
-                  >
-                    {playingAudio === episode.id ? 'Pause' : 'Listen Now'}
-                  </Button>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
 
@@ -666,7 +631,6 @@ export default function MediaContentMobile() {
 
           {/* Modal */}
           <div className='fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 pointer-events-none'>
-            <div className='relative w-full h-full sm:h-auto max-w-4xl max-h-[95vh] bg-white rounded-none sm:rounded-2xl shadow-2xl overflow-hidden pointer-events-auto flex flex-col'>
               {/* Close Button */}
               <button
                 onClick={() => setActiveVideo(null)}
@@ -700,7 +664,6 @@ export default function MediaContentMobile() {
                   className='w-full h-full'
                 ></iframe>
               </div>
-            </div>
           </div>
         </>
       )}
