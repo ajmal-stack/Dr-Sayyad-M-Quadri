@@ -7,7 +7,6 @@ import {
   SpeakerWaveIcon,
   PlayIcon,
   PauseIcon,
-  ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '../primitives/Button';
@@ -16,6 +15,7 @@ import Link from 'next/link';
 import { ContentLoader } from '../primitives/Loader';
 import booksData from '@/data/books.json';
 import podcastData from '@/data/podcasts.json';
+import youtubeData from '@/data/youtube.json';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -64,13 +64,21 @@ interface Book {
 }
 
 interface YouTubeVideo {
-  id: number;
+  id: string;
+  videoId: string;
   title: string;
   description: string;
   thumbnail: string;
   duration: string;
-  views: string;
-  uploadDate: string;
+  views: number;
+  likes: number;
+  publishDate: string;
+  category: string;
+  tags: string[];
+  channelName: string;
+  isNew?: boolean;
+  isTrending?: boolean;
+  featured?: boolean;
 }
 
 interface PodcastEpisode {
@@ -94,47 +102,38 @@ interface PodcastEpisode {
 const allBooks = [...booksData.featuredBooks, ...booksData.otherBooks] as Book[];
 const books = allBooks.slice(0, 6); // Show first 6 books
 
-// Sample YouTube videos data
-const youtubeVideos: YouTubeVideo[] = [
-  {
-    id: 1,
-    title: 'Understanding Anxiety: Signs, Symptoms & Solutions',
-    description: 'Learn to identify anxiety disorders and discover effective coping strategies.',
-    thumbnail: '/banner/White and Black Simple Mental Health Youtube Thumbnail.png',
-    duration: '15:32',
-    views: '125K',
-    uploadDate: '2 weeks ago',
-  },
-  {
-    id: 2,
-    title: 'Depression Treatment: Modern Approaches',
-    description: 'Explore evidence-based treatments for depression and mood disorders.',
-    thumbnail: '/banner/U_White and Black Simple Mental Health Youtube Thumbnail.png',
-    duration: '22:45',
-    views: '89K',
-    uploadDate: '1 month ago',
-  },
-  {
-    id: 3,
-    title: 'Parenting and Mental Health',
-    description: "Essential parenting strategies for supporting children's mental wellness.",
-    thumbnail: '/banner/Parenting Unveiled (1).jpg',
-    duration: '18:20',
-    views: '156K',
-    uploadDate: '3 weeks ago',
-  },
-];
+// Get YouTube videos data from JSON
+const youtubeVideos: YouTubeVideo[] = youtubeData as YouTubeVideo[];
+
+// Utility functions for formatting
+const formatViews = (views: number) => {
+  if (views >= 1000000) return `${(views / 1000000).toFixed(1)}M`;
+  if (views >= 1000) return `${(views / 1000).toFixed(1)}K`;
+  return views.toString();
+};
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 1) return '1 day ago';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+  return `${Math.floor(diffDays / 30)} months ago`;
+};
 
 // Get podcast episodes from JSON data
 const podcastEpisodes: PodcastEpisode[] = podcastData.episodes.slice(0, 6); // Show first 6 episodes
 
 export default function MediaContentDesktop() {
-
-  const [currentVideoPage, setCurrentVideoPage] = useState(0);
   const [playingAudio, setPlayingAudio] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   const itemsPerPage = 4;
+  const youtubeVideoPerPage = 3;
 
   useEffect(() => {
     // Inject blob animation styles only once
@@ -154,31 +153,21 @@ export default function MediaContentDesktop() {
   };
 
   const getVideosPageItems = () => {
-    const startVideo = currentVideoPage * itemsPerPage;
-    return youtubeVideos.slice(startVideo, startVideo + itemsPerPage);
+    return youtubeVideos.slice(0, youtubeVideoPerPage);
   };
 
   const getPodcastPageItems = () => {
     return podcastEpisodes.slice(0, 3); 
   };
 
-  const getVideosTotalPages = () => Math.ceil(youtubeVideos.length / itemsPerPage);
-
-
-
-  const handleVideosPrevPage = () => {
-    setCurrentVideoPage((prev) => Math.max(0, prev - 1));
-  };
-
-  const handleVideosNextPage = () => {
-    const totalPages = getVideosTotalPages();
-    setCurrentVideoPage((prev) => Math.min(totalPages - 1, prev + 1));
-  };
-
 
 
   const toggleAudioPlay = (episodeId: number) => {
     setPlayingAudio(playingAudio === episodeId ? null : episodeId);
+  };
+
+  const handleVideoPlay = (videoId: string) => {
+    setActiveVideo(videoId);
   };
 
   return (
@@ -372,57 +361,31 @@ export default function MediaContentDesktop() {
 
           <div className='grid grid-cols-3 gap-8 mb-8'>
             {getPodcastPageItems().map((episode, index) => (
-              <Link
+              <div
                 key={episode.id}
-                href={`/podcast/${episode.id}`}
-                className='group relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-slate-100 block'
-                style={{ animationDelay: `${index * 100}ms` }}
+                className='group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 border border-purple-100 cursor-pointer'
               >
-                {/* Animated Blob Background */}
-                <div 
-                  className="absolute z-[1] top-1/2 left-1/2 w-[120px] h-[120px] rounded-full opacity-60 blur-[8px]"
-                  style={{
-                    backgroundColor: index % 3 === 0 ? '#7c3aed' : index % 3 === 1 ? '#ec4899' : '#8b5cf6',
-                    animation: 'blob-bounce 5s infinite ease',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                />
-
-                {/* Podcast Thumbnail with Glassmorphism */}
-                <div className='relative overflow-hidden h-64'>
-                  {/* Glass overlay */}
-                  <div className="absolute inset-0 z-[2] " />
-                  
+                {/* Podcast Thumbnail */}
+                <div className='relative aspect-video bg-slate-200 overflow-hidden'>
                   <Image
                     src={episode.coverImage}
                     alt={episode.title}
                     fill
-                    className='object-cover object-center transition-transform duration-300 group-hover:scale-105'
+                    className='object-cover'
                     sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                     loading={index === 0 ? "eager" : "lazy"}
                     priority={index === 0}
-                    placeholder="blur"
-                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+E="
                   />
                   
-                  {/* Category Badge */}
-                  <div className='absolute top-4 left-4 z-[3]'>
-                    <span className='bg-white/90 backdrop-blur-sm text-purple-700 px-3 py-1 rounded-full text-xs font-semibold shadow-sm'>
-                      {episode.category}
-                    </span>
-                  </div>
-
                   {/* Duration Badge */}
-                  <div className='absolute top-4 right-4 z-[3]'>
-                    <span className='bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
-                      {episode.duration}
-                    </span>
+                  <div className='absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs font-medium'>
+                    {episode.duration}
                   </div>
 
-                  {/* Play Button */}
-                  <div className='absolute inset-0 flex items-center justify-center z-[3]'>
-                    <div 
-                      className='bg-purple-600 rounded-full p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:bg-purple-700 cursor-pointer'
+                  {/* Play Button Overlay */}
+                  <div className='absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-200 flex items-center justify-center'>
+                    <button 
+                      className='w-16 h-16 lg:w-20 lg:h-20 bg-purple-600 hover:bg-purple-700 rounded-full flex items-center justify-center text-white transition-colors duration-200'
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -430,52 +393,16 @@ export default function MediaContentDesktop() {
                       }}
                     >
                       {playingAudio === episode.id ? (
-                        <PauseIcon className='w-6 h-6 text-white' />
+                        <PauseIcon className='w-8 h-8 lg:w-10 lg:h-10' />
                       ) : (
-                        <PlayIcon className='w-6 h-6 text-white ml-0.5' />
+                        <PlayIcon className='w-8 h-8 lg:w-10 lg:h-10 ml-1' />
                       )}
-                    </div>
-                  </div>
-
-                  {/* Hover Overlay */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-[4]'>
-                    <div className='absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500'>
-                      <h3 className='text-lg font-bold mb-2 leading-tight'>
-                        {episode.title}
-                      </h3>
-                      <p className='text-sm text-white/90 mb-3 leading-relaxed line-clamp-2'>
-                        {episode.description}
-                      </p>
-                      <div className='flex items-center justify-between'>
-                        <div className='text-xs text-white/80'>
-                          <div className='font-medium'>
-                            {new Date(episode.publishDate).toLocaleDateString()}
-                          </div>
-                          <div>Duration: {episode.duration}</div>
-                        </div>
-                        <Button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            toggleAudioPlay(episode.id);
-                          }}
-                          variant="primary"
-                          size="sm"
-                          leftIcon={
-                            playingAudio === episode.id ? (
-                              <PauseIcon className='w-4 h-4' />
-                            ) : (
-                              <PlayIcon className='w-4 h-4' />
-                            )
-                          }
-                        >
-                          {playingAudio === episode.id ? 'Pause' : 'Listen Now'}
-                        </Button>
-                      </div>
-                    </div>
+                    </button>
                   </div>
                 </div>
-              </Link>
+
+              
+              </div>
             ))}
           </div>
 
@@ -543,106 +470,95 @@ export default function MediaContentDesktop() {
             {getVideosPageItems().map((video, index) => (
               <div
                 key={video.id}
-                className='group relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-slate-100'
-                style={{ animationDelay: `${index * 100}ms` }}
+                className='group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 border border-red-100 cursor-pointer'
+                onClick={() => handleVideoPlay(video.id)}
               >
                 {/* Video Thumbnail */}
-                <div className='relative overflow-hidden h-64'>
+                <div className='relative aspect-video bg-slate-200 overflow-hidden'>
                   <Image
                     src={video.thumbnail}
                     alt={video.title}
                     fill
-                    className='object-cover object-center transition-transform duration-300 group-hover:scale-105'
+                    className='object-cover'
                     sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                     loading={index === 0 ? "eager" : "lazy"}
                     priority={index === 0}
-                    placeholder="blur"
-                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+E="
                   />
                   
                   {/* Duration Badge */}
-                  <div className='absolute top-4 right-4'>
-                    <span className='bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
-                      {video.duration}
-                    </span>
+                  <div className='absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs font-medium'>
+                    {video.duration}
                   </div>
 
-                  {/* Play Button */}
-                  <div className='absolute inset-0 flex items-center justify-center'>
-                    <div className='bg-red-600 rounded-full p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:bg-red-700'>
-                      <PlayIcon className='w-6 h-6 text-white ml-0.5' />
-                    </div>
-                  </div>
-
-                  {/* Hover Overlay */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500'>
-                    <div className='absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500'>
-                      <h3 className='text-lg font-bold mb-2 leading-tight'>
-                        {video.title}
-                      </h3>
-                      <p className='text-sm text-white/90 mb-3 leading-relaxed line-clamp-2'>
-                        {video.description}
-                      </p>
-                      <div className='flex items-center justify-between'>
-                        <div className='text-xs text-white/80'>
-                          <div className='font-medium'>{video.views} views</div>
-                          <div>{video.uploadDate}</div>
-                        </div>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          leftIcon={<PlayIcon className='w-4 h-4' />}
-                        >
-                          Watch Now
-                        </Button>
-                      </div>
-                    </div>
+                  {/* Play Button Overlay */}
+                  <div className='absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-200 flex items-center justify-center'>
+                    <button className='w-16 h-16 lg:w-20 lg:h-20 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center text-white transition-colors duration-200'>
+                      <PlayIcon className='w-8 h-8 lg:w-10 lg:h-10 ml-1' />
+                    </button>
                   </div>
                 </div>
+
+                {/* Video Info */}
+                
               </div>
             ))}
           </div>
 
-          {/* Pagination for Videos */}
-          {getVideosTotalPages() > 1 && (
-            <div className='flex items-center justify-center space-x-4 mt-8'>
-              <Button
-                onClick={handleVideosPrevPage}
-                disabled={currentVideoPage === 0}
-                variant="secondary"
-                size="sm"
-                leftIcon={<ChevronLeftIcon className='w-5 h-5' />}
-              >
-                Previous
-              </Button>
-
-              <div className='flex space-x-2'>
-                {Array.from({ length: getVideosTotalPages() }, (_, i) => (
-                  <Button
-                    key={i}
-                    onClick={() => setCurrentVideoPage(i)}
-                    variant={currentVideoPage === i ? "primary" : "secondary"}
-                    size="icon"
-                    className="w-10 h-10"
-                  >
-                    {i + 1}
-                  </Button>
-                ))}
-              </div>
-
-              <Button
-                onClick={handleVideosNextPage}
-                disabled={currentVideoPage === getVideosTotalPages() - 1}
-                variant="secondary"
-                size="sm"
-                rightIcon={<ChevronRightIcon className='w-5 h-5' />}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+         
         </div>
       </div>
+
+      {/* Video Modal */}
+      {activeVideo && (
+        <>
+          {/* Backdrop */}
+          <div
+            className='fixed inset-0 z-40 bg-black/80'
+            onClick={() => setActiveVideo(null)}
+          />
+
+          {/* Modal */}
+          <div className='fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 lg:p-6 xl:p-8 pointer-events-none'>
+            <div className='relative w-full h-full sm:h-auto max-w-7xl max-h-[95vh] bg-white rounded-none sm:rounded-2xl lg:rounded-3xl shadow-2xl overflow-hidden pointer-events-auto flex flex-col'>
+              {/* Close Button */}
+              <button
+                onClick={() => setActiveVideo(null)}
+                className='absolute top-2 right-2 sm:top-4 sm:right-4 z-10 w-8 h-8 sm:w-10 sm:h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors duration-200'
+              >
+                <svg
+                  className='w-4 h-4 sm:w-6 sm:h-6'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M6 18L18 6M6 6l12 12'
+                  />
+                </svg>
+              </button>
+
+              {/* Video Player Container */}
+              <div className='w-full aspect-video bg-black flex-shrink-0'>
+                <iframe
+                  src={`https://www.youtube.com/embed/${
+                    youtubeVideos.find((v) => v.id === activeVideo)?.videoId
+                  }?autoplay=1&rel=0&modestbranding=1&fs=1`}
+                  title='YouTube video player'
+                  frameBorder='0'
+                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+                  allowFullScreen
+                  className='w-full h-full'
+                ></iframe>
+              </div>
+
+            
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }

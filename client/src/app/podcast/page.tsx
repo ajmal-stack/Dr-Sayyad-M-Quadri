@@ -205,11 +205,13 @@ export default function PodcastPage() {
           <div className='max-w-7xl mx-auto'>
             <div className='flex items-center gap-4'>
               <div className='flex items-center gap-3'>
-                <img
+                <Image
                   src={
-                    podcasts.find((p) => p.id === currentlyPlaying)?.coverImage
+                    podcasts.find((p) => p.id === currentlyPlaying)?.coverImage || ''
                   }
                   alt='Episode thumbnail'
+                  width={48}
+                  height={48}
                   className='w-12 h-12 rounded-lg object-cover'
                 />
                 <div>
@@ -325,10 +327,12 @@ export default function PodcastPage() {
                 >
                   {/* Card Image */}
                   <div className='relative aspect-[4/3] overflow-hidden'>
-                    <img
+                    <Image
                       src={podcast.coverImage}
                       alt={podcast.title}
+                      fill
                       className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     
                     {/* Badges */}
@@ -373,7 +377,7 @@ export default function PodcastPage() {
                     </div>
 
                     {/* Meta Information */}
-                    <div className='flex items-center justify-between text-sm text-gray-500 mb-4'>
+                    {/* <div className='flex items-center justify-between text-sm text-gray-500 mb-4'>
                       <div className='flex items-center space-x-1'>
                         <ClockIcon className='w-4 h-4' />
                         <span>{podcast.duration}</span>
@@ -387,10 +391,10 @@ export default function PodcastPage() {
                           })}
                         </span>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* Stats and Actions */}
-                    <div className='flex items-center justify-between pt-4 border-t border-gray-100'>
+                    {/* <div className='flex items-center justify-between pt-4 border-t border-gray-100'>
                       <div className='flex items-center space-x-4 text-xs text-gray-500'>
                         <div className='flex items-center space-x-1'>
                           <EyeIcon className='w-4 h-4' />
@@ -427,7 +431,7 @@ export default function PodcastPage() {
                           <ShareIcon className='w-4 h-4 text-gray-400 hover:text-gray-600' />
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </Link>
               ))}

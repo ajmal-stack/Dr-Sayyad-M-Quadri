@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { ContentLoader } from '../primitives/Loader';
 import booksData from '@/data/books.json';
 import podcastData from '@/data/podcasts.json';
+import youtubeData from '@/data/youtube.json';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -65,13 +66,21 @@ interface Book {
 }
 
 interface YouTubeVideo {
-  id: number;
+  id: string;
+  videoId: string;
   title: string;
   description: string;
   thumbnail: string;
   duration: string;
-  views: string;
-  uploadDate: string;
+  views: number;
+  likes: number;
+  publishDate: string;
+  category: string;
+  tags: string[];
+  channelName: string;
+  isNew?: boolean;
+  isTrending?: boolean;
+  featured?: boolean;
 }
 
 interface PodcastEpisode {
@@ -95,36 +104,27 @@ interface PodcastEpisode {
 const allBooks = [...booksData.featuredBooks, ...booksData.otherBooks] as Book[];
 const books = allBooks.slice(0, 6); // Show first 6 books
 
-// Sample YouTube videos data
-const youtubeVideos: YouTubeVideo[] = [
-  {
-    id: 1,
-    title: 'Understanding Anxiety: Signs, Symptoms & Solutions',
-    description: 'Learn to identify anxiety disorders and discover effective coping strategies.',
-    thumbnail: '/banner/White and Black Simple Mental Health Youtube Thumbnail.png',
-    duration: '15:32',
-    views: '125K',
-    uploadDate: '2 weeks ago',
-  },
-  {
-    id: 2,
-    title: 'Depression Treatment: Modern Approaches',
-    description: 'Explore evidence-based treatments for depression and mood disorders.',
-    thumbnail: '/banner/U_White and Black Simple Mental Health Youtube Thumbnail.png',
-    duration: '22:45',
-    views: '89K',
-    uploadDate: '1 month ago',
-  },
-  {
-    id: 3,
-    title: 'Parenting and Mental Health',
-    description: "Essential parenting strategies for supporting children's mental wellness.",
-    thumbnail: '/banner/Parenting Unveiled (1).jpg',
-    duration: '18:20',
-    views: '156K',
-    uploadDate: '3 weeks ago',
-  },
-];
+// Get YouTube videos data from JSON
+const youtubeVideos: YouTubeVideo[] = youtubeData as YouTubeVideo[];
+
+// Utility functions for formatting
+const formatViews = (views: number) => {
+  if (views >= 1000000) return `${(views / 1000000).toFixed(1)}M`;
+  if (views >= 1000) return `${(views / 1000).toFixed(1)}K`;
+  return views.toString();
+};
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 1) return '1 day ago';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+  return `${Math.floor(diffDays / 30)} months ago`;
+};
 
 // Get podcast episodes from JSON data
 const podcastEpisodes: PodcastEpisode[] = podcastData.episodes.slice(0, 6); // Show first 6 episodes
@@ -137,8 +137,9 @@ export default function MediaContentMobile() {
   const [isLoading, setIsLoading] = useState(true);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
-  const itemsPerPage = 2; // 2 cards per page for mobile
+  const itemsPerPage = 2; // 2 cards per page for mobile 
   
   // Refs for swipe containers
   const booksContainerRef = useRef<HTMLDivElement>(null);
@@ -249,6 +250,10 @@ export default function MediaContentMobile() {
 
   const toggleAudioPlay = (episodeId: number) => {
     setPlayingAudio(playingAudio === episodeId ? null : episodeId);
+  };
+
+  const handleVideoPlay = (videoId: string) => {
+    setActiveVideo(videoId);
   };
 
   // Swipe Hint Component
@@ -587,35 +592,31 @@ export default function MediaContentMobile() {
             {getVideosPageItems().map((video, index) => (
               <div
                 key={video.id}
-                className='group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 overflow-hidden border border-slate-100'
-                style={{ animationDelay: `${index * 100}ms` }}
+                className='group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 border border-red-100 cursor-pointer'
+                onClick={() => handleVideoPlay(video.id)}
               >
                 {/* Video Thumbnail */}
-                <div className='relative overflow-hidden h-32'>
+                <div className='relative aspect-video bg-slate-200 overflow-hidden'>
                   <Image
                     src={video.thumbnail}
                     alt={video.title}
                     fill
-                    className='object-cover object-center transition-transform duration-300 group-hover:scale-105'
+                    className='object-cover'
                     sizes='(max-width: 768px) 50vw, 33vw'
                     loading={index === 0 ? "eager" : "lazy"}
                     priority={index === 0}
-                    placeholder="blur"
-                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+E="
                   />
                   
                   {/* Duration Badge */}
-                  <div className='absolute top-2 right-2'>
-                    <span className='bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm'>
-                      {video.duration}
-                    </span>
+                  <div className='absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs font-medium'>
+                    {video.duration}
                   </div>
 
-                  {/* Play Button */}
-                  <div className='absolute inset-0 flex items-center justify-center'>
-                    <div className='bg-red-600 rounded-full p-2 shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:bg-red-700'>
-                      <PlayIcon className='w-4 h-4 text-white ml-0.5' />
-                    </div>
+                  {/* Play Button Overlay */}
+                  <div className='absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-200 flex items-center justify-center'>
+                    <button className='w-12 h-12 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center text-white transition-colors duration-200'>
+                      <PlayIcon className='w-6 h-6 ml-0.5' />
+                    </button>
                   </div>
                 </div>
 
@@ -625,16 +626,8 @@ export default function MediaContentMobile() {
                     {video.title}
                   </h4>
                   <p className='text-xs text-slate-600 mb-2'>
-                    {video.views} views • {video.uploadDate}
+                    {formatViews(video.views)} views • {formatDate(video.publishDate)}
                   </p>
-                  <Button
-                    variant="primary"
-                    size="xs"
-                    fullWidth
-                    leftIcon={<PlayIcon className='w-3 h-3' />}
-                  >
-                    Watch Now
-                  </Button>
                 </div>
               </div>
             ))}
@@ -661,6 +654,56 @@ export default function MediaContentMobile() {
 
       {/* Swipe Hint */}
       <SwipeHint show={showSwipeHint && !isLoading} />
+
+      {/* Video Modal */}
+      {activeVideo && (
+        <>
+          {/* Backdrop */}
+          <div
+            className='fixed inset-0 z-40 bg-black/80'
+            onClick={() => setActiveVideo(null)}
+          />
+
+          {/* Modal */}
+          <div className='fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 pointer-events-none'>
+            <div className='relative w-full h-full sm:h-auto max-w-4xl max-h-[95vh] bg-white rounded-none sm:rounded-2xl shadow-2xl overflow-hidden pointer-events-auto flex flex-col'>
+              {/* Close Button */}
+              <button
+                onClick={() => setActiveVideo(null)}
+                className='absolute top-2 right-2 sm:top-4 sm:right-4 z-10 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors duration-200'
+              >
+                <svg
+                  className='w-4 h-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M6 18L18 6M6 6l12 12'
+                  />
+                </svg>
+              </button>
+
+              {/* Video Player Container */}
+              <div className='w-full aspect-video bg-black flex-shrink-0'>
+                <iframe
+                  src={`https://www.youtube.com/embed/${
+                    youtubeVideos.find((v) => v.id === activeVideo)?.videoId
+                  }?autoplay=1&rel=0&modestbranding=1&fs=1`}
+                  title='YouTube video player'
+                  frameBorder='0'
+                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+                  allowFullScreen
+                  className='w-full h-full'
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }
