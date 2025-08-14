@@ -513,10 +513,12 @@ export default function PodcastPage() {
                 >
                   {/* Card Image */}
                   <div className='relative aspect-[4/3] overflow-hidden'>
-                    <img
+                    <Image
                       src={podcast.coverImage}
                       alt={podcast.title}
-                      className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
+                      fill
+                      className='object-cover group-hover:scale-105 transition-transform duration-700'
+                      sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                     />
                     
                     {/* Badges */}

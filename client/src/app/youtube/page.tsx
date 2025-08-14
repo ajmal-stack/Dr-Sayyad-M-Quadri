@@ -7,6 +7,7 @@ import {
   CalendarIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 import youtubeData from '@/data/youtube.json';
 
 interface YouTubeVideo {
@@ -219,10 +220,12 @@ const YouTubeContent = () => {
             >
               {/* Video Thumbnail */}
               <div className='relative aspect-video bg-slate-200 overflow-hidden'>
-                <img
+                <Image
                   src={video.thumbnail}
                   alt={video.title}
-                  className='w-full h-full object-cover'
+                  fill
+                  className='object-cover'
+                  sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
                 />
 
                 {/* Play Button Overlay */}
@@ -369,10 +372,12 @@ const YouTubeContent = () => {
                   onClick={() => handleVideoPlay(video.id)}
                 >
                   <div className='relative w-20 h-12 bg-slate-200 rounded-lg overflow-hidden flex-shrink-0'>
-                    <img
+                    <Image
                       src={video.thumbnail}
                       alt={video.title}
-                      className='w-full h-full object-cover'
+                      fill
+                      className='object-cover'
+                      sizes='80px'
                     />
                     <div className='absolute inset-0 bg-black/30 flex items-center justify-center'>
                       <PlayIcon className='w-4 h-4 text-white' />
@@ -407,10 +412,12 @@ const YouTubeContent = () => {
                   onClick={() => handleVideoPlay(video.id)}
                 >
                   <div className='relative w-20 h-12 bg-slate-200 rounded-lg overflow-hidden flex-shrink-0'>
-                    <img
+                    <Image
                       src={video.thumbnail}
                       alt={video.title}
-                      className='w-full h-full object-cover'
+                      fill
+                      className='object-cover'
+                      sizes='80px'
                     />
                     <div className='absolute inset-0 bg-black/30 flex items-center justify-center'>
                       <PlayIcon className='w-4 h-4 text-white' />
