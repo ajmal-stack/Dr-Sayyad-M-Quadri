@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: 'Dr. Syed M Quadri - Psychiatrist & Mental Health Specialist',
   description:
     'Professional psychiatric care, therapy sessions, and mental health guidance from Dr. Syed M Quadri',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
