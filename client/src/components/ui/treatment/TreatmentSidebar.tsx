@@ -5,7 +5,6 @@ interface TreatmentSidebarProps {
 }
 
 const healthTopics = [
-  { name: "Addiction Recovery", href: "/treatment/addiction" },
   { name: "Anxiety Disorders", href: "/treatment/anxiety" },
   { name: "Attention-Deficit/Hyperactivity Disorder (ADHD)", href: "/treatment/adhd" },
   // { name: "Autism Spectrum Disorder", href: "/treatment/autism" },
@@ -18,6 +17,7 @@ const healthTopics = [
   // { name: "Eating Disorders", href: "/treatment/eating-disorders" },
   // { name: "HIV and Mental Health", href: "/treatment/hiv-mental-health" },
   { name: "Life Transitions", href: "/treatment/life-transitions" },
+  { name: "Addiction Recovery", href: "/treatment/addiction" },
   // { name: "Obsessive-Compulsive Disorder (OCD)", href: "/treatment/ocd" },
   // { name: "Schizophrenia", href: "/treatment/schizophrenia" },
   { name: "Sleep Disorders", href: "/treatment/sleep" },
