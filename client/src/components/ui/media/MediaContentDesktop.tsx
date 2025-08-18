@@ -153,7 +153,7 @@ export default function MediaContentDesktop() {
   };
 
   return (
-    <section className='pt-8 pb-12 bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 relative overflow-hidden'>
+    <section className='pt-8 bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 relative overflow-hidden'>
       {/* Main Loading Overlay */}
       {isLoading && (
         <div className="absolute inset-0 z-40 bg-white/80 backdrop-blur-sm">

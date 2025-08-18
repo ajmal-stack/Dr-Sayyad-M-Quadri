@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 // import { CheckCircleIcon } from '@heroicons/react/24/outline';
 
 const services = [
@@ -12,6 +13,7 @@ const services = [
       'Evidence-based treatment for panic attacks, social anxiety, generalized anxiety disorders, and phobias using proven therapeutic techniques.',
     image: '/Services/Anxiety Disorders.svg',
     gradient: 'from-blue-500 to-indigo-600',
+    link: '/treatment/anxiety',
   },
   {
     id: 2,
@@ -20,6 +22,7 @@ const services = [
       'Personalized treatment for major depression, dysthymia, and mood-related challenges using evidence-based therapeutic approaches.',
     image: '/Services/Depression Treatment.svg',
     gradient: 'from-emerald-500 to-teal-600',
+    link: '/treatment/depression',
   },
   {
     id: 3,
@@ -28,6 +31,7 @@ const services = [
       'Master techniques to manage work stress, life transitions, and daily pressures with personalized coping strategies.',
     image: '/Services/Stress Management.svg',
     gradient: 'from-orange-500 to-amber-600',
+    link: '/treatment/stress',
   },
   {
     id: 4,
@@ -36,6 +40,7 @@ const services = [
       'Expert treatment for PTSD, childhood trauma, and traumatic life experiences using specialized therapeutic approaches.',
     image: '/Services/Trauma Therapy.svg',
     gradient: 'from-purple-500 to-violet-600',
+    link: '/treatment/trauma',
   },
   {
     id: 5,
@@ -44,6 +49,7 @@ const services = [
       'Improve communication, resolve conflicts, and strengthen emotional connections in your relationships.',
     image: '/Services/Couples Therapy.svg',
     gradient: 'from-pink-500 to-rose-600',
+    link: '/treatment/couples',
   },
   {
     id: 6,
@@ -52,6 +58,7 @@ const services = [
       'Address insomnia, sleep anxiety, and develop healthy sleep patterns for better mental and physical health.',
     image: '/Services/Sleep Disorders.svg',
     gradient: 'from-indigo-500 to-blue-600',
+    link: '/treatment/sleep',
   },
   {
     id: 7,
@@ -60,6 +67,7 @@ const services = [
       'Support for substance abuse recovery and behavioral addiction treatment with compassionate, evidence-based care.',
     image: '/Services/Addiction Recovery.svg',
     gradient: 'from-teal-500 to-cyan-600',
+    link: '/treatment/addiction',
   },
   {
     id: 8,
@@ -68,6 +76,7 @@ const services = [
       'Navigate major life changes, career transitions, and personal growth challenges with professional guidance.',
     image: '/Services/Life Transitions.svg',
     gradient: 'from-violet-500 to-purple-600',
+    link: '/treatment/life-transitions',
   },
 ];
 
@@ -141,9 +150,10 @@ export default function Services() {
         {/* Services Grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-0'>
           {services.map((service, index) => (
-            <div
+            <Link
               key={service.id}
-              className={`group relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer ${
+              href={service.link}
+              className={`group relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer block ${
                 isVisible
                   ? 'animate-in slide-in-from-bottom duration-1000'
                   : 'opacity-0'
@@ -211,14 +221,14 @@ export default function Services() {
                   </h3>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
         {/* Mobile-specific instruction text */}
         <div className='block sm:hidden text-center mb-8'>
           <p className='text-sm text-slate-500 px-4'>
-            Tap on any service card to learn more about our treatment approaches
+            Tap on any service card to explore detailed treatment information
           </p>
         </div>
       </div>
