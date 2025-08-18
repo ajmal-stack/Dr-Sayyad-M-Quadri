@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { CheckCircleIcon, ArrowRightIcon, ClockIcon, UserGroupIcon, AcademicCapIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
 
 const treatmentServices = [
   {
@@ -104,23 +104,7 @@ const treatmentServices = [
   },
 ];
 
-const treatmentApproaches = [
-  {
-    name: 'Evidence-Based Practice',
-    description: 'All treatments are grounded in scientific research and proven clinical outcomes.',
-    icon: AcademicCapIcon
-  },
-  {
-    name: 'Personalized Care',
-    description: 'Treatment plans tailored to your specific needs, goals, and circumstances.',
-    icon: UserGroupIcon
-  },
-  {
-    name: 'Flexible Scheduling',
-    description: 'Convenient appointment times including evenings and weekends.',
-    icon: ClockIcon
-  }
-];
+// Removed unused treatmentApproaches array
 
 export default function TreatmentPage() {
   const [activeService, setActiveService] = useState<number | null>(null);

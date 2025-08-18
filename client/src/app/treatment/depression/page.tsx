@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+// import { useState } from 'react';
 import Link from 'next/link';
 import TreatmentSidebar from '@/components/ui/treatment/TreatmentSidebar';
 import { 
@@ -66,7 +66,6 @@ const socialLinks = [
 ];
 
 export default function DepressionNIMHPage() {
-  const [emailSignup, setEmailSignup] = useState(false);
 
   return (
     <div className="min-h-screen pt-18 bg-white">
@@ -288,7 +287,7 @@ export default function DepressionNIMHPage() {
                   </div>
                 </div>
                 <button 
-                  onClick={() => setEmailSignup(true)}
+                  // onClick={() => setEmailSignup(true)}
                   className="w-full bg-white text-blue-600 px-4 py-2 rounded font-medium hover:bg-gray-50 transition-colors text-sm"
                 >
                   Sign Up
