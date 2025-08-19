@@ -370,7 +370,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
                       className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
                       leftIcon={<SpeakerWaveIcon className="w-5 h-5" />}
                     >
-                      Get Audiobook
+                      Buy Now 
                     </Button>
                     <Button 
                       variant="outline" 
@@ -388,7 +388,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
                       className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
                       leftIcon={<DocumentTextIcon className="w-5 h-5" />}
                     >
-                      Get E-book
+                      Buy Now
                 </Button>
                     <Button 
                       variant="outline" 
@@ -802,7 +802,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
                       )}
                       {book.narrator && (
                         <div className="flex justify-between">
-                          <dt className="text-gray-600">Narrator:</dt>
+                          <dt className="text-gray-600">Written By:</dt>
                           <dd className="text-gray-900 font-medium">{book.narrator}</dd>
                         </div>
                       )}
