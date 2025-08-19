@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import podcastData from '@/data/podcasts.json';
+import PodcastSearchModal from '@/components/ui/primitives/PodcastSearchModal';
 import {
   PlayIcon,
   PauseIcon,
@@ -63,6 +64,7 @@ export default function PodcastPage() {
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // Load podcast data from JSON
@@ -95,6 +97,22 @@ export default function PodcastPage() {
       audio.removeEventListener('ended', handleEnded);
     };
   }, [currentlyPlaying]);
+
+  // Handle anchor navigation from URL hash
+  useEffect(() => {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+      setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }, 100); // Small delay to ensure page is loaded
+    }
+  }, []);
 
   // Filter podcasts based on category and search
   useEffect(() => {
@@ -305,16 +323,74 @@ export default function PodcastPage() {
         <div className='absolute inset-0 bg-black/25'></div>
       </section>
 
+      {/* Episode Search Section - Moved to Top */}
+      <section id="episode-search" className='py-6 sm:py-8 md:py-10 bg-white/50 backdrop-blur-sm border-b border-slate-200'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='mb-6'>
+            <div className='flex items-center justify-center gap-3 mb-4'>
+              <div className='bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg'>
+                <MagnifyingGlassIcon className="w-6 h-6 text-white" />
+              </div>
+              <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 text-center'>
+                Find Your Perfect Episode
+              </h2>
+            </div>
+            <p className='text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto text-center'>
+              Search through our collection of therapeutic podcasts and mental health discussions
+            </p>
+          </div>
+          <div className='flex flex-col gap-4 sm:gap-6'>
+            {/* Search */}
+            <div className='relative w-full max-w-2xl mx-auto z-20'>
+              <MagnifyingGlassIcon className='absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none' />
+              <button
+                onClick={() => setIsSearchModalOpen(true)}
+                className='w-full pl-12 pr-4 py-4 border border-slate-200 rounded-2xl hover:border-blue-300 transition-all duration-300 bg-white shadow-lg text-base text-left text-slate-400 relative z-30 cursor-text'
+              >
+                Search episodes, topics, or categories...
+              </button>
+            </div>
+
+            {/* Quick Category Access */}
+            <div className='flex justify-center relative z-20'>
+              <div className='flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide'>
+                <span className='text-sm text-slate-500 flex-shrink-0 mr-2'>Quick Browse:</span>
+                <div className='flex gap-2 min-w-max'>
+                  {categories.slice(1, 4).map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => {
+                        setSelectedCategory(category);
+                        setIsSearchModalOpen(true);
+                      }}
+                      className='px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap relative z-30 bg-white text-slate-600 hover:bg-blue-50 border border-slate-200 hover:border-blue-300'
+                    >
+                      {category}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setIsSearchModalOpen(true)}
+                    className='px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap relative z-30 bg-blue-600 text-white hover:bg-blue-700'
+                  >
+                    View All
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Episodes */}
       {featuredPodcasts.length > 0 && (
-        <section className='py-8 sm:py-12 md:py-16 lg:py-20'>
+        <section id="all-episodes" className='py-8 sm:py-12 md:py-16 lg:py-20'>
           <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
             <div className='mb-8 sm:mb-12'>
               <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3'>
-                Featured Episodes
+                All Podcast Episodes
               </h2>
               <p className='text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl'>
-                Handpicked episodes covering the most important topics in mental health and wellness
+                Browse all therapeutic podcast episodes
               </p>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8'>
@@ -440,247 +516,190 @@ export default function PodcastPage() {
         </section>
       )}
 
-      {/* Search and Filter Section */}
-      <section className='py-3 xs:py-4 sm:py-5 md:py-6 bg-white/50 backdrop-blur-sm border-y border-slate-200'>
-        <div className='max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8'>
-          <div className='flex flex-col gap-3 xs:gap-4 sm:gap-5 md:gap-6'>
-            {/* Search */}
-            <div className='relative w-full'>
-              <MagnifyingGlassIcon className='absolute left-2.5 xs:left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400' />
-              <input
-                type='text'
-                placeholder='Search episodes...'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className='w-full pl-8 xs:pl-10 sm:pl-12 pr-3 xs:pr-4 py-2 xs:py-2.5 sm:py-3 border border-slate-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/80 backdrop-blur-sm text-sm sm:text-base placeholder:text-xs xs:placeholder:text-sm'
-              />
-            </div>
-
-            {/* Category Filter */}
-            <div className='flex items-center gap-1.5 xs:gap-2 overflow-x-auto pb-1 xs:pb-2 sm:pb-0 scrollbar-hide'>
-              <FunnelIcon className='w-4 h-4 sm:w-5 sm:h-5 text-slate-500 flex-shrink-0' />
-              <div className='flex gap-1.5 xs:gap-2 min-w-max'>
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`px-2.5 py-1 xs:px-3 xs:py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap touch-manipulation ${
-                      selectedCategory === category
-                        ? 'bg-blue-600 text-white shadow-md xs:shadow-lg'
-                        : 'bg-white text-slate-600 hover:bg-blue-50 border border-slate-200 active:bg-blue-100'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* All Episodes */}
-      <section className={`py-8 sm:py-12 md:py-16 lg:py-20 ${currentlyPlaying ? 'pb-20 xs:pb-24 sm:pb-28 md:pb-32' : ''}`}>
+      {/* Trending Episodes Section */}
+      <section id="trending-episodes" className='py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-purple-50 to-blue-50'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='mb-8 sm:mb-12'>
-            <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3'>
-              All Episodes
-            </h2>
+            <div className='flex items-center gap-3 mb-4'>
+              <div className='bg-gradient-to-r from-purple-600 to-blue-600 p-2 rounded-lg'>
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900'>
+                Trending Episodes
+              </h2>
+            </div>
             <p className='text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl'>
-              Browse our complete collection of mental health and wellness episodes
+              Most popular mental health discussions
             </p>
           </div>
-          {filteredPodcasts.length === 0 ? (
-            <div className='text-center py-8 xs:py-10 sm:py-12 md:py-16'>
-              <div className='w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 xs:mb-4'>
-                <MagnifyingGlassIcon className='w-5 h-5 xs:w-6 xs:h-6 sm:w-8 sm:h-8 text-slate-400' />
-              </div>
-              <h3 className='text-base xs:text-lg sm:text-xl font-semibold text-slate-800 mb-2'>
-                No episodes found
-              </h3>
-              <p className='text-xs xs:text-sm sm:text-base text-slate-600'>
-                Try adjusting your search or filter criteria
-              </p>
-            </div>
-          ) : (
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8'>
-              {filteredPodcasts.map((podcast) => (
-                <Link
-                  key={podcast.id}
-                  href={`/podcast/${podcast.id}`}
-                  onClick={(e) => handleCardClick(podcast.id, e)}
-                  className='group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:-translate-y-1 border border-gray-100 block'
-                >
-                  {/* Card Image */}
-                  <div className='relative aspect-[4/3] overflow-hidden'>
-                    <Image
-                      src={podcast.coverImage}
-                      alt={podcast.title}
-                      fill
-                      className='object-cover group-hover:scale-105 transition-transform duration-700'
-                      sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
-                    />
-                    
-                    {/* Badges */}
-                    <div className='absolute top-3 left-3'>
-                      <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-sm'>
-                        Featured
-                      </span>
-                    </div>
-                    
-                    <div className='absolute top-3 right-3'>
-                      <span className='inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-white/90 text-gray-700 backdrop-blur-sm'>
-                        #{podcast.episodeNumber}
-                      </span>
-                    </div>
-
-                    {/* Category Badge */}
-                    <div className='absolute bottom-3 left-3'>
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium text-white backdrop-blur-sm shadow-sm ${
-                        podcast.category === 'Mental Health' ? 'bg-purple-500/90' :
-                        podcast.category === 'Nutrition' ? 'bg-green-500/90' :
-                        podcast.category === 'Self-Development' ? 'bg-blue-500/90' :
-                        podcast.category === 'Health' ? 'bg-teal-500/90' :
-                        podcast.category === 'Wellness' ? 'bg-indigo-500/90' :
-                        podcast.category === 'Psychology' ? 'bg-orange-500/90' :
-                        'bg-gray-500/90'
-                      }`}>
-                        {podcast.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Episode Number - Always visible */}
-                  <div className='absolute top-1 left-1 xs:top-1.5 xs:left-1.5 sm:top-2 sm:left-2 md:top-3 md:left-3'>
-                    <span className='px-1 py-0.5 xs:px-1.5 xs:py-0.5 sm:px-2 sm:py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white'>
-                      #{podcast.episodeNumber}
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8'>
+            {podcasts.slice(0, 8).map((podcast) => (
+              <Link
+                key={podcast.id}
+                href={`/podcast/${podcast.id}`}
+                className='group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:-translate-y-1 border border-gray-100 block'
+              >
+                <div className='relative aspect-[4/3] overflow-hidden'>
+                  <Image
+                    src={podcast.coverImage}
+                    alt={podcast.title}
+                    fill
+                    className='object-cover group-hover:scale-105 transition-transform duration-700'
+                    sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                  />
+                  <div className='absolute top-3 left-3'>
+                    <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-sm'>
+                      Trending
                     </span>
                   </div>
-
-                  {/* Featured Badge - Only for featured */}
-                  {podcast.featured && (
-                    <div className='absolute top-1 right-1 xs:top-1.5 xs:right-1.5 sm:top-2 sm:right-2 md:top-3 md:right-3'>
-                      <span className='px-1 py-0.5 xs:px-1.5 xs:py-0.5 sm:px-2 sm:py-1 bg-red-500/90 backdrop-blur-sm rounded-full text-xs font-medium text-white'>
-                        Featured
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Mobile Active / Desktop Hover Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 transition-all duration-500 flex flex-col justify-end p-2 xs:p-3 sm:p-4 ${
-                    activeCard === podcast.id ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'
-                  }`}>
-
-
-                    {/* Content Details - Bottom */}
-                    <div
-                      className={`transform transition-all duration-500 ${
-                        activeCard === podcast.id ? 'translate-y-0' : 'translate-y-4 md:group-hover:translate-y-0'
-                      }`}
-                      style={{ transitionDelay: '200ms' }}
-                    >
-                      {/* Desktop Metadata (hidden on mobile) */}
-                      <div className='hidden md:block'>
-                        {/* Category and Duration */}
-                        <div className='flex items-center gap-2 mb-2'>
-                          <span className='px-2 py-1 bg-blue-500/80 backdrop-blur-sm text-white rounded-full text-xs font-medium'>
-                            {podcast.category}
-                          </span>
-                          <div className='flex items-center text-white/80 text-xs'>
-                            <ClockIcon className='w-3 h-3 mr-1' />
-                            {podcast.duration}
-                          </div>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className='text-white font-bold text-sm mb-2 line-clamp-2 leading-tight'>
-                          {podcast.title}
-                        </h3>
-
-                        {/* Stats */}
-                        <div className='flex items-center justify-between text-white/70 text-xs mb-3'>
-                          <div className='flex items-center gap-3'>
-                            <div className='flex items-center'>
-                              <EyeIcon className='w-3 h-3 mr-1' />
-                              {podcast.views?.toLocaleString()}
-                            </div>
-                            <div className='flex items-center'>
-                              <HeartIcon className='w-3 h-3 mr-1' />
-                              {podcast.likes}
-                            </div>
-                          </div>
-                          <div className='flex items-center'>
-                            <CalendarIcon className='w-3 h-3 mr-1' />
-                            {new Date(podcast.publishDate).toLocaleDateString('en-US', { 
-                              month: 'long', 
-                              day: 'numeric' 
-                            })}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Mobile Simplified Controls */}
-                      <div className='md:hidden'>
-                        {/* Title */}
-                        <h3 className='text-white font-bold text-sm mb-2 line-clamp-2 leading-tight'>
-                          {podcast.title}
-                        </h3>
-                        
-                        {/* Date */}
-                        <div className='flex items-center justify-end'>
-                          <div className='flex items-center text-white/80 text-xs'>
-                            <CalendarIcon className='w-3 h-3 mr-1' />
-                            {new Date(podcast.publishDate).toLocaleDateString('en-US', { 
-                              month: 'short', 
-                              day: 'numeric' 
-                            })}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Desktop Full Controls */}
-                      <div className='hidden md:flex md:items-center md:justify-between'>
-                        <div className='flex items-center gap-1'>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleLike(podcast.id);
-                            }}
-                            className='p-1.5 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors'
-                          >
-                            {likedEpisodes.has(podcast.id) ? (
-                              <HeartSolidIcon className='w-4 h-4 text-red-400' />
-                            ) : (
-                              <HeartIcon className='w-4 h-4 text-white/70' />
-                            )}
-                          </button>
-
-                          <button
-                            onClick={(e) => e.stopPropagation()}
-                            className='p-1.5 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors'
-                          >
-                            <ShareIcon className='w-4 h-4 text-white/70' />
-                          </button>
-
-                          <button
-                            onClick={(e) => e.stopPropagation()}
-                            className='p-1.5 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors'
-                          >
-                            <ArrowDownTrayIcon className='w-4 h-4 text-white/70' />
-                          </button>
-                        </div>
-
-
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
+                </div>
+                <div className='p-4 sm:p-5 lg:p-6'>
+                  <h3 className='text-lg sm:text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-purple-600 transition-colors'>
+                    {podcast.title}
+                  </h3>
+                  <p className='text-sm text-gray-600 line-clamp-2 leading-relaxed'>
+                    {podcast.description}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* Podcast Topics Section */}
+      <section id="podcast-topics" className='py-8 sm:py-12 md:py-16 lg:py-20 bg-white'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='mb-8 sm:mb-12'>
+            <div className='flex items-center gap-3 mb-4'>
+              <div className='bg-gradient-to-r from-teal-600 to-green-600 p-2 rounded-lg'>
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900'>
+                Podcast Topics
+              </h2>
+            </div>
+            <p className='text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl'>
+              Browse by therapeutic categories
+            </p>
+          </div>
+          <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6'>
+            {categories.slice(1).map((category, index) => (
+              <button
+                key={category}
+                onClick={() => {
+                  setSelectedCategory(category);
+                  document.getElementById('episode-search')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className={`group p-4 sm:p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
+                  selectedCategory === category
+                    ? 'border-teal-500 bg-teal-50 text-teal-700'
+                    : 'border-gray-200 hover:border-teal-300 hover:bg-teal-50'
+                }`}
+              >
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-3 rounded-full flex items-center justify-center ${
+                  category === 'Mental Health' ? 'bg-purple-100 text-purple-600' :
+                  category === 'Nutrition' ? 'bg-green-100 text-green-600' :
+                  category === 'Self-Development' ? 'bg-blue-100 text-blue-600' :
+                  category === 'Health' ? 'bg-teal-100 text-teal-600' :
+                  category === 'Wellness' ? 'bg-indigo-100 text-indigo-600' :
+                  category === 'Psychology' ? 'bg-orange-100 text-orange-600' :
+                  'bg-gray-100 text-gray-600'
+                }`}>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h3 className='font-semibold text-sm sm:text-base text-center line-clamp-2'>
+                  {category}
+                </h3>
+                <p className='text-xs sm:text-sm text-gray-500 mt-1 text-center'>
+                  {podcasts.filter(p => p.category === category).length} episodes
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+
+      {/* Podcast Membership Section */}
+      <section id="podcast-membership" className='py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-indigo-50 to-purple-50'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='text-center mb-8 sm:mb-12'>
+            <div className='flex items-center justify-center gap-3 mb-4'>
+              <div className='bg-gradient-to-r from-indigo-600 to-purple-600 p-2 rounded-lg'>
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900'>
+                Podcast Membership
+              </h2>
+            </div>
+            <p className='text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto'>
+              Join our therapeutic community
+            </p>
+          </div>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8'>
+            <div className='bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300'>
+              <div className='text-center'>
+                <div className='bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4'>
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className='text-xl font-bold text-gray-900 mb-2'>Free Access</h3>
+                <p className='text-gray-600 text-sm mb-4'>Basic podcast episodes and community access</p>
+                <button className='w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors'>
+                  Get Started
+                </button>
+              </div>
+            </div>
+            <div className='bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border-2 border-indigo-200'>
+              <div className='text-center'>
+                <div className='bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4'>
+                  <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                  </svg>
+                </div>
+                <h3 className='text-xl font-bold text-gray-900 mb-2'>Premium</h3>
+                <p className='text-gray-600 text-sm mb-4'>Exclusive content, early access, and premium support</p>
+                <button className='w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors'>
+                  Upgrade Now
+                </button>
+              </div>
+            </div>
+            <div className='bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300'>
+              <div className='text-center'>
+                <div className='bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4'>
+                  <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h3 className='text-xl font-bold text-gray-900 mb-2'>Community</h3>
+                <p className='text-gray-600 text-sm mb-4'>Connect with others on their mental health journey</p>
+                <button className='w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors'>
+                  Join Community
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Search Modal */}
+      <PodcastSearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        podcasts={podcasts}
+        categories={categories}
+      />
 
     </div>
   );

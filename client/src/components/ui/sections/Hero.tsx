@@ -65,7 +65,7 @@ const socialLinks = [
     )
   },
   {
-    name: 'LinkedIn',
+    name: 'LinkedIn', 
     url: 'https://www.linkedin.com',
     icon: (
       <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">

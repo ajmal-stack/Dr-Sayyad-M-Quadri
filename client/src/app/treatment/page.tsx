@@ -382,25 +382,25 @@ export default function TreatmentPage() {
                     <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-500`} />
                     
                     
-                                          {/* Hover Overlay */}
-                      <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 transition-all duration-500 ${
-                        activeService === service.id ? 'opacity-100' : 'opacity-0'
-                      }`}>
+                    {/* Hover Overlay */}
+                    <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 transition-all duration-500 ${
+                      activeService === service.id ? 'opacity-100' : 'opacity-0'
+                    }`}>
                         <div className={`absolute inset-0 flex flex-col justify-center items-center text-center p-2 sm:p-4 lg:p-6 text-white transform transition-all duration-700 ease-out ${
                           activeService === service.id ? 'translate-y-0' : 'translate-y-8'
                         }`}>
                           <h3 className={`text-sm sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 transform transition-all duration-600 ease-out ${
                             activeService === service.id ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-                          }`}>
-                            {service.name}
-                          </h3>
+                        }`}>
+                          {service.name}
+                        </h3>
                           <p className={`text-xs sm:text-sm leading-tight sm:leading-relaxed transform transition-all duration-600 ease-out delay-150 ${
                             activeService === service.id ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-                          }`}>
-                            {service.detailedDescription}
-                          </p>
-                        </div>
+                        }`}>
+                          {service.detailedDescription}
+                        </p>
                       </div>
+                    </div>
 
                       {/* Service Name at Bottom (visible when not hovering) */}
                       <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-4 lg:p-6 transition-opacity duration-500 ${
@@ -410,7 +410,7 @@ export default function TreatmentPage() {
                           {service.name}
                         </h3>
                       </div>
-
+                   
                   </div>
 
                   <div className="p-3 sm:p-4 lg:p-6">
@@ -428,8 +428,8 @@ export default function TreatmentPage() {
                   </div>
                 </div>
               </div>
-              ))}
-            </div>
+            ))}
+          </div>
           )}
 
           {/* Mobile instruction */}

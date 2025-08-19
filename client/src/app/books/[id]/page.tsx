@@ -396,7 +396,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
                       className="flex-1 border-blue-300 text-blue-700 hover:bg-blue-50"
                       leftIcon={<BookOpenIcon className="w-5 h-5" />}
                     >
-                      Read Now
+                      Read Now 
                 </Button>
                   </>
                 )}
