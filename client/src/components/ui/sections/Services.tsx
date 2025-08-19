@@ -148,7 +148,7 @@ export default function Services() {
         </div>
 
         {/* Services Grid */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-0'>
+        <div className='grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mb-0'>
           {services.map((service, index) => (
             <Link
               key={service.id}
@@ -164,7 +164,7 @@ export default function Services() {
               onClick={() => handleMobileCardTap(service.id)}
             >
               {/* Image Container */}
-              <div className='relative h-48 sm:h-56 md:h-64 lg:h-72 xl:h-80 overflow-hidden'>
+              <div className='relative h-36 sm:h-56 md:h-64 lg:h-72 xl:h-80 overflow-hidden'>
                 {/* SVG Background Image */}
                 <div className='w-full h-full relative'>
                   <Image
@@ -188,9 +188,9 @@ export default function Services() {
                     hoveredCard === service.id ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  <div className='absolute inset-0 flex flex-col justify-center items-center text-center p-3 sm:p-4 lg:p-6 text-white transform transition-all duration-500'>
+                  <div className='absolute inset-0 flex flex-col justify-center items-center text-center p-2 sm:p-4 lg:p-6 text-white transform transition-all duration-500'>
                     <h3
-                      className={`text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 transform transition-all duration-500 ${
+                      className={`text-sm sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-3 lg:mb-4 transform transition-all duration-500 ${
                         hoveredCard === service.id
                           ? 'translate-y-0 opacity-100'
                           : 'translate-y-4 opacity-0'
@@ -212,11 +212,11 @@ export default function Services() {
 
                 {/* Service Name at Bottom (visible when not hovering/tapped) */}
                 <div
-                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-4 lg:p-6 transition-opacity duration-500 ${
+                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2 sm:p-4 lg:p-6 transition-opacity duration-500 ${
                     hoveredCard === service.id ? 'opacity-0' : 'opacity-100'
                   }`}
                 >
-                  <h3 className='text-white text-base sm:text-lg lg:text-xl font-bold leading-tight'>
+                  <h3 className='text-white text-sm sm:text-lg lg:text-xl font-bold leading-tight'>
                     {service.name}
                   </h3>
                 </div>

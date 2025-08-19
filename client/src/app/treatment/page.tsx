@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const treatmentServices = [
   {
@@ -102,14 +102,130 @@ const treatmentServices = [
     conditions: ['Career Changes', 'Relationship Transitions', 'Personal Growth'],
     link: '/treatment/transitions'
   },
+  // General Health Topics
+  {
+    id: 9,
+    name: 'Adult Vaccinations',
+    description: 'Comprehensive vaccination guidance and immunization schedules for adults to prevent serious diseases.',
+    detailedDescription: 'Stay protected with up-to-date vaccinations including flu shots, COVID-19 boosters, and travel immunizations.',
+    image: '/Services/Adult Vaccinations.jpg',
+    gradient: 'from-green-500 to-emerald-600',
+    duration: 'Consultation',
+    methods: ['Preventive Care', 'Immunization', 'Health Screening'],
+    conditions: ['Flu Prevention', 'COVID-19', 'Travel Health'],
+    link: '/treatment/vaccinations'
+  },
+  {
+    id: 10,
+    name: 'Diabetes Management',
+    description: 'Comprehensive diabetes care including blood sugar monitoring, lifestyle modifications, and medication management.',
+    detailedDescription: 'Expert diabetes management with personalized treatment plans, nutritional guidance, and ongoing monitoring.',
+    image: '/Services/Diabetes Management.jpg',
+    gradient: 'from-red-500 to-pink-600',
+    duration: 'Ongoing Care',
+    methods: ['Medication Management', 'Lifestyle Coaching', 'Blood Sugar Monitoring'],
+    conditions: ['Type 1 Diabetes', 'Type 2 Diabetes', 'Prediabetes'],
+    link: '/treatment/diabetes'
+  },
+  {
+    id: 11,
+    name: 'High Blood Pressure',
+    description: 'Effective hypertension management through lifestyle changes, medication, and regular monitoring.',
+    detailedDescription: 'Comprehensive hypertension care with personalized treatment plans to reduce cardiovascular risk.',
+    image: '/Services/High Blood Pressure.jpg',
+    gradient: 'from-blue-500 to-cyan-600',
+    duration: 'Ongoing Care',
+    methods: ['Medication Management', 'Lifestyle Modification', 'Regular Monitoring'],
+    conditions: ['Essential Hypertension', 'Secondary Hypertension', 'Cardiovascular Risk'],
+    link: '/treatment/hypertension'
+  },
+  {
+    id: 12,
+    name: 'COVID-19 Care',
+    description: 'Comprehensive COVID-19 prevention, testing, treatment, and post-COVID care services.',
+    detailedDescription: 'Complete COVID-19 healthcare including prevention strategies, testing, treatment, and long-COVID management.',
+    image: '/Services/COVID-19 Care.jpg',
+    gradient: 'from-purple-500 to-indigo-600',
+    duration: 'As Needed',
+    methods: ['Prevention', 'Testing', 'Treatment'],
+    conditions: ['COVID-19 Prevention', 'Active Infection', 'Long COVID'],
+    link: '/treatment/covid'
+  },
+  {
+    id: 13,
+    name: 'Healthy Weight Management',
+    description: 'Personalized weight management programs combining nutrition, exercise, and behavioral changes.',
+    detailedDescription: 'Achieve and maintain a healthy weight through evidence-based nutrition and lifestyle interventions.',
+    image: '/Services/Healthy Weight Management.jpg',
+    gradient: 'from-orange-500 to-yellow-600',
+    duration: '3-6 months',
+    methods: ['Nutritional Counseling', 'Exercise Planning', 'Behavioral Support'],
+    conditions: ['Weight Loss', 'Weight Gain', 'Obesity Management'],
+    link: '/treatment/weight'
+  },
+  {
+    id: 14,
+    name: 'Preventive Health Screenings',
+    description: 'Regular health screenings and preventive care to detect and prevent serious health conditions.',
+    detailedDescription: 'Comprehensive preventive care including cancer screenings, heart health assessments, and wellness checkups.',
+    image: '/Services/Preventive Health Screenings.jpg',
+    gradient: 'from-teal-500 to-green-600',
+    duration: 'Annual/Periodic',
+    methods: ['Health Screenings', 'Preventive Care', 'Risk Assessment'],
+    conditions: ['Cancer Screening', 'Heart Health', 'General Wellness'],
+    link: '/treatment/preventive'
+  },
 ];
 
 // Removed unused treatmentApproaches array
 
 export default function TreatmentPage() {
   const [activeService, setActiveService] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<'mental-health' | 'general-health'>('mental-health');
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Categorize treatment services
+  const mentalHealthServices = treatmentServices.filter(service => 
+    ['Anxiety Disorders', 'Depression Treatment', 'Stress Management', 'Sleep Disorders', 'Trauma Therapy', 'Couples Therapy', 'Addiction Recovery', 'Life Transitions'].includes(service.name)
+  );
+
+  const generalHealthServices = treatmentServices.filter(service => 
+    ['Adult Vaccinations', 'Diabetes Management', 'High Blood Pressure', 'COVID-19 Care', 'Healthy Weight Management', 'Preventive Health Screenings'].includes(service.name)
+  );
+
+  // Get services based on active tab and search term
+  const getFilteredServices = () => {
+    const tabServices = activeTab === 'mental-health' ? mentalHealthServices : generalHealthServices;
+    
+    if (!searchTerm.trim()) {
+      return tabServices;
+    }
+    
+    return tabServices.filter(service =>
+      service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      service.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      service.conditions.some(condition => 
+        condition.toLowerCase().includes(searchTerm.toLowerCase())
+      ) ||
+      service.methods.some(method => 
+        method.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  };
+
+  const filteredServices = getFilteredServices();
+
+  const handleTabChange = (tab: 'mental-health' | 'general-health') => {
+    setActiveTab(tab);
+    setActiveService(null); // Reset active service when changing tabs
+    setSearchTerm(''); // Clear search when changing tabs
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+  };
 
   useEffect(() => {
     setIsVisible(true);
@@ -137,27 +253,113 @@ export default function TreatmentPage() {
   };
 
   return (
-    <div className="min-h-screen pt-12 bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
-            {/* Treatment Services Grid */}
-      <section id="services" className="py-4 sm:py-8 lg:py-12">
+    <div className="min-h-screen pt-14 sm:pt-8 lg:pt-10 bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+      {/* Header Section */}
+      <section className="py-6 sm:py-8 lg:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6">
+          {/* Title */}
+          <div className="text-center mb-8 sm:mb-10">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight">
               Specialized{' '}
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Treatment Services
               </span>
-            </h2>
-            <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto">
-              Comprehensive mental health care tailored to your specific needs and circumstances
-            </p>
+            </h1>
+            
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {treatmentServices.map((service, index) => (
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto mb-8 sm:mb-10">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search treatments, conditions, or methods..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="block w-full pl-12 pr-12 py-4 text-sm sm:text-base border border-gray-200 rounded-2xl bg-white shadow-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 placeholder-gray-400"
+              />
+              {searchTerm && (
+                <button
+                  onClick={clearSearch}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center hover:text-gray-600 transition-colors"
+                >
+                  <XMarkIcon className="h-5 w-5 text-gray-400" />
+                </button>
+              )}
+            </div>
+            {searchTerm && (
+              <div className="mt-3 text-sm text-gray-600 text-center">
+                {filteredServices.length === 0 ? (
+                  <span className="text-red-600">No treatments found for "{searchTerm}"</span>
+                ) : (
+                  <span>
+                    Found {filteredServices.length} treatment{filteredServices.length !== 1 ? 's' : ''} for "{searchTerm}"
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Tab Navigation */}
+          <div className='flex justify-center mb-8 sm:mb-10'>
+            <div className='bg-white rounded-2xl p-1 shadow-lg border border-blue-100'>
+              <div className='flex gap-1'>
+                <button
+                  onClick={() => handleTabChange('mental-health')}
+                  className={`px-4 sm:px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base ${
+                    activeTab === 'mental-health'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                      : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  Mental Health
+                </button>
+                <button
+                  onClick={() => handleTabChange('general-health')}
+                  className={`px-4 sm:px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base ${
+                    activeTab === 'general-health'
+                      ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg'
+                      : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  General Health
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Treatment Services Grid */}
+      <section id="services" className="pb-12 sm:pb-16 lg:pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Results Grid */}
+          {filteredServices.length === 0 && searchTerm ? (
+            <div className="text-center py-12 sm:py-16">
+              <div className="max-w-md mx-auto">
+                <MagnifyingGlassIcon className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-4 text-lg font-medium text-gray-900">No treatments found</h3>
+                <p className="mt-2 text-gray-500">
+                  We couldn't find any treatments matching "{searchTerm}". Try adjusting your search terms.
+                </p>
+                <button
+                  onClick={clearSearch}
+                  className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200 transition-colors duration-200"
+                >
+                  Clear search
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+              {filteredServices.map((service, index) => (
               <div
                 key={service.id}
-                className={`group relative rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer ${
+                className={`group relative rounded-t-2xl lg:rounded-t-3xl rounded-b-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer ${
                   isVisible ? 'animate-in slide-in-from-bottom duration-1000' : 'opacity-0'
                 }`}
                 style={{ animationDelay: `${index * 100}ms` }}
@@ -168,7 +370,7 @@ export default function TreatmentPage() {
                 {/* Service Card */}
                 <div className="bg-white h-full">
                   {/* Image Container */}
-                  <div className="relative h-48 sm:h-56 lg:h-64 overflow-hidden">
+                  <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 overflow-hidden">
                     <Image
                       src={service.image}
                       alt={service.name}
@@ -179,86 +381,68 @@ export default function TreatmentPage() {
                     />
                     <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-500`} />
                     
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 transition-all duration-500 ${
-                      activeService === service.id ? 'opacity-100' : 'opacity-0'
-                    }`}>
-                      <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-4 text-white">
-                        <h3 className={`text-lg sm:text-xl font-bold mb-3 transform transition-all duration-500 ${
-                          activeService === service.id ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                    
+                                          {/* Hover Overlay */}
+                      <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 transition-all duration-500 ${
+                        activeService === service.id ? 'opacity-100' : 'opacity-0'
+                      }`}>
+                        <div className={`absolute inset-0 flex flex-col justify-center items-center text-center p-4 text-white transform transition-all duration-700 ease-out ${
+                          activeService === service.id ? 'translate-y-0' : 'translate-y-8'
                         }`}>
+                          <h3 className={`text-lg sm:text-xl font-bold mb-3 transform transition-all duration-600 ease-out ${
+                            activeService === service.id ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+                          }`}>
+                            {service.name}
+                          </h3>
+                          <p className={`text-sm leading-relaxed transform transition-all duration-600 ease-out delay-150 ${
+                            activeService === service.id ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+                          }`}>
+                            {service.detailedDescription}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Service Name at Bottom (visible when not hovering) */}
+                      <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-4 lg:p-6 transition-opacity duration-500 ${
+                        activeService === service.id ? 'opacity-0' : 'opacity-100'
+                      }`}>
+                        <h3 className='text-white text-sm sm:text-lg lg:text-xl font-bold leading-tight'>
                           {service.name}
                         </h3>
-                        <p className={`text-sm leading-relaxed transform transition-all duration-500 delay-100 ${
-                          activeService === service.id ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                        }`}>
-                          {service.detailedDescription}
-                        </p>
                       </div>
-                    </div>
 
-                    {/* Service Name at Bottom */}
-                   
                   </div>
 
-                  {/* Content */}
-                  <div className="p-4 sm:p-6">
-                    <p className="text-slate-600 text-sm sm:text-base mb-4 leading-relaxed">
-                      {service.description}
-                    </p>
-
-                    {/* Treatment Details */}
-                   
-
-                    {/* Learn More Button */}
+                  <div className="p-3 sm:p-4 lg:p-6">
                     <Link
                       href={service.link}
-                      className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold text-sm group/link"
+                      className={`inline-flex items-center font-semibold text-xs sm:text-sm group/link transition-colors duration-200 ${
+                        activeTab === 'general-health' 
+                          ? 'text-teal-600 hover:text-teal-700' 
+                          : 'text-blue-600 hover:text-blue-700'
+                      }`}
                     >
                       Learn More
-                      <ArrowRightIcon className="w-4 h-4 ml-1 transform group-hover/link:translate-x-1 transition-transform duration-200" />
+                      <ArrowRightIcon className="w-3 h-3 sm:w-4 sm:h-4 ml-1 transform group-hover/link:translate-x-1 transition-transform duration-200" />
                     </Link>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Mobile instruction */}
-          <div className="block md:hidden text-center mt-8">
-            <p className="text-sm text-slate-500">
-              Tap on any service card to learn more about our treatment approaches
+          <div className="block lg:hidden text-center mt-8 sm:mt-12">
+            <p className="text-sm text-slate-500 px-4">
+              Tap on any service card to see more details about our treatment approaches
             </p>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-blue-600 to-indigo-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
-            Ready to Start Your Journey?
-          </h2>
-          <p className="text-lg sm:text-xl text-blue-100 mb-8 sm:mb-12 leading-relaxed">
-            Take the first step towards better mental health with personalized treatment designed just for you
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center bg-white text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:bg-blue-50 transform hover:scale-105 transition-all duration-300 shadow-lg"
-            >
-              Schedule Consultation
-              <ArrowRightIcon className="w-5 h-5 ml-2" />
-            </Link>
-            <Link
-              href="/about"
-              className="inline-flex items-center border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:bg-white hover:text-blue-600 transform hover:scale-105 transition-all duration-300"
-            >
-              Learn About Dr. Quadri
-            </Link>
-          </div>
-        </div>
-      </section>
+      
     </div>
   );
 }

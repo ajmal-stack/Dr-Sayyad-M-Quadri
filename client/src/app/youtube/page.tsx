@@ -30,28 +30,63 @@ interface YouTubeVideo {
 
 const YouTubeContent = () => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'mental-health' | 'general'>('mental-health');
   const [activeFilter, setActiveFilter] = useState('all');
   const videoRefs = useRef<{ [key: string]: HTMLIFrameElement | null }>({});
 
   const youtubeVideos: YouTubeVideo[] = youtubeData as YouTubeVideo[];
 
-  const categories = [
-    'all',
-    'Mental Health',
-    'Depression',
-    'Anxiety',
-    'Emotional Health',
-  ];
+  // Categorize videos into Mental Health and General topics
+  const mentalHealthCategories = ['Mental Health', 'Depression', 'Anxiety', 'Emotional Health'];
+  const generalCategories = ['Health', 'Lifestyle', 'Education', 'Wellness'];
 
-  const filteredVideos = youtubeVideos.filter(
-    (video) => activeFilter === 'all' || video.category === activeFilter
+  const mentalHealthVideos = youtubeVideos.filter(video => 
+    mentalHealthCategories.includes(video.category) || 
+    video.tags.some(tag => ['Mental Health', 'Depression', 'Anxiety', 'Psychology', 'Clinical Psychology', 'Overthinking'].includes(tag))
   );
 
-  const featuredVideos = youtubeVideos.filter((video) => video.featured);
-  const trendingVideos = youtubeVideos.filter((video) => video.isTrending);
+  const generalVideos = youtubeVideos.filter(video => 
+    !mentalHealthCategories.includes(video.category) && 
+    !video.tags.some(tag => ['Mental Health', 'Depression', 'Anxiety', 'Psychology', 'Clinical Psychology', 'Overthinking'].includes(tag))
+  );
+
+  // Get categories based on active tab
+  const getCategories = () => {
+    if (activeTab === 'mental-health') {
+      return ['all', ...mentalHealthCategories];
+    } else {
+      return ['all', ...generalCategories];
+    }
+  };
+
+  const categories = getCategories();
+
+  // Get videos based on active tab and filter
+  const getFilteredVideos = () => {
+    const tabVideos = activeTab === 'mental-health' ? mentalHealthVideos : generalVideos;
+    
+    if (activeFilter === 'all') {
+      return tabVideos;
+    }
+    
+    return tabVideos.filter(video => video.category === activeFilter);
+  };
+
+  const filteredVideos = getFilteredVideos();
+
+  // Get featured and trending videos based on active tab
+  const getTabVideos = () => activeTab === 'mental-health' ? mentalHealthVideos : generalVideos;
+  
+  const featuredVideos = getTabVideos().filter((video) => video.featured);
+  const trendingVideos = getTabVideos().filter((video) => video.isTrending);
 
   const handleVideoPlay = (videoId: string) => {
     setActiveVideo(videoId);
+  };
+
+  const handleTabChange = (tab: 'mental-health' | 'general') => {
+    setActiveTab(tab);
+    setActiveFilter('all'); // Reset filter when changing tabs
   };
 
 
@@ -135,6 +170,34 @@ const YouTubeContent = () => {
               </svg>
               Subscribe Channel
             </a>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className='flex justify-center mb-6 lg:mb-8'>
+          <div className='bg-white rounded-2xl p-1 shadow-lg border border-red-100'>
+            <div className='flex gap-1'>
+              <button
+                onClick={() => handleTabChange('mental-health')}
+                className={`px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold transition-all duration-300 ${
+                  activeTab === 'mental-health'
+                    ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg'
+                    : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                Mental Health
+              </button>
+              <button
+                onClick={() => handleTabChange('general')}
+                className={`px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold transition-all duration-300 ${
+                  activeTab === 'general'
+                    ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg'
+                    : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                General Topics
+              </button>
+            </div>
           </div>
         </div>
 
