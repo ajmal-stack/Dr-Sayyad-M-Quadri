@@ -12,6 +12,8 @@ import {
   ArrowTopRightOnSquareIcon,
   GlobeAltIcon
 } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import ContactForm from '@/components/ui/primitives/ContactForm';
 
 const onThisPageItems = [
   { name: "What is diabetes?", href: "#what-is-diabetes" },
@@ -58,11 +60,20 @@ const socialLinks = [
   { name: "Twitter", icon: "x" },
   { name: "LinkedIn", icon: "in" },
   { name: "Email", icon: "@" },
-  { name: "Print", icon: "🖨" }
+  { name: "Print", icon: "🖨" },
+  {name: "Contact Us", icon: "📞"}
 ];
 
 export default function DiabetesManagementPage() {
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
 
+  const handleContactClick = () => {
+    setIsContactFormOpen(true);
+  };
+
+  const handleCloseContactForm = () => {
+    setIsContactFormOpen(false);
+  };
   return (
     <div className="min-h-screen pt-18 bg-white">
       {/* Breadcrumb Navigation */}
@@ -328,7 +339,11 @@ export default function DiabetesManagementPage() {
                 </h3>
                 <div className="space-y-2">
                   {socialLinks.map((social) => (
-                    <button key={social.name} className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded transition-colors flex items-center">
+                    <button 
+                      key={social.name} 
+                      onClick={social.name === 'Contact Us' ? handleContactClick : undefined}
+                      className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded transition-colors flex items-center"
+                    >
                       <span className="mr-2 text-blue-600">{social.icon}</span>
                       {social.name}
                     </button>
@@ -374,6 +389,12 @@ export default function DiabetesManagementPage() {
           </div>
         </div>
       </div>
+
+      {/* Contact Form Modal */}
+      <ContactForm 
+        isOpen={isContactFormOpen} 
+        onClose={handleCloseContactForm} 
+      />
     </div>
   );
 }
