@@ -802,7 +802,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
                       )}
                       {book.narrator && (
                         <div className="flex justify-between">
-                          <dt className="text-gray-600">Written By:</dt>
+                          <dt className="text-gray-600">Author:</dt>
                           <dd className="text-gray-900 font-medium">{book.narrator}</dd>
                         </div>
                       )}
