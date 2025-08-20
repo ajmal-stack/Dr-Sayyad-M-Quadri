@@ -14,10 +14,11 @@ import {
 import { Button } from '../primitives/Button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ContentLoader } from '../primitives/Loader';
+// import { ContentLoader } from '../primitives/Loader';
 import booksData from '@/data/books.json';
 import podcastData from '@/data/podcasts.json';
 import youtubeData from '@/data/youtube.json';
+// import LoadingAnimation from '../LoadingAnimation';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -134,7 +135,7 @@ export default function MediaContentMobile() {
   const [currentVideoPage, setCurrentVideoPage] = useState(0);
   const [currentPodcastPage, setCurrentPodcastPage] = useState(0);
   const [playingAudio, setPlayingAudio] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
@@ -160,7 +161,7 @@ export default function MediaContentMobile() {
     }
 
     // Remove artificial delay - load instantly
-    setIsLoading(false);
+    // setIsLoading(false);
   }, []);
 
   const getBooksPageItems = () => {
@@ -278,16 +279,12 @@ export default function MediaContentMobile() {
   return (
     <section className='pt-4 pb-6 bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 relative overflow-hidden'>
       {/* Main Loading Overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 z-40 bg-white/80 backdrop-blur-sm">
-          <ContentLoader 
-            variant="dots" 
-            size="xl" 
-            message="Loading media content..." 
-            className="min-h-[400px]"
-          />
-        </div>
-      )}
+        {/* {isLoading && (
+          <div className="absolute inset-0 z-40 bg-white/80 backdrop-blur-sm">
+            <LoadingAnimation className="text-blue-600 scale-150 mb-8" />
+            <p className="text-slate-600 text-lg font-medium">Loading media content...</p>
+          </div>
+        )} */}
 
       {/* Background Elements */}
       <div className='absolute inset-0 opacity-20'>
@@ -618,7 +615,7 @@ export default function MediaContentMobile() {
       </div>
 
       {/* Swipe Hint */}
-      <SwipeHint show={showSwipeHint && !isLoading} />
+      <SwipeHint show={showSwipeHint} />
 
       {/* Video Modal */}
       {activeVideo && (

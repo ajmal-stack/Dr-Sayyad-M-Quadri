@@ -12,10 +12,11 @@ import {
 import { Button } from '../primitives/Button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ContentLoader } from '../primitives/Loader';
+// import { ContentLoader } from '../primitives/Loader';
 import booksData from '@/data/books.json';
 import podcastData from '@/data/podcasts.json';
 import youtubeData from '@/data/youtube.json';
+// import LoadingAnimation from '../LoadingAnimation';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -111,7 +112,7 @@ const podcastEpisodes: PodcastEpisode[] = podcastData.episodes.slice(0, 6); // S
 
 export default function MediaContentDesktop() {
   const [playingAudio, setPlayingAudio] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   const itemsPerPage = 4;
@@ -127,7 +128,7 @@ export default function MediaContentDesktop() {
     }
 
     // Remove artificial delay - load instantly
-    setIsLoading(false);
+    // setIsLoading(false);
   }, []);
 
   const getBooksPageItems = () => {
@@ -155,16 +156,12 @@ export default function MediaContentDesktop() {
   return (
     <section className='pt-8 bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 relative overflow-hidden'>
       {/* Main Loading Overlay */}
-      {isLoading && (
+      {/* {isLoading && (
         <div className="absolute inset-0 z-40 bg-white/80 backdrop-blur-sm">
-          <ContentLoader 
-            variant="dots" 
-            size="xl" 
-            message="Loading media content..." 
-            className="min-h-[400px]"
-          />
+          <LoadingAnimation className="text-blue-600 scale-150 mb-8" />
+          <p className="text-slate-600 text-lg font-medium">Loading media content...</p>
         </div>
-      )}
+      )} */}
 
       {/* Background Elements */}
       <div className='absolute inset-0 opacity-20'>

@@ -1,7 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import TreatmentSidebar from '@/components/ui/treatment/TreatmentSidebar';
+import LoadingAnimation from '@/components/ui/LoadingAnimation';
 import { 
   ShareIcon,
   EnvelopeIcon,
@@ -12,7 +14,6 @@ import {
   ArrowTopRightOnSquareIcon,
   GlobeAltIcon
 } from '@heroicons/react/24/outline';
-import { useState } from 'react';
 import ContactForm from '@/components/ui/primitives/ContactForm';
 
 const onThisPageItems = [
@@ -66,6 +67,7 @@ const socialLinks = [
 
 export default function DiabetesManagementPage() {
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleContactClick = () => {
     setIsContactFormOpen(true);
@@ -74,6 +76,26 @@ export default function DiabetesManagementPage() {
   const handleCloseContactForm = () => {
     setIsContactFormOpen(false);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-18 bg-white flex items-center justify-center">
+        <div className="text-center">
+          <LoadingAnimation className="text-teal-600 scale-150 mb-8" />
+          <p className="text-slate-600 text-lg font-medium">Loading Diabetes Management Information...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen pt-18 bg-white">
       {/* Breadcrumb Navigation */}

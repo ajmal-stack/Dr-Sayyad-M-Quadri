@@ -1,8 +1,9 @@
 'use client';
 
-  import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import TreatmentSidebar from '@/components/ui/treatment/TreatmentSidebar';
+import LoadingAnimation from '@/components/ui/LoadingAnimation';
 import { 
   ShareIcon,
   EnvelopeIcon,
@@ -67,6 +68,7 @@ const socialLinks = [
 
 export default function AnxietyNIMHPage() {
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleContactClick = () => {
     setIsContactFormOpen(true);
@@ -75,6 +77,26 @@ export default function AnxietyNIMHPage() {
   const handleCloseContactForm = () => {
     setIsContactFormOpen(false);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-18 bg-white flex items-center justify-center">
+        <div className="text-center">
+          <LoadingAnimation className="text-blue-600 scale-150 mb-8" />
+          <p className="text-slate-600 text-lg font-medium">Loading Anxiety Disorders Information...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen pt-18 bg-white">
       {/* Breadcrumb Navigation */}

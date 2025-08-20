@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ContentLoader } from '../primitives/Loader';
+// import { ContentLoader } from '../primitives/Loader';
 
 const heroSlides = [
   {
@@ -99,7 +99,7 @@ export default function Hero() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [currentX, setCurrentX] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -239,7 +239,7 @@ export default function Hero() {
   };
 
   const handleImageLoad = () => {
-    setIsLoading(false);
+    // setIsLoading(false);
   };
 
   return (
@@ -258,7 +258,7 @@ export default function Hero() {
       style={{ touchAction: 'pan-y pinch-zoom' }}
     >
       {/* Loading overlay */}
-      {isLoading && (
+      {/* {isLoading && (
         <div className="absolute inset-0 z-30 bg-slate-100">
           <ContentLoader 
             variant="spinner" 
@@ -267,7 +267,7 @@ export default function Hero() {
             className="h-full"
           />
         </div>
-      )}
+      )} */}
 
       <div className='absolute inset-0'>
         {heroSlides.map((slide, index) => (
