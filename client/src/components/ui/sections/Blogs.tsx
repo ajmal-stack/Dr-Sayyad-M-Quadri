@@ -7,7 +7,15 @@ import blogData from '@/data/blogs.json';
 
 const Blogs = () => {
   const allBlogs = [blogData.featuredBlog, ...blogData.otherBlogs];
-  const recentBlogs = allBlogs.slice(0, 3); // Show only 4 recent posts
+  const recentBlogs = allBlogs.slice(0, 3); // Show only 3 recent posts
+
+  // Create slug from title (same function as in blog post page)
+  const createSlug = (title: string) => {
+    return title.toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .trim();
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -56,7 +64,7 @@ const Blogs = () => {
               key={blog.id} 
               className={`group cursor-pointer ${index === 0 ? 'sm:col-span-2 lg:row-span-2' : ''}`}
             >
-              <Link href={`/blog/${blog.id}`} className='block h-full'>
+              <Link href={`/blog/${createSlug(blog.title)}`} className='block h-full'>
                 <div className='bg-white rounded-2xl overflow-hidden h-full flex flex-col shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group-hover:border-blue-200'>
                   {/* Enhanced Image */}
                   <div className={`relative overflow-hidden ${index === 0 ? 'h-48 sm:h-64 lg:h-80' : 'h-40 sm:h-48'}`}>
