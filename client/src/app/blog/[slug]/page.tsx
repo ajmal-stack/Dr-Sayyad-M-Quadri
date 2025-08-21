@@ -303,18 +303,19 @@ const getHardcodedBlogPost = (slug: string): HardcodedBlogPost | null => {
 };
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const { slug } = await params;
   const [isLoading, setIsLoading] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [likes, setLikes] = useState(0);
 
-  const post = getBlogPost(params.slug) || getHardcodedBlogPost(params.slug);
+  const post = getBlogPost(slug) || getHardcodedBlogPost(slug);
 
   useEffect(() => {
     const timer = setTimeout(() => {
