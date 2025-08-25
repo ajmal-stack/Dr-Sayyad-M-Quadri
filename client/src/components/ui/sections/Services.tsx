@@ -8,30 +8,30 @@ import Link from 'next/link';
 const services = [
   {
     id: 1,
-    name: 'Anxiety Disorders',
+    name: 'Psychiatric Urgent Care',
     description:
-      'Evidence-based treatment for panic attacks, social anxiety, generalized anxiety disorders, and phobias using proven therapeutic techniques.',
+      'Same-day psychiatric evaluations and treatment. No weeks of waiting - get the mental health care you need within 24 hours.',
     image: '/Services/Anxiety Disorders.svg',
-    gradient: 'from-blue-500 to-indigo-600',
-    link: '/treatment/anxiety',
+    gradient: 'from-red-500 to-orange-600',
+    link: '/treatment/urgent-care',
   },
   {
     id: 2,
-    name: 'Depression Treatment',
+    name: 'Child & Adolescent Psychiatry',
     description:
-      'Personalized treatment for major depression, dysthymia, and mood-related challenges using evidence-based therapeutic approaches.',
+      'Specialized psychiatric care for children and teenagers. Fellowship-trained expertise in developmental mental health needs.',
     image: '/Services/Depression Treatment.svg',
     gradient: 'from-emerald-500 to-teal-600',
-    link: '/treatment/depression',
+    link: '/treatment/child-adolescent',
   },
   {
     id: 3,
-    name: 'Stress Management',
+    name: 'Adult Psychiatry',
     description:
-      'Master techniques to manage work stress, life transitions, and daily pressures with personalized coping strategies.',
+      'Comprehensive psychiatric care for adults including medication management, therapy, and crisis intervention.',
     image: '/Services/Stress Management.svg',
     gradient: 'from-orange-500 to-amber-600',
-    link: '/treatment/stress',
+    link: '/treatment/adult-psychiatry',
   },
   {
     id: 4,
@@ -136,14 +136,14 @@ export default function Services() {
             </span>
           </div> */}
           <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-2'>
-            Transform Your Life with{' '}
+            Same-Day Mental Health Care with{' '}
             <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-              Expert Care
+              Dr. Quadri
             </span>
           </h2>
           <p className='text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed px-4'>
-            Personalized treatment approaches designed to help you overcome
-            challenges and achieve lasting mental wellness
+            Skip the weeks-long wait times. Get urgent psychiatric care when you need it most - 
+            serving children, adolescents, and adults in Richardson, Texas.
           </p>
         </div>
 

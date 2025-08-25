@@ -105,7 +105,7 @@ export default function BooksGrid({ items, className = '' }: BooksGridProps) {
         <div className='absolute bottom-60 right-1/3 w-2 h-2 bg-indigo-400/20 rounded-full animate-ping delay-1500' />
       </div>
 
-      <div className='max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 relative z-10'>
+      <div className='max-w-none mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 relative z-10'>
         {/* Section Header */}
         <div className='mb-8 xs:mb-10 sm:mb-12'>
           <div className='flex items-center justify-between mb-6 xs:mb-8'>

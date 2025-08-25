@@ -57,11 +57,11 @@ export default function Footer() {
   ];
 
   const socialLinks = [
+    { name: 'LinkedIn', href: 'https://www.linkedin.com/in/drsyedmquadri', icon: LinkedInIcon },
     { name: 'Facebook', href: '#', icon: FacebookIcon },
-    { name: 'Twitter', href: '#', icon: TwitterIcon },
     { name: 'Instagram', href: '#', icon: InstagramIcon },
-    { name: 'LinkedIn', href: '#', icon: LinkedInIcon },
     { name: 'YouTube', href: '#', icon: YouTubeIcon },
+    { name: 'Twitter', href: '#', icon: TwitterIcon },
   ];
 
   return (
@@ -69,18 +69,38 @@ export default function Footer() {
       <div className='max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8'>
         {/* Main Content */}
         <div className='py-8 sm:py-12 lg:py-16'>
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12'>
+          <div className='grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12'>
             {/* Brand Section */}
-            <div className='sm:col-span-2 lg:col-span-2'>
+            <div className='lg:col-span-2'>
               <h3 className='text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4'>
                 <span className='bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'>
                   Dr. Syed M Quadri
                 </span>
               </h3>
               <p className='text-slate-300 mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base max-w-lg'>
-                Board-certified psychiatrist providing compassionate,
-                evidence-based mental health care for over 10 years.
+                Fellowship-trained psychiatrist providing urgent psychiatric care 
+                for children, adolescents, and adults for over 18 years.
               </p>
+
+              {/* Newsletter Section */}
+              <div className='mb-6 sm:mb-8 max-w-md'>
+                <h4 className='text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-white'>
+                  Stay Updated
+                </h4>
+                <p className='text-slate-300 mb-4 text-xs sm:text-sm leading-relaxed'>
+                  Get weekly mental health tips delivered to your inbox
+                </p>
+                <div className='flex flex-col sm:flex-row gap-2 sm:gap-3'>
+                  <input
+                    type='email'
+                    placeholder='Enter your email'
+                    className='flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base transition-colors'
+                  />
+                  <button className='bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm sm:text-base whitespace-nowrap'>
+                    Subscribe
+                  </button>
+                </div>
+              </div>
               
               {/* Mobile-first social links - shown on small screens */}
               <div className='flex justify-center sm:justify-start space-x-3 mb-6 sm:hidden'>
@@ -99,90 +119,79 @@ export default function Footer() {
               {/* Contact Info */}
               {/* <div className='space-y-4'>
                 <div className='flex items-center space-x-3'>
-                  <PhoneIcon className='w-5 h-5 text-blue-400' />
-                  <span className='text-slate-300'>(555) 123-4567</span>
+                  <div className='w-5 h-5 text-blue-400'>📞</div>
+                  <a href='tel:972-478-0322' className='text-slate-300 hover:text-white transition-colors'>
+                    (972) 478-0322
+                  </a>
                 </div>
                 <div className='flex items-center space-x-3'>
-                  <EnvelopeIcon className='w-5 h-5 text-blue-400' />
-                  <span className='text-slate-300'>contact@drquadri.com</span>
-                </div>
-                <div className='flex items-center space-x-3'>
-                  <MapPinIcon className='w-5 h-5 text-blue-400' />
+                  <div className='w-5 h-5 text-blue-400'>📍</div>
                   <span className='text-slate-300'>
-                    123 Wellness Street, NY 10001
+                    3417 Spectrum Blvd Suite 200<br/>Richardson, TX 75082
                   </span>
                 </div>
                 <div className='flex items-center space-x-3'>
-                  <ClockIcon className='w-5 h-5 text-blue-400' />
-                  <span className='text-slate-300'>Mon-Fri: 9AM-6PM</span>
+                  <div className='w-5 h-5 text-blue-400'>🕐</div>
+                  <span className='text-slate-300'>
+                    Mon-Fri: 5PM-8PM<br/>Saturday: 11AM-2PM
+                  </span>
+                </div>
+                <div className='flex items-center space-x-3'>
+                  <div className='w-5 h-5 text-blue-400'>⚡</div>
+                  <span className='text-slate-300'>
+                    Same-Day Appointments Available
+                  </span>
                 </div>
               </div> */}
            
             </div>
 
-            {/* Quick Links */}
-            <div className='sm:col-span-1'>
-              <h4 className='text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-white'>
-                Quick Links
-              </h4>
-              <ul className='space-y-2 sm:space-y-3'>
-                {quickLinks.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className='text-slate-300 hover:text-white transition-colors duration-200 text-sm sm:text-base block py-1'
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* Quick Links and Resources Container */}
+            <div className='lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8'>
+              {/* Quick Links */}
+              <div>
+                <h4 className='text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-white'>
+                  Quick Links
+                </h4>
+                <ul className='space-y-2 sm:space-y-3'>
+                  {quickLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link
+                        href={link.href}
+                        className='text-slate-300 hover:text-white transition-colors duration-200 text-sm sm:text-base block py-1'
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-            {/* Resources */}
-            <div className='sm:col-span-1'>
-              <h4 className='text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-white'>
-                Resources
-              </h4>
-              <ul className='space-y-2 sm:space-y-3'>
-                {resources.map((resource) => (
-                  <li key={resource.name}>
-                    <Link
-                      href={resource.href}
-                      className='text-slate-300 hover:text-white transition-colors duration-200 flex items-center text-sm sm:text-base py-1'
-                    >
-                      <resource.icon className='w-3 h-3 sm:w-4 sm:h-4 mr-2 text-blue-400 flex-shrink-0' />
-                      <span className='truncate'>{resource.name}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              {/* Resources */}
+              <div>
+                <h4 className='text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-white'>
+                  Resources
+                </h4>
+                <ul className='space-y-2 sm:space-y-3'>
+                  {resources.map((resource) => (
+                    <li key={resource.name}>
+                      <Link
+                        href={resource.href}
+                        className='text-slate-300 hover:text-white transition-colors duration-200 flex items-center text-sm sm:text-base py-1'
+                      >
+                        <resource.icon className='w-3 h-3 sm:w-4 sm:h-4 mr-2 text-blue-400 flex-shrink-0' />
+                        <span className='truncate'>{resource.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
            
              
           </div>
 
-          {/* Newsletter */}
-          <div className='mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-700'>
-            <div className='max-w-md mx-auto sm:mx-0'>
-              <h4 className='text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-white text-center sm:text-left'>
-                Stay Updated
-              </h4>
-              <p className='text-slate-300 mb-4 text-xs sm:text-sm text-center sm:text-left leading-relaxed'>
-                Get weekly mental health tips delivered to your inbox
-              </p>
-              <div className='flex flex-col sm:flex-row gap-2 sm:gap-3'>
-                <input
-                  type='email'
-                  placeholder='Enter your email'
-                  className='flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base transition-colors'
-                />
-                <button className='bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm sm:text-base whitespace-nowrap'>
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
+
 
           {/* Stats */}
           {/* <div className='mt-12 pt-8 border-t border-slate-700'>
@@ -265,11 +274,15 @@ export default function Footer() {
             <div className='flex flex-col sm:flex-row items-center justify-center lg:justify-end space-y-2 sm:space-y-0 sm:space-x-3 lg:space-x-4 text-slate-400 order-first lg:order-last'>
               <div className='flex items-center space-x-1'>
                 <CheckBadgeIcon className='w-3 h-3 sm:w-4 sm:h-4 text-green-400' />
-                <span className='text-xs sm:text-sm'>Licensed</span>
+                <span className='text-xs sm:text-sm'>Fellowship Trained</span>
               </div>
               <div className='flex items-center space-x-1'>
                 <ShieldCheckIcon className='w-3 h-3 sm:w-4 sm:h-4 text-blue-400' />
-                <span className='text-xs sm:text-sm'>HIPAA Compliant</span>
+                <span className='text-xs sm:text-sm'>18+ Years Experience</span>
+              </div>
+              <div className='flex items-center space-x-1'>
+                <CheckBadgeIcon className='w-3 h-3 sm:w-4 sm:h-4 text-orange-400' />
+                <span className='text-xs sm:text-sm'>Same-Day Care</span>
               </div>
             </div>
           </div>

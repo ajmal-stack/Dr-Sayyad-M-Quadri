@@ -48,122 +48,122 @@ const About = () => {
 
   const stats = [
     {
-      number: '5000+',
+      number: '7000+',
       label: 'Patients Helped',
       color: 'text-blue-600',
       description:
-        'Successfully treated patients across various mental health conditions',
+        'Successfully treated patients across children, adolescents, and adults',
     },
     {
-      number: '15+',
+      number: '18+',
       label: 'Years Experience',
       color: 'text-indigo-600',
       description:
-        'Dedicated years of practice in psychiatric care and mental health',
+        'Dedicated years of practice in psychiatric care since 2006',
     },
     {
-      number: '98%',
-      label: 'Success Rate',
+      number: 'Same Day',
+      label: 'Urgent Care',
       color: 'text-emerald-600',
-      description: 'Patient satisfaction and treatment success rate',
+      description: 'Walk-in psychiatric urgent care within 24 hours',
     },
     {
-      number: '24/7',
-      label: 'Support Available',
+      number: '3',
+      label: 'Locations',
       color: 'text-purple-600',
-      description: 'Round-the-clock emergency support and consultation',
+      description: 'Richardson TX, Billings MT, and telehealth services',
     },
   ];
 
   const achievements: Achievement[] = [
     {
-      year: '2024',
-      title: 'Mental Health Innovation Award',
+      year: '2017',
+      title: 'Founded Innovated Minds',
       description:
-        'Recognized for innovative approaches in digital mental health therapy',
+        'Established first walk-in psychiatric urgent care clinic in Richardson, TX',
       icon: TrophyIcon,
       color: 'text-yellow-600',
     },
     {
-      year: '2023',
-      title: 'Published "Mind Matters" Book',
-      description: 'Bestselling book on modern mental health approaches',
-      icon: BookOpenIcon,
-      color: 'text-blue-600',
-    },
-    {
-      year: '2022',
-      title: 'Excellence in Patient Care',
-      description: 'Award for outstanding patient care and treatment outcomes',
+      year: '2018',
+      title: 'Yellowstone Boys and Girls Ranch',
+      description: 'Appointed as Psychiatrist serving youth in Billings, Montana',
       icon: HeartIcon,
       color: 'text-red-600',
     },
     {
-      year: '2021',
-      title: 'Research Publication',
-      description: 'Published groundbreaking research on anxiety treatment',
-      icon: BeakerIcon,
+      year: '2016',
+      title: 'Texas Psychiatry Association',
+      description: 'Joined as practicing psychiatrist in Richardson, Texas',
+      icon: ShieldCheckIcon,
+      color: 'text-blue-600',
+    },
+    {
+      year: '2006',
+      title: 'Medical Director at THR Springwood',
+      description: 'Led inpatient and outpatient adolescent psychiatric services for 11+ years',
+      icon: UserGroupIcon,
       color: 'text-green-600',
     },
     {
-      year: '2020',
-      title: 'Board Certification',
-      description: 'Achieved board certification in psychiatry',
-      icon: ShieldCheckIcon,
+      year: '2006',
+      title: 'Child & Adolescent Fellowship',
+      description: 'Completed specialized fellowship at University of Kansas',
+      icon: AcademicCapIcon,
       color: 'text-indigo-600',
     },
   ];
 
   const qualifications: Qualification[] = [
     {
-      degree: 'MD in Psychiatry',
-      institution: 'Harvard Medical School',
-      year: '2018',
+      degree: 'Child and Adolescent Psychiatry Fellowship',
+      institution: 'University of Kansas School of Medicine',
+      year: '2004-2006',
       description:
-        'Specialized in clinical psychiatry and mental health disorders',
+        'Specialized training in psychiatric care for children and adolescents',
     },
     {
-      degree: 'Residency in Psychiatry',
-      institution: 'Johns Hopkins Hospital',
-      year: '2015-2018',
-      description: 'Comprehensive training in psychiatric care and treatment',
+      degree: 'Adult Psychiatry Residency',
+      institution: 'University of Kansas School of Medicine',
+      year: '2001-2004',
+      description: 'Comprehensive training in adult psychiatric care and treatment',
     },
     {
-      degree: 'Bachelor of Medicine',
-      institution: 'Stanford University',
-      year: '2015',
+      degree: 'Doctor of Medicine (MD)',
+      institution: 'Medical School',
+      year: '2001',
       description: 'Foundation in medical sciences and clinical practice',
     },
   ];
 
   const specializations: Specialization[] = [
     {
-      name: 'Anxiety Disorders',
-      description: 'Comprehensive treatment for various anxiety conditions',
-      icon: HeartIcon,
+      name: 'Psychiatric Urgent Care',
+      description: 'Same-day psychiatric evaluations and crisis intervention',
+      icon: ClockIcon,
       color: 'text-blue-600',
-      experience: '10+ years',
-    },
-    {
-      name: 'Depression',
-      description: 'Evidence-based approaches for depression management',
-      icon: LightBulbIcon,
-      color: 'text-indigo-600',
-      experience: '12+ years',
-    },
-    {
-      name: 'Trauma Therapy',
-      description: 'EMDR and trauma-focused cognitive behavioral therapy',
-      icon: ShieldCheckIcon,
-      color: 'text-green-600',
       experience: '8+ years',
     },
     {
-      name: 'Relationship Counseling',
-      description: 'Couples and family therapy for relationship issues',
+      name: 'Child & Adolescent Psychiatry',
+      description: 'Specialized care for children and teenagers',
       icon: UserGroupIcon,
+      color: 'text-indigo-600',
+      experience: '18+ years',
+    },
+    {
+      name: 'Adult Psychiatry',
+      description: 'Comprehensive psychiatric care for adults',
+      icon: HeartIcon,
+      color: 'text-green-600',
+      experience: '20+ years',
+    },
+    {
+      name: 'Inpatient & Outpatient Services',
+      description: 'Medical director experience in both settings',
+      icon: ShieldCheckIcon,
       color: 'text-purple-600',
-      experience: '9+ years',
+      experience: '15+ years',
     },
   ];
 
@@ -198,8 +198,7 @@ const About = () => {
             </span>
           </h2>
           <p className='text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed'>
-            Combining clinical expertise with genuine compassion to help
-            individuals navigate their mental health journey
+            Pioneer of psychiatric urgent care in Texas, providing same-day mental health services for children, adolescents, and adults
           </p>
         </div>
 
@@ -228,19 +227,20 @@ const About = () => {
             <div className='space-y-8'>
               <div className='space-y-6 text-lg text-slate-600 leading-relaxed'>
                 <p>
-                  With over a decade of experience in psychiatric care, Dr. Syed
-                  M Quadri combines clinical expertise with genuine compassion
-                  to help individuals navigate their mental health journey.
+                  Dr. Syed M Quadri is an innovative psychiatrist who founded Innovated Minds, 
+                  the first walk-in psychiatric urgent care clinic in Richardson, Texas. With over 
+                  18 years of experience, he eliminates the traditional weeks-to-months wait times 
+                  for psychiatric care.
                 </p>
                 <p>
-                  Specializing in anxiety, depression, trauma, and relationship
-                  issues, Dr. Quadri uses evidence-based approaches tailored to
-                  each person&apos;s unique needs and circumstances.
+                  As an attending psychiatrist in Richardson and at Yellowstone Boys and Girls Ranch 
+                  in Montana, Dr. Quadri specializes in providing immediate psychiatric evaluations 
+                  and treatment for children, adolescents, and adults within 24 hours.
                 </p>
                 <p>
-                  His holistic approach integrates traditional psychiatric
-                  methods with modern therapeutic techniques, ensuring
-                  comprehensive care for every patient.
+                  His extensive background includes serving as Medical Director of inpatient and 
+                  outpatient adolescent services at THR Springwood for over 11 years, bringing 
+                  both clinical excellence and administrative expertise to patient care.
                 </p>
               </div>
 
@@ -251,26 +251,26 @@ const About = () => {
                     <CheckCircleIcon className='w-5 h-5 text-green-600' />
                   </div>
                   <span className='font-semibold'>
-                    Board Certified Psychiatrist
+                    Fellowship Trained Psychiatrist
                   </span>
                 </div>
                 <div className='flex items-center text-slate-700 bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300'>
                   <div className='p-2 bg-blue-100 rounded-xl mr-4'>
                     <ClockIcon className='w-5 h-5 text-blue-600' />
                   </div>
-                  <span className='font-semibold'>15+ Years Experience</span>
+                  <span className='font-semibold'>18+ Years Experience</span>
                 </div>
                 <div className='flex items-center text-slate-700 bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300'>
                   <div className='p-2 bg-indigo-100 rounded-xl mr-4'>
-                    <BookOpenIcon className='w-5 h-5 text-indigo-600' />
+                    <UserGroupIcon className='w-5 h-5 text-indigo-600' />
                   </div>
-                  <span className='font-semibold'>Published Author</span>
+                  <span className='font-semibold'>Medical Director</span>
                 </div>
                 <div className='flex items-center text-slate-700 bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300'>
                   <div className='p-2 bg-yellow-100 rounded-xl mr-4'>
                     <TrophyIcon className='w-5 h-5 text-yellow-600' />
                   </div>
-                  <span className='font-semibold'>Award Winner</span>
+                  <span className='font-semibold'>Urgent Care Pioneer</span>
                 </div>
               </div>
 

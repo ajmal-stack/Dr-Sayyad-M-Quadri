@@ -99,10 +99,10 @@ export default function CTA() {
           </div>
           
           <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6'>
-            Ask Your Questions
+            Need Urgent Psychiatric Care?
           </h1>
           <p className='text-xl text-slate-600 mb-8 leading-relaxed max-w-3xl mx-auto'>
-            Have questions about mental health or need guidance? Send us a message and Dr. Quadri will get back to you.
+            Don't wait weeks for an appointment. Call <a href="tel:972-478-0322" className="text-blue-600 font-semibold hover:underline">(972) 478-0322</a> for same-day psychiatric evaluation and treatment.
           </p>
         </div>
 

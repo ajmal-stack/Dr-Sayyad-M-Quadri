@@ -132,8 +132,8 @@ export default function BooksGridDesktop({ items, className = '' }: BooksGridDes
       {/* Hidden Audio Element */}
       <audio ref={audioRef} preload='metadata' />
       
-      {/* Desktop Grid - 3 columns for md, 4 for lg+, 5 for 2xl */}
-     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8'>
+      {/* Desktop Grid - Adjusted for sidebar layout */}
+     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mb-8'>
             {items.map((item, index) => (
               <Link
                 key={item.id}

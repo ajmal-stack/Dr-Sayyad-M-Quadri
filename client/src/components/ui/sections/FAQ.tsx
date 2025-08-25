@@ -69,89 +69,87 @@ const faqData = [
   },
   {
     id: 5,
-    category: 'Confidentiality',
-    question: 'Is therapy confidential?',
+    category: 'Locations',
+    question: 'Where are you located?',
     answer:
-      'Absolutely. All sessions are strictly confidential. Information is only shared with your explicit consent or in rare cases where safety is a concern.',
+      'Dr. Quadri practices at Innovated Minds in Richardson, Texas (3417 Spectrum Blvd Suite 200) and also serves patients at Yellowstone Boys and Girls Ranch in Montana.',
     detailedAnswer:
-      "Confidentiality is a cornerstone of therapy. Everything you share is protected by strict ethical and legal guidelines. I will only share information with your written consent, except in very rare circumstances where there's an immediate risk of harm to yourself or others, or when required by law (such as suspected child abuse). We'll discuss these limits during our first session so you feel completely informed and safe.",
-    icon: ShieldCheckIcon,
+      "The main Innovated Minds urgent care clinic is located at 3417 Spectrum Blvd Suite 200, Richardson TX 75082. Dr. Quadri also serves as an attending psychiatrist at Yellowstone Boys and Girls Ranch in Billings, Montana. Additionally, he is affiliated with Texas Psychiatry Association. The Richardson location is easily accessible and designed specifically for urgent psychiatric care needs.",
+    icon: CheckCircleIcon,
     color: 'from-rose-500 to-pink-600',
     popular: false,
   },
   {
     id: 6,
-    category: 'Insurance & Payment',
-    question: 'Do you accept insurance?',
+    category: 'Experience',
+    question: 'What is Dr. Quadri\'s background and experience?',
     answer:
-      'Yes, I accept most major insurance plans. I also offer sliding scale fees for those who qualify.',
+      'Dr. Quadri has 18+ years of psychiatric experience, including fellowship training in child and adolescent psychiatry and over 11 years as a medical director.',
     detailedAnswer:
-      "I work with most major insurance providers including Blue Cross Blue Shield, Aetna, Cigna, and others. I'll help verify your benefits and explain your coverage. For those without insurance or with limited coverage, I offer a sliding scale fee structure based on income. Payment can be made via cash, check, or credit card, and I can provide receipts for HSA/FSA reimbursement.",
-    icon: CheckCircleIcon,
+      "Dr. Syed M Quadri completed his Adult Psychiatry Residency (2001-2004) and Child & Adolescent Psychiatry Fellowship (2004-2006) at the University of Kansas School of Medicine. He served as Medical Director of inpatient and outpatient adolescent services at THR Springwood for over 11 years (2006-2018). He founded Innovated Minds in 2017, pioneering the psychiatric urgent care model in Texas, and has been serving at Yellowstone Boys and Girls Ranch since 2018.",
+    icon: ShieldCheckIcon,
     color: 'from-cyan-500 to-blue-600',
     popular: true,
   },
   {
     id: 7,
-    category: 'Treatment Approaches',
-    question: 'What therapy approaches do you use?',
+    category: 'Urgent Care',
+    question: 'What makes this different from regular psychiatry appointments?',
     answer:
-      'I use evidence-based approaches including CBT, DBT, EMDR, and mindfulness-based therapies, tailored to your specific needs.',
+      'Unlike traditional psychiatry with weeks-to-months wait times, our urgent care model provides same-day or next-day access when you need mental health support most.',
     detailedAnswer:
-      "I integrate multiple therapeutic approaches based on what research shows works best for your specific concerns. These include Cognitive Behavioral Therapy (CBT) for anxiety and depression, Dialectical Behavior Therapy (DBT) for emotional regulation, EMDR for trauma, mindfulness-based therapies for stress reduction, and psychodynamic approaches for deeper insight. We'll work together to find the approach that resonates most with you.",
+      "Traditional psychiatric appointments often require waiting weeks or months, which can be problematic during mental health crises. Innovated Minds bridges the gap between your regular doctor and emergency room visits. We provide immediate access to comprehensive psychiatric evaluation, medication management, and therapeutic support. This model is particularly valuable during acute anxiety, depression episodes, medication adjustments, or when life circumstances require prompt psychiatric intervention.",
     icon: HeartIcon,
     color: 'from-indigo-500 to-purple-600',
     popular: false,
   },
   {
     id: 8,
-    category: 'Scheduling',
-    question: 'How do I schedule an appointment?',
+    category: 'Emergency',
+    question: 'What if I have a mental health emergency?',
     answer:
-      'You can schedule online through our booking system, call our office, or send a secure message through the patient portal.',
+      'For immediate mental health crises, call 911 or go to your nearest emergency room. For urgent but non-emergency concerns, our urgent care model can see you within 24 hours.',
     detailedAnswer:
-      'Scheduling is easy and flexible. You can book appointments online through our secure patient portal, call our office during business hours, or send a message through our encrypted communication system. I offer appointments Monday through Friday, with some evening slots available. For urgent concerns, I provide same-day or next-day appointments when possible.',
-    icon: CheckCircleIcon,
-    color: 'from-teal-500 to-emerald-600',
+      'If you are having thoughts of harming yourself or others, or experiencing a severe mental health crisis, please call 911 or go to your nearest emergency room immediately. For urgent mental health concerns that are not life-threatening - such as severe anxiety, depression episodes, medication issues, or acute stress - our psychiatric urgent care can typically see you the same day or within 24 hours. You can call 972-478-0322 or walk in during business hours.',
+    icon: PhoneIcon,
+    color: 'from-red-500 to-pink-600',
     popular: true,
   },
 ];
 
 const categories = [
   'All',
-  'Getting Started',
-  'First Session',
-  'Treatment Duration',
-  'Online Services',
-  'Confidentiality',
-  'Insurance & Payment',
-  'Treatment Approaches',
+  'Urgent Care',
   'Scheduling',
+  'Services',
+  'Locations',
+  'Experience',
+  'Emergency',
 ];
 
 const quickStats = [
   {
-    icon: QuestionMarkCircleIcon,
-    label: 'Common Questions',
-    value: '8+',
+    icon: ClockIcon,
+    label: 'Appointment Wait Time',
+    value: '1-2 Days',
     color: 'from-blue-500 to-indigo-600',
   },
   {
-    icon: ClockIcon,
-    label: 'Avg Response Time',
-    value: '<24hrs',
+    icon: PhoneIcon,
+    label: 'Urgent Care Hours',
+    value: 'M-F 5-8pm',
     color: 'from-emerald-500 to-teal-600',
   },
   {
-    icon: CheckCircleIcon,
-    label: 'Questions Answered',
-    value: '1000+',
+    icon: HeartIcon,
+    label: 'Age Groups Served',
+    value: 'All Ages',
     color: 'from-purple-500 to-violet-600',
   },
   {
-    icon: HeartIcon,
-    label: 'Patient Satisfaction',
-    value: '98%',
+    icon: CheckCircleIcon,
+    label: 'Years Experience',
+    value: '18+',
     color: 'from-rose-500 to-pink-600',
   },
 ];
@@ -231,10 +229,9 @@ export default function FAQ() {
             </span>
           </h2>
           <p className='text-xl md:text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed'>
-            Find answers to common questions about therapy, treatment
-            approaches, and what to expect from your{' '}
+            Find answers about our psychiatric urgent care services, same-day appointments, and what to expect from{' '}
             <span className='text-blue-600 font-semibold'>
-              mental health journey
+              Dr. Quadri's innovative approach
             </span>
           </p>
         </div>
@@ -496,40 +493,39 @@ export default function FAQ() {
                 Still Have Questions?
               </h3>
               <p className='text-xl mb-8 opacity-90 max-w-2xl mx-auto'>
-                I&apos;m here to help. Reach out for personalized answers about
-                your mental health journey
+                Need immediate psychiatric care? Call 972-478-0322 or visit our urgent care clinic for same-day appointments
               </p>
 
               <div className='flex flex-col sm:flex-row gap-4 justify-center'>
                 <a
-                  href='/contact'
+                  href='tel:972-478-0322'
                   className='group inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 rounded-2xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105'
                 >
                   <PhoneIcon className='w-5 h-5 mr-2' />
-                  Contact Dr. Quadri
+                  Call 972-478-0322
                   <ChevronDownIcon className='w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform rotate-[-90deg]' />
                 </a>
                 <a
                   href='/about'
                   className='inline-flex items-center justify-center px-8 py-4 bg-white/10 text-white rounded-2xl font-semibold text-lg hover:bg-white/20 transition-all duration-300 border border-white/20'
                 >
-                  Learn More About Treatment
+                  Learn About Dr. Quadri
                 </a>
               </div>
 
               {/* Trust Indicators */}
               <div className='mt-8 flex flex-wrap justify-center items-center gap-6 text-sm opacity-80'>
                 <div className='flex items-center'>
-                  <CheckCircleIconSolid className='w-5 h-5 mr-2' />
-                  Free Consultation
+                  <ClockIcon className='w-5 h-5 mr-2' />
+                  Same Day Appointments
                 </div>
                 <div className='flex items-center'>
                   <ShieldCheckIcon className='w-5 h-5 mr-2' />
-                  Confidential
+                  18+ Years Experience
                 </div>
                 <div className='flex items-center'>
-                  <ClockIcon className='w-5 h-5 mr-2' />
-                  24hr Response
+                  <CheckCircleIconSolid className='w-5 h-5 mr-2' />
+                  Walk-ins Welcome
                 </div>
               </div>
             </div>

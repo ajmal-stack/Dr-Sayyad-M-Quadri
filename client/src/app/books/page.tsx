@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import booksData from '@/data/books.json';
 import BooksHero from '@/components/ui/books/BooksHero';
-import BooksFilters from '@/components/ui/books/BooksFilters';
+import BooksSidebar from '@/components/ui/books/BooksSidebar';
 import BooksGrid from '@/components/ui/books/BooksGrid';
-import BooksCTA from '@/components/ui/books/BooksCTA';
+// import BooksCTA from '@/components/ui/books/BooksCTA';
 
 
 interface Book {
@@ -58,26 +58,32 @@ const BooksPage = () => {
       {/* Hero Section */}
       <BooksHero />
 
-      {/* Filters Section */}
-      <BooksFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        selectedFormat={selectedFormat}
-        setSelectedFormat={setSelectedFormat}
-        selectedType={selectedType}
-        setSelectedType={setSelectedType}
-        categories={booksData.categories}
-        formats={booksData.stats.formats}
-        resultsCount={filteredItems.length}
-      />
+      {/* Main Content with Sidebar Layout */}
+      <div className="lg:flex">
+        {/* Sidebar */}
+        <BooksSidebar
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedFormat={selectedFormat}
+          setSelectedFormat={setSelectedFormat}
+          selectedType={selectedType}
+          setSelectedType={setSelectedType}
+          categories={booksData.categories}
+          formats={booksData.stats.formats}
+          resultsCount={filteredItems.length}
+        />
 
-      {/* Books Grid */}
-      <BooksGrid items={filteredItems} />
+        {/* Main Content Area */}
+        <div className="flex-1 min-w-0">
+          {/* Books Grid */}
+          <BooksGrid items={filteredItems} className="bg-gray-50" />
 
-      {/* Call to Action */}
-      <BooksCTA />
+          {/* Call to Action */}
+          {/* <BooksCTA /> */}
+        </div>
+      </div>
     </div>
   );
 };
