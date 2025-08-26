@@ -8,43 +8,33 @@ import Link from 'next/link';
 const services = [
   {
     id: 1,
-    name: 'AI Mental Health Assistant',
+    name: 'Anxiety Disorders',
     description:
-      '24/7 instant responses to your mental health questions. Get immediate support, schedule appointments, and access resources anytime.',
-    image: '/Services/AI-Assistant.svg',
-    gradient: 'from-purple-500 to-blue-600',
-    link: '#chatbot',
-    isSpecial: true,
+      'Evidence-based treatment for panic attacks, social anxiety, generalized anxiety disorders, and phobias using proven therapeutic techniques.',
+    image: '/Services/Anxiety Disorders.svg',
+    gradient: 'from-blue-500 to-indigo-600',
+    link: '/treatment/anxiety',
   },
   {
     id: 2,
-    name: 'Psychiatric Urgent Care',
+    name: 'Depression Treatment',
     description:
-      'Same-day psychiatric evaluations and treatment. No weeks of waiting - get the mental health care you need within 24 hours.',
-    image: '/Services/Anxiety Disorders.svg',
-    gradient: 'from-red-500 to-orange-600',
-    link: '/treatment/urgent-care',
+      'Personalized treatment for major depression, dysthymia, and mood-related challenges using evidence-based therapeutic approaches.',
+    image: '/Services/Depression Treatment.svg',
+    gradient: 'from-emerald-500 to-teal-600',
+    link: '/treatment/depression',
   },
   {
     id: 3,
-    name: 'Child & Adolescent Psychiatry',
+    name: 'Stress Management',
     description:
-      'Specialized psychiatric care for children and teenagers. Fellowship-trained expertise in developmental mental health needs.',
-    image: '/Services/Depression Treatment.svg',
-    gradient: 'from-emerald-500 to-teal-600',
-    link: '/treatment/child-adolescent',
+      'Master techniques to manage work stress, life transitions, and daily pressures with personalized coping strategies.',
+    image: '/Services/Stress Management.svg',
+    gradient: 'from-orange-500 to-amber-600',
+    link: '/treatment/stress',
   },
   {
     id: 4,
-    name: 'Adult Psychiatry',
-    description:
-      'Comprehensive psychiatric care for adults including medication management, therapy, and crisis intervention.',
-    image: '/Services/Stress Management.svg',
-    gradient: 'from-orange-500 to-amber-600',
-    link: '/treatment/adult-psychiatry',
-  },
-  {
-    id: 5,
     name: 'Trauma Therapy',
     description:
       'Expert treatment for PTSD, childhood trauma, and traumatic life experiences using specialized therapeutic approaches.',
@@ -53,7 +43,7 @@ const services = [
     link: '/treatment/trauma',
   },
   {
-    id: 6,
+    id: 5,
     name: 'Couples Therapy',
     description:
       'Improve communication, resolve conflicts, and strengthen emotional connections in your relationships.',
@@ -62,7 +52,7 @@ const services = [
     link: '/treatment/couples',
   },
   {
-    id: 7,
+    id: 6,
     name: 'Sleep Disorders',
     description:
       'Address insomnia, sleep anxiety, and develop healthy sleep patterns for better mental and physical health.',
@@ -71,7 +61,7 @@ const services = [
     link: '/treatment/sleep',
   },
   {
-    id: 8,
+    id: 7,
     name: 'Addiction Recovery',
     description:
       'Support for substance abuse recovery and behavioral addiction treatment with compassionate, evidence-based care.',
@@ -80,7 +70,7 @@ const services = [
     link: '/treatment/addiction',
   },
   {
-    id: 9,
+    id: 8,
     name: 'Life Transitions',
     description:
       'Navigate major life changes, career transitions, and personal growth challenges with professional guidance.',
@@ -94,12 +84,6 @@ export default function Services() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  const handleChatbotClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    // Dispatch custom event to open chatbot
-    window.dispatchEvent(new CustomEvent('openChatbot'));
-  };
 
   useEffect(() => {
     setIsVisible(true);
@@ -152,122 +136,93 @@ export default function Services() {
             </span>
           </div> */}
           <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-2'>
-            Same-Day Mental Health Care with{' '}
+            Transform Your Life with{' '}
             <span className='bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-              Dr. Quadri
+              Expert Care
             </span>
           </h2>
           <p className='text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed px-4'>
-            Skip the weeks-long wait times. Get urgent psychiatric care when you need it most - 
-            serving children, adolescents, and adults in Richardson, Texas.
+            Personalized treatment approaches designed to help you overcome
+            challenges and achieve lasting mental wellness
           </p>
         </div>
 
         {/* Services Grid */}
         <div className='grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mb-0'>
-          {services.map((service, index) => {
-            const isSpecialService = service.isSpecial;
-            
-            const cardContent = (
-              <>
-                {/* Image Container */}
-                <div className='relative h-36 sm:h-56 md:h-64 lg:h-72 xl:h-80 overflow-hidden'>
-                  {/* SVG Background Image */}
-                  <div className='w-full h-full relative'>
-                    <Image
-                      src={service.image}
-                      alt={service.name}
-                      fill
-                      className='object-cover object-center'
-                      sizes='(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 33vw, 25vw'
-                      priority={index < 4}
-                    />
-                  </div>
-
-                  {/* Gradient Overlay */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-500`}
+          {services.map((service, index) => (
+            <Link
+              key={service.id}
+              href={service.link}
+              className={`group relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer block ${
+                isVisible
+                  ? 'animate-in slide-in-from-bottom duration-1000'
+                  : 'opacity-0'
+              }`}
+              style={{ animationDelay: `${index * 100}ms` }}
+              onMouseEnter={() => handleCardInteraction(service.id, true)}
+              onMouseLeave={() => handleCardInteraction(service.id, false)}
+              onClick={() => handleMobileCardTap(service.id)}
+            >
+              {/* Image Container */}
+              <div className='relative h-36 sm:h-56 md:h-64 lg:h-72 xl:h-80 overflow-hidden'>
+                {/* SVG Background Image */}
+                <div className='w-full h-full relative'>
+                  <Image
+                    src={service.image}
+                    alt={service.name}
+                    fill
+                    className='object-cover object-center'
+                    sizes='(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 33vw, 25vw'
+                    priority={index < 4}
                   />
+                </div>
 
-                  {/* Hover/Tap Text Overlay */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 transition-all duration-500 ${
-                      hoveredCard === service.id ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  >
-                    <div className='absolute inset-0 flex flex-col justify-center items-center text-center p-2 sm:p-4 lg:p-6 text-white transform transition-all duration-500'>
-                      <h3
-                        className={`text-sm sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-3 lg:mb-4 transform transition-all duration-500 ${
-                          hoveredCard === service.id
-                            ? 'translate-y-0 opacity-100'
-                            : 'translate-y-4 opacity-0'
-                        }`}
-                      >
-                        {service.name}
-                      </h3>
-                      <p
-                        className={`text-xs sm:text-sm lg:text-base leading-relaxed transform transition-all duration-500 delay-100 ${
-                          hoveredCard === service.id
-                            ? 'translate-y-0 opacity-100'
-                            : 'translate-y-4 opacity-0'
-                        }`}
-                      >
-                        {service.description}
-                      </p>
-                    </div>
-                  </div>
+                {/* Gradient Overlay */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-500`}
+                />
 
-                  {/* Service Name at Bottom (visible when not hovering/tapped) */}
-                  <div
-                    className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2 sm:p-4 lg:p-6 transition-opacity duration-500 ${
-                      hoveredCard === service.id ? 'opacity-0' : 'opacity-100'
-                    }`}
-                  >
-                    <h3 className='text-white text-sm sm:text-lg lg:text-xl font-bold leading-tight'>
+                {/* Hover/Tap Text Overlay */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 transition-all duration-500 ${
+                    hoveredCard === service.id ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  <div className='absolute inset-0 flex flex-col justify-center items-center text-center p-2 sm:p-4 lg:p-6 text-white transform transition-all duration-500'>
+                    <h3
+                      className={`text-sm sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-3 lg:mb-4 transform transition-all duration-500 ${
+                        hoveredCard === service.id
+                          ? 'translate-y-0 opacity-100'
+                          : 'translate-y-4 opacity-0'
+                      }`}
+                    >
                       {service.name}
                     </h3>
+                    <p
+                      className={`text-xs sm:text-sm lg:text-base leading-relaxed transform transition-all duration-500 delay-100 ${
+                        hoveredCard === service.id
+                          ? 'translate-y-0 opacity-100'
+                          : 'translate-y-4 opacity-0'
+                      }`}
+                    >
+                      {service.description}
+                    </p>
                   </div>
                 </div>
-              </>
-            );
-            
-            if (isSpecialService) {
-              return (
+
+                {/* Service Name at Bottom (visible when not hovering/tapped) */}
                 <div
-                  key={service.id}
-                  className={`group relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer block ring-2 ring-purple-400 ring-opacity-50 ${
-                    isVisible
-                      ? 'animate-in slide-in-from-bottom duration-1000'
-                      : 'opacity-0'
+                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2 sm:p-4 lg:p-6 transition-opacity duration-500 ${
+                    hoveredCard === service.id ? 'opacity-0' : 'opacity-100'
                   }`}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  onMouseEnter={() => handleCardInteraction(service.id, true)}
-                  onMouseLeave={() => handleCardInteraction(service.id, false)}
-                  onClick={handleChatbotClick}
                 >
-                  {cardContent}
+                  <h3 className='text-white text-sm sm:text-lg lg:text-xl font-bold leading-tight'>
+                    {service.name}
+                  </h3>
                 </div>
-              );
-            } else {
-              return (
-                <Link
-                  key={service.id}
-                  href={service.link}
-                  className={`group relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer block ${
-                    isVisible
-                      ? 'animate-in slide-in-from-bottom duration-1000'
-                      : 'opacity-0'
-                  }`}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  onMouseEnter={() => handleCardInteraction(service.id, true)}
-                  onMouseLeave={() => handleCardInteraction(service.id, false)}
-                  onClick={() => handleMobileCardTap(service.id)}
-                >
-                  {cardContent}
-                </Link>
-              );
-            }
-          })}
+              </div>
+            </Link>
+          ))}
         </div>
 
         {/* Mobile-specific instruction text */}
