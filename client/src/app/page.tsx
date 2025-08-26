@@ -6,6 +6,7 @@ import Hero from "@/components/ui/sections/Hero";
 import Blogs from "@/components/ui/sections/Blogs";
 import Services from "@/components/ui/sections/Services";
 import TrustedBy from "@/components/ui/sections/TrustedBy";
+import ChatbotFeatures from "@/components/ui/sections/ChatbotFeatures";
 
 export default function Home() {
   return (
@@ -22,9 +23,9 @@ export default function Home() {
         <Services />
       </div>
 
-      {/* <div id='featured-content'>
-        <FeaturedContent />
-      </div> */}
+      <div id='chatbot-features'>
+        <ChatbotFeatures />
+      </div>
 
       <div id='newsletter'>
         <Blogs />

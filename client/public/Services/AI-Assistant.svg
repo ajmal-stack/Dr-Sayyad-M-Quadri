@@ -1,0 +1,74 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EF4444;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#grad1)" opacity="0.1"/>
+  
+  <!-- Robot head -->
+  <rect x="60" y="50" width="80" height="70" rx="15" fill="url(#grad1)"/>
+  
+  <!-- Eyes -->
+  <circle cx="80" cy="75" r="8" fill="white"/>
+  <circle cx="120" cy="75" r="8" fill="white"/>
+  <circle cx="80" cy="75" r="4" fill="#1F2937"/>
+  <circle cx="120" cy="75" r="4" fill="#1F2937"/>
+  
+  <!-- Smile -->
+  <path d="M 85 95 Q 100 105 115 95" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Chat bubbles -->
+  <ellipse cx="45" cy="40" rx="15" ry="10" fill="url(#grad2)" opacity="0.8"/>
+  <ellipse cx="155" cy="35" rx="12" ry="8" fill="url(#grad2)" opacity="0.6"/>
+  <ellipse cx="170" cy="65" rx="10" ry="6" fill="url(#grad2)" opacity="0.4"/>
+  
+  <!-- Speech lines in bubbles -->
+  <line x1="38" y1="37" x2="52" y2="37" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <line x1="38" y1="43" x2="48" y2="43" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  
+  <line x1="150" y1="32" x2="160" y2="32" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="150" y1="38" x2="157" y2="38" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Brain/AI symbol -->
+  <g transform="translate(85, 60)">
+    <path d="M 5 0 Q 15 -5 25 0 Q 30 5 25 15 Q 15 20 5 15 Q 0 5 5 0" fill="white" opacity="0.3"/>
+    <circle cx="8" cy="8" r="1.5" fill="white"/>
+    <circle cx="15" cy="5" r="1" fill="white"/>
+    <circle cx="22" cy="8" r="1.5" fill="white"/>
+    <circle cx="15" cy="12" r="1" fill="white"/>
+    <line x1="8" y1="8" x2="15" y2="5" stroke="white" stroke-width="0.5"/>
+    <line x1="15" y1="5" x2="22" y2="8" stroke="white" stroke-width="0.5"/>
+    <line x1="15" y1="12" x2="8" y2="8" stroke="white" stroke-width="0.5"/>
+    <line x1="15" y1="12" x2="22" y2="8" stroke="white" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Body -->
+  <rect x="70" y="120" width="60" height="50" rx="10" fill="url(#grad1)" opacity="0.8"/>
+  
+  <!-- Body details -->
+  <circle cx="85" cy="135" r="3" fill="white" opacity="0.6"/>
+  <circle cx="100" cy="135" r="3" fill="white" opacity="0.6"/>
+  <circle cx="115" cy="135" r="3" fill="white" opacity="0.6"/>
+  
+  <rect x="85" y="145" width="30" height="4" rx="2" fill="white" opacity="0.4"/>
+  <rect x="80" y="155" width="40" height="4" rx="2" fill="white" opacity="0.4"/>
+  
+  <!-- Arms -->
+  <rect x="45" y="130" width="25" height="8" rx="4" fill="url(#grad1)" opacity="0.7"/>
+  <rect x="130" y="130" width="25" height="8" rx="4" fill="url(#grad1)" opacity="0.7"/>
+  
+  <!-- Sparkles around -->
+  <g opacity="0.6">
+    <polygon points="30,80 32,84 36,86 32,88 30,92 28,88 24,86 28,84" fill="url(#grad2)"/>
+    <polygon points="165,100 167,103 170,105 167,107 165,110 163,107 160,105 163,103" fill="url(#grad2)"/>
+    <polygon points="25,140 27,143 30,145 27,147 25,150 23,147 20,145 23,143" fill="url(#grad2)"/>
+  </g>
+</svg>

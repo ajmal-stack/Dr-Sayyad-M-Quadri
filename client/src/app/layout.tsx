@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/ui/layout/Navbar';
 import Footer from '@/components/ui/layout/Footer';
+import AutomaticChatEmbed from '@/components/ui/primitives/AutomaticChatEmbed';
 
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <AutomaticChatEmbed />
       </body>
     </html>
   );
