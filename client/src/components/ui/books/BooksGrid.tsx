@@ -105,23 +105,23 @@ export default function BooksGrid({ items, className = '' }: BooksGridProps) {
         <div className='absolute bottom-60 right-1/3 w-2 h-2 bg-indigo-400/20 rounded-full animate-ping delay-1500' />
       </div>
 
-      <div className='max-w-none mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 relative z-10'>
-        {/* Section Header */}
-        <div className='mb-8 xs:mb-10 sm:mb-12'>
+      <div className='max-w-none mx-auto px-3 xs:px-4 sm:px-6 lg:px-0 relative z-10'>
+        {/* Section Header - Only show on mobile */}
+        <div className='mb-8 xs:mb-10 sm:mb-12 lg:hidden'>
           <div className='flex items-center justify-between mb-6 xs:mb-8'>
             <div className='flex-1'>
               <h2 className='
-                text-2xl xs:text-3xl sm:text-4xl lg:text-5xl 
+                text-2xl xs:text-3xl sm:text-4xl 
                 font-bold text-slate-900 mb-2 xs:mb-3 sm:mb-4
                 flex items-center
               '>
                 <BookOpenIcon className='
-                  w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9
+                  w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8
                   mr-2 xs:mr-3 sm:mr-4 text-black
                 ' />
                 <span className='text-black'>Books & Audiobooks</span>
               </h2>
-              <div className='h-1 w-24 xs:w-28 sm:w-36 lg:w-44 bg-black rounded-full'></div>
+              <div className='h-1 w-24 xs:w-28 sm:w-36 bg-black rounded-full'></div>
             </div>
           </div>
         </div>

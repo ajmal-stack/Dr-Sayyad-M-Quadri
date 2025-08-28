@@ -53,9 +53,9 @@ export default function BooksSidebar({
     selectedType !== 'All Types';
 
   const SidebarContent = () => (
-    <div className="h-full bg-white border-r border-gray-200 flex flex-col">
+    <div className="h-full lg:h-auto bg-white border-r lg:border border-gray-200 lg:rounded-xl lg:shadow-sm flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+      <div className="p-4 lg:p-6 border-b border-gray-200 bg-white lg:bg-gray-50 lg:rounded-t-xl sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center">
             <FunnelIcon className="w-5 h-5 mr-2 text-gray-600" />
@@ -71,7 +71,7 @@ export default function BooksSidebar({
       </div>
 
       {/* Filter Content */}
-      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+      <div className="flex-1 p-4 lg:p-6 space-y-6 overflow-y-auto">
         {/* Search */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
@@ -97,52 +97,110 @@ export default function BooksSidebar({
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="All Categories">All Categories</option>
+          <label className="block text-sm font-medium text-gray-700 mb-3">Category</label>
+          <div className="space-y-2">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="category"
+                value="All Categories"
+                checked={selectedCategory === 'All Categories'}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+              />
+              <span className="ml-2 text-sm text-gray-700">All Categories</span>
+            </label>
             {categories.filter(cat => cat !== 'All Books').map(category => (
-              <option key={category} value={category}>{category}</option>
+              <label key={category} className="flex items-center">
+                <input
+                  type="radio"
+                  name="category"
+                  value={category}
+                  checked={selectedCategory === category}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="ml-2 text-sm text-gray-700">{category}</span>
+              </label>
             ))}
-          </select>
+          </div>
         </div>
 
         {/* Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
-          <select
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="All Types">All Types</option>
-            <option value="Books">Books</option>
-            <option value="Audiobook">Audiobooks</option>
-          </select>
+          <label className="block text-sm font-medium text-gray-700 mb-3">Type</label>
+          <div className="space-y-2">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="type"
+                value="All Types"
+                checked={selectedType === 'All Types'}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+              />
+              <span className="ml-2 text-sm text-gray-700">All Types</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="type"
+                value="Books"
+                checked={selectedType === 'Books'}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+              />
+              <span className="ml-2 text-sm text-gray-700">Books</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="type"
+                value="Audiobook"
+                checked={selectedType === 'Audiobook'}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+              />
+              <span className="ml-2 text-sm text-gray-700">Audiobooks</span>
+            </label>
+          </div>
         </div>
 
         {/* Format */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Format</label>
-          <select
-            value={selectedFormat}
-            onChange={(e) => setSelectedFormat(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="All Formats">All Formats</option>
+          <label className="block text-sm font-medium text-gray-700 mb-3">Format</label>
+          <div className="space-y-2">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="format"
+                value="All Formats"
+                checked={selectedFormat === 'All Formats'}
+                onChange={(e) => setSelectedFormat(e.target.value)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+              />
+              <span className="ml-2 text-sm text-gray-700">All Formats</span>
+            </label>
             {formats.map(format => (
-              <option key={format} value={format}>{format}</option>
+              <label key={format} className="flex items-center">
+                <input
+                  type="radio"
+                  name="format"
+                  value={format}
+                  checked={selectedFormat === format}
+                  onChange={(e) => setSelectedFormat(e.target.value)}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="ml-2 text-sm text-gray-700">{format}</span>
+              </label>
             ))}
-          </select>
+          </div>
         </div>
 
       </div>
 
       {/* Sticky Footer - Results and Clear */}
-      <div className="p-4 border-t border-gray-200 bg-white sticky bottom-0">
+      <div className="p-4 lg:p-6 border-t border-gray-200 bg-white lg:bg-gray-50 lg:rounded-b-xl sticky bottom-0">
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600">
             {resultsCount} result{resultsCount !== 1 ? 's' : ''}
@@ -184,13 +242,14 @@ export default function BooksSidebar({
 
             {/* Sidebar */}
       <div className={`
-        fixed lg:sticky
-        top-0 lg:top-20
-        left-0 h-screen lg:h-[calc(100vh-5rem)]
-        w-80 lg:w-72 xl:w-80
+        fixed lg:static
+        top-0 lg:top-0
+        left-0 h-screen lg:h-auto
+        w-80 lg:w-full
         z-50 lg:z-10
         transform lg:transform-none transition-transform duration-300 ease-in-out
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        lg:mt-6
         ${className}
       `}>
         <SidebarContent />

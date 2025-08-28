@@ -58,30 +58,35 @@ const BooksPage = () => {
       {/* Hero Section */}
       <BooksHero />
 
-      {/* Main Content with Sidebar Layout */}
-      <div className="lg:flex">
-        {/* Sidebar */}
-        <BooksSidebar
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedFormat={selectedFormat}
-          setSelectedFormat={setSelectedFormat}
-          selectedType={selectedType}
-          setSelectedType={setSelectedType}
-          categories={booksData.categories}
-          formats={booksData.stats.formats}
-          resultsCount={filteredItems.length}
-        />
+      {/* Main Content Container */}
+      <div className="max-w-[1600px] mx-auto">
+        {/* Main Content with Sidebar Layout */}
+        <div className="lg:flex lg:gap-6 xl:gap-8">
+          {/* Sidebar */}
+          <div className="lg:w-80 xl:w-96 lg:flex-shrink-0">
+            <BooksSidebar
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              selectedFormat={selectedFormat}
+              setSelectedFormat={setSelectedFormat}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              categories={booksData.categories}
+              formats={booksData.stats.formats}
+              resultsCount={filteredItems.length}
+            />
+          </div>
 
-        {/* Main Content Area */}
-        <div className="flex-1 min-w-0">
-          {/* Books Grid */}
-          <BooksGrid items={filteredItems} className="bg-gray-50" />
+          {/* Main Content Area */}
+          <div className="flex-1 min-w-0 lg:pt-6">
+            {/* Books Grid */}
+            <BooksGrid items={filteredItems} className="bg-gray-50" />
 
-          {/* Call to Action */}
-          {/* <BooksCTA /> */}
+            {/* Call to Action */}
+            {/* <BooksCTA /> */}
+          </div>
         </div>
       </div>
     </div>
