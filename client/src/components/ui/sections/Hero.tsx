@@ -12,7 +12,7 @@ const heroSlides = [
   },
   {
     id: 2,
-    backgroundImage: '/hero banner/2.png',
+    backgroundImage: '/hero banner/2.jpg',
   },
   {
     id: 3,
@@ -333,36 +333,46 @@ export default function Hero() {
       </div>
 
       {/* Social Media Links - Right Side */}
-      <div className='absolute right-3 sm:right-6 md:right-8 top-1/2 transform -translate-y-1/2 z-20'>
-        <div className='flex flex-col gap-2 sm:gap-3 md:gap-4'>
-          {socialLinks.map((social) => (
-            <Link
-              key={social.name}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className='group bg-white/20 backdrop-blur-md hover:bg-white/30 p-1.5 sm:p-2 md:p-3 rounded-full border border-white/30 hover:border-white/50 transition-all duration-300 hover:scale-110'
-              aria-label={`Visit our ${social.name} page`}
-            >
-              <div className='text-white group-hover:text-white transition-colors duration-300'>
-                <div className='w-4 h-4 sm:w-5 sm:h-5'>
-                  {social.icon}
+      <div className='absolute right-2 xs:right-3 sm:right-4 md:right-6 lg:right-8 top-1/2 transform -translate-y-1/2 z-20'>
+        <div className='flex flex-col gap-3 xs:gap-1.5 sm:gap-2 md:gap-3 lg:gap-4'>
+          {socialLinks.map((social) => {
+            // Define brand colors for each platform
+            const getBrandStyles = (name: string) => {
+              switch (name) {
+                case 'Facebook':
+                  return 'bg-blue-600 hover:bg-blue-700 border-blue-500 hover:border-blue-600 text-white';
+                case 'Instagram':
+                  return 'bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 hover:from-purple-700 hover:via-pink-600 hover:to-orange-500 border-pink-400 hover:border-pink-500 text-white';
+                case 'LinkedIn':
+                  return 'bg-blue-700 hover:bg-blue-800 border-blue-600 hover:border-blue-700 text-white';
+                case 'YouTube':
+                  return 'bg-red-600 hover:bg-red-700 border-red-500 hover:border-red-600 text-white';
+                case 'Twitter':
+                  return 'bg-black hover:bg-gray-900 border-gray-600 hover:border-gray-700 text-white';
+                default:
+                  return 'bg-white/20 hover:bg-white/30 border-white/30 hover:border-white/50 text-white';
+              }
+            };
+
+            return (
+              <Link
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`group backdrop-blur-md p-1.5 xs:p-1.5 sm:p-2 md:p-2.5 lg:p-3 xl:p-3.5 rounded-full border transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg hover:shadow-xl ${getBrandStyles(social.name)}`}
+                aria-label={`Visit our ${social.name} page`}
+              >
+                <div className='transition-transform duration-300 group-hover:scale-110'>
+                  <div className='w-3.5 h-3.5 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7'>
+                    {social.icon}
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
-
-      {/* Pause/Drag Indicator */}
-      {/* {(isPaused || isDragging) && (
-        <div className='absolute top-4 left-1/2 transform -translate-x-1/2 z-20'>
-          <div className='bg-orange-500/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-medium border border-orange-400/50'>
-            {isDragging ? '🤏 Dragging' : '⏸️ Paused'}
-          </div>
-        </div>
-      )} */}
-
       <div className='absolute bottom-0 left-0 right-0 h-0.5 sm:h-1 bg-white/20 z-20'>
         <div
           className='h-full bg-white transition-all duration-300 ease-linear'

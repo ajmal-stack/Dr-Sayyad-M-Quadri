@@ -617,25 +617,26 @@ export default function MediaContentMobile() {
       {/* Swipe Hint */}
       <SwipeHint show={showSwipeHint} />
 
-      {/* Video Modal */}
+      {/* Video Modal - Enhanced Responsive Design */}
       {activeVideo && (
         <>
           {/* Backdrop */}
           <div
-            className='fixed inset-0 z-40 bg-black/80'
+            className='fixed inset-0 z-40 bg-black/90 backdrop-blur-sm'
             onClick={() => setActiveVideo(null)}
           />
 
-                    {/* Modal */}
-          <div className='fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 pointer-events-none'>
-            <div className='relative w-full h-full sm:h-auto max-w-4xl max-h-[95vh] bg-white rounded-none sm:rounded-2xl shadow-2xl overflow-hidden pointer-events-auto flex flex-col'>
+          {/* Modal */}
+          <div className='fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 lg:p-8'>
+            <div className='relative w-full max-w-[95vw] sm:max-w-[85vw] md:max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto'>
               {/* Close Button */}
               <button
                 onClick={() => setActiveVideo(null)}
-                className='absolute top-2 right-2 sm:top-4 sm:right-4 z-10 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors duration-200'
+                className='absolute -top-8 sm:-top-10 md:-top-12 right-0 z-10 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50'
+                aria-label='Close video'
               >
                 <svg
-                  className='w-4 h-4'
+                  className='w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'
@@ -645,27 +646,32 @@ export default function MediaContentMobile() {
                     strokeLinejoin='round'
                     strokeWidth={2}
                     d='M6 18L18 6M6 6l12 12'
-                  />
+                  />  
                 </svg>
               </button>
 
               {/* Video Player Container */}
-              <div className='w-full aspect-video bg-black flex-shrink-0'>
+              <div className='relative w-full aspect-video bg-black rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden shadow-2xl'>
+                {/* Loading indicator */}
+                <div className='absolute inset-0 bg-black flex items-center justify-center'>
+                  <div className='animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-white'></div>
+                </div>
+                
                 <iframe
                   src={`https://www.youtube.com/embed/${
                     youtubeVideos.find((v) => v.id === activeVideo)?.videoId
-                  }?autoplay=1&rel=0&modestbranding=1&fs=1`}
+                  }?autoplay=1&rel=0&modestbranding=1&fs=1&iv_load_policy=3&controls=1&disablekb=0`}
                   title='YouTube video player'
                   frameBorder='0'
                   allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
                   allowFullScreen
-                  className='w-full h-full'
+                  className='absolute inset-0 w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl'
                 ></iframe>
               </div>
 
-              {/* Video Title */}
-              <div className='p-4 border-t border-gray-200 bg-gray-50'>
-                <h3 className='text-sm font-bold text-slate-900 leading-tight line-clamp-2'>
+              {/* Video Title (Optional - shows below video on larger screens) */}
+              <div className='hidden md:block mt-4 text-center'>
+                <h3 className='text-white text-lg lg:text-xl font-semibold px-4'>
                   {youtubeVideos.find((v) => v.id === activeVideo)?.title}
                 </h3>
               </div>
