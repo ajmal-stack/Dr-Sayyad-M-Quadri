@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React from 'react';
 import {
   FunnelIcon,
   MagnifyingGlassIcon,
@@ -11,46 +11,49 @@ import {
 interface BooksSidebarProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-  selectedFormat: string;
-  setSelectedFormat: (format: string) => void;
-  selectedType: string;
-  setSelectedType: (type: string) => void;
+  selectedCategories: string[];
+  setSelectedCategories: (categories: string[]) => void;
+  selectedFormats: string[];
+  setSelectedFormats: (formats: string[]) => void;
+  selectedTypes: string[];
+  setSelectedTypes: (types: string[]) => void;
   categories: string[];
   formats: string[];
   resultsCount: number;
   className?: string;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (open: boolean) => void;
 }
 
 export default function BooksSidebar({
   searchTerm,
   setSearchTerm,
-  selectedCategory,
-  setSelectedCategory,
-  selectedFormat,
-  setSelectedFormat,
-  selectedType,
-  setSelectedType,
+  selectedCategories,
+  setSelectedCategories,
+  selectedFormats,
+  setSelectedFormats,
+  selectedTypes,
+  setSelectedTypes,
   categories,
   formats,
   resultsCount,
-  className = ''
+  className = '',
+  isSidebarOpen,
+  setIsSidebarOpen
 }: BooksSidebarProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const clearFilters = () => {
     setSearchTerm('');
-    setSelectedCategory('All Categories');
-    setSelectedFormat('All Formats');
-    setSelectedType('All Types');
+    setSelectedCategories([]);
+    setSelectedFormats([]);
+    setSelectedTypes([]);
   };
 
   const hasActiveFilters = 
     searchTerm !== '' || 
-    selectedCategory !== 'All Categories' || 
-    selectedFormat !== 'All Formats' || 
-    selectedType !== 'All Types';
+    selectedCategories.length > 0 || 
+    selectedFormats.length > 0 || 
+    selectedTypes.length > 0;
 
   const SidebarContent = () => (
     <div className="h-full lg:h-auto bg-white border-r lg:border border-gray-200 lg:rounded-xl lg:shadow-sm flex flex-col">
@@ -99,26 +102,20 @@ export default function BooksSidebar({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Category</label>
           <div className="space-y-2">
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="category"
-                value="All Categories"
-                checked={selectedCategory === 'All Categories'}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-              />
-              <span className="ml-2 text-sm text-gray-700">All Categories</span>
-            </label>
             {categories.filter(cat => cat !== 'All Books').map(category => (
               <label key={category} className="flex items-center">
                 <input
-                  type="radio"
-                  name="category"
+                  type="checkbox"
                   value={category}
-                  checked={selectedCategory === category}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                  checked={selectedCategories.includes(category)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedCategories([...selectedCategories, category]);
+                    } else {
+                      setSelectedCategories(selectedCategories.filter(cat => cat !== category));
+                    }
+                  }}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                 />
                 <span className="ml-2 text-sm text-gray-700">{category}</span>
               </label>
@@ -132,34 +129,33 @@ export default function BooksSidebar({
           <div className="space-y-2">
             <label className="flex items-center">
               <input
-                type="radio"
-                name="type"
-                value="All Types"
-                checked={selectedType === 'All Types'}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-              />
-              <span className="ml-2 text-sm text-gray-700">All Types</span>
-            </label>
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="type"
+                type="checkbox"
                 value="Books"
-                checked={selectedType === 'Books'}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                checked={selectedTypes.includes('Books')}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedTypes([...selectedTypes, 'Books']);
+                  } else {
+                    setSelectedTypes(selectedTypes.filter(type => type !== 'Books'));
+                  }
+                }}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
               />
               <span className="ml-2 text-sm text-gray-700">Books</span>
             </label>
             <label className="flex items-center">
               <input
-                type="radio"
-                name="type"
+                type="checkbox"
                 value="Audiobook"
-                checked={selectedType === 'Audiobook'}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                checked={selectedTypes.includes('Audiobook')}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedTypes([...selectedTypes, 'Audiobook']);
+                  } else {
+                    setSelectedTypes(selectedTypes.filter(type => type !== 'Audiobook'));
+                  }
+                }}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
               />
               <span className="ml-2 text-sm text-gray-700">Audiobooks</span>
             </label>
@@ -170,26 +166,20 @@ export default function BooksSidebar({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Format</label>
           <div className="space-y-2">
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="format"
-                value="All Formats"
-                checked={selectedFormat === 'All Formats'}
-                onChange={(e) => setSelectedFormat(e.target.value)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-              />
-              <span className="ml-2 text-sm text-gray-700">All Formats</span>
-            </label>
             {formats.map(format => (
               <label key={format} className="flex items-center">
                 <input
-                  type="radio"
-                  name="format"
+                  type="checkbox"
                   value={format}
-                  checked={selectedFormat === format}
-                  onChange={(e) => setSelectedFormat(e.target.value)}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                  checked={selectedFormats.includes(format)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedFormats([...selectedFormats, format]);
+                    } else {
+                      setSelectedFormats(selectedFormats.filter(fmt => fmt !== format));
+                    }
+                  }}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                 />
                 <span className="ml-2 text-sm text-gray-700">{format}</span>
               </label>
@@ -220,18 +210,6 @@ export default function BooksSidebar({
 
   return (
     <>
-      {/* Mobile Filter Toggle Button - Sticky */}
-      <button
-        onClick={() => setIsSidebarOpen(true)}
-        className="lg:hidden fixed top-24 left-4 z-30 flex items-center gap-2 px-3 py-2 bg-white shadow-lg border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 backdrop-blur-sm"
-      >
-        <Bars3Icon className="w-4 h-4" />
-        Filters
-        {hasActiveFilters && (
-          <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-        )}
-      </button>
-
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div 

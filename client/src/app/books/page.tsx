@@ -33,25 +33,30 @@ interface Book {
 }
 
 const BooksPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFormat, setSelectedFormat] = useState('All Formats');
-  const [selectedType, setSelectedType] = useState('All Types');
+  const [selectedFormats, setSelectedFormats] = useState<string[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const allBooks = [...booksData.featuredBooks, ...booksData.otherBooks] as Book[];
 
   const filteredItems = allBooks.filter(item => {
-    const matchesCategory = selectedCategory === 'All Categories' || item.category === selectedCategory;
+    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(item.category);
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesFormat = selectedFormat === 'All Formats' || item.format.includes(selectedFormat);
-    const matchesType = selectedType === 'All Types' || 
-                       (selectedType === 'Books' && item.type === 'Books') ||
-                       (selectedType === 'Audiobook' && item.type === 'Audiobook');
+    const matchesFormat = selectedFormats.length === 0 || selectedFormats.some(format => item.format.includes(format));
+    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(item.type);
     
     return matchesCategory && matchesSearch && matchesFormat && matchesType;
   });
+
+  const hasActiveFilters = 
+    searchTerm !== '' || 
+    selectedCategories.length > 0 || 
+    selectedFormats.length > 0 || 
+    selectedTypes.length > 0;
 
   return (
     <div className='min-h-screen bg-gray-50 pt-20'>
@@ -67,22 +72,29 @@ const BooksPage = () => {
             <BooksSidebar
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              selectedFormat={selectedFormat}
-              setSelectedFormat={setSelectedFormat}
-              selectedType={selectedType}
-              setSelectedType={setSelectedType}
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
+              selectedFormats={selectedFormats}
+              setSelectedFormats={setSelectedFormats}
+              selectedTypes={selectedTypes}
+              setSelectedTypes={setSelectedTypes}
               categories={booksData.categories}
               formats={booksData.stats.formats}
               resultsCount={filteredItems.length}
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
             />
           </div>
 
           {/* Main Content Area */}
           <div className="flex-1 min-w-0 lg:pt-6">
             {/* Books Grid */}
-            <BooksGrid items={filteredItems} className="bg-gray-50" />
+            <BooksGrid 
+              items={filteredItems} 
+              className="bg-gray-50"
+              onFilterClick={() => setIsSidebarOpen(true)}
+              hasActiveFilters={hasActiveFilters}
+            />
 
             {/* Call to Action */}
             {/* <BooksCTA /> */}

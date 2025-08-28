@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BookOpenIcon } from '@heroicons/react/24/outline';
+import { BookOpenIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import BooksGridMobile from './BooksGridMobile';
 import BooksGridDesktop from './BooksGridDesktop';
 
@@ -34,9 +34,11 @@ interface Book {
 interface BooksGridProps {
   items: Book[];
   className?: string;
+  onFilterClick?: () => void;
+  hasActiveFilters?: boolean;
 }
 
-export default function BooksGrid({ items, className = '' }: BooksGridProps) {
+export default function BooksGrid({ items, className = '', onFilterClick, hasActiveFilters = false }: BooksGridProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -123,6 +125,20 @@ export default function BooksGrid({ items, className = '' }: BooksGridProps) {
               </h2>
               <div className='h-1 w-24 xs:w-28 sm:w-36 bg-black rounded-full'></div>
             </div>
+            
+            {/* Filter Button - Right side of header */}
+            {onFilterClick && (
+              <button
+                onClick={onFilterClick}
+                className='flex items-center gap-2 px-3 xs:px-4 py-2 xs:py-2.5 bg-white shadow-lg border border-gray-200 rounded-lg text-sm xs:text-base font-medium hover:bg-gray-50 transition-all duration-200 ml-4'
+              >
+                <FunnelIcon className='w-4 h-4 xs:w-5 xs:h-5' />
+                <span className='inline'>Filters</span>
+                {hasActiveFilters && (
+                  <span className='w-2 h-2 bg-blue-500 rounded-full animate-pulse'></span>
+                )}
+              </button>
+            )}
           </div>
         </div>
 
