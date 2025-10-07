@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Navbar from '@/components/ui/layout/Navbar';
-import Footer from '@/components/ui/layout/Footer';
-import AutomaticChatEmbed from '@/components/ui/primitives/AutomaticChatEmbed';
+import ConditionalLayout from '@/components/ui/layout/ConditionalLayout';
 
 
 export const metadata: Metadata = {
@@ -23,11 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang='en'>
-      <body suppressHydrationWarning >
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <AutomaticChatEmbed />
+      <body suppressHydrationWarning>
+        <ConditionalLayout>
+          {children}
+        </ConditionalLayout>
       </body>
     </html>
   );

@@ -1,0 +1,260 @@
+{
+  "audioMetadata": {
+    "title": "Demo Audiobook Experience",
+    "description": "Dr. Syed M. Quadri introduces the upcoming voice book platform and shares a glimpse of what's to come in mental wellness content.",
+    "audioSrc": "/Audio/sampleaudio.mp3",
+    "duration": 49,
+    "speaker": "Dr. Syed M. Quadri"
+  },
+  "transcripts": {
+    "english": {
+      "language": "English",
+      "languageCode": "en",
+      "segments": [
+        {
+          "id": "en-1",
+          "startTime": 0,
+          "endTime": 3.5,
+          "text": "Hello, this is Dr. Syed M. Quadri.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-2",
+          "startTime": 3.5,
+          "endTime": 7.2,
+          "text": "Welcome to our demo audiobook experience.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-3",
+          "startTime": 7.2,
+          "endTime": 12.8,
+          "text": "What you're about to hear is only a sample to help you explore how our voice books will sound on this platform.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-4",
+          "startTime": 12.8,
+          "endTime": 18.5,
+          "text": "Imagine you're listening to an engaging chapter on mental wellness — the voice is calm, clear, and easy to follow.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-5",
+          "startTime": 18.5,
+          "endTime": 24.2,
+          "text": "Each word is carefully chosen to bring the message to life, making it feel like I'm speaking directly to you.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-6",
+          "startTime": 24.2,
+          "endTime": 28.8,
+          "text": "In our real voice books, we'll dive deep into topics like how your brain responds to stress,",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-7",
+          "startTime": 28.8,
+          "endTime": 33.5,
+          "text": "why small habits can rewire your mindset, and how you can take simple steps toward better mental health every day.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-8",
+          "startTime": 33.5,
+          "endTime": 36.8,
+          "text": "And here's the exciting part — very soon, we'll be releasing full episodes for you to enjoy.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-9",
+          "startTime": 36.8,
+          "endTime": 42.5,
+          "text": "They're in the final stages of preparation, so stay tuned, keep an ear out, and be ready to listen.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-10",
+          "startTime": 42.5,
+          "endTime": 45.2,
+          "text": "Thank you for trying this demo.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "en-11",
+          "startTime": 45.2,
+          "endTime": 49.0,
+          "text": "Now, sit back, relax, and imagine the possibilities.",
+          "speaker": "Dr. Syed M. Quadri"
+        }
+      ]
+    },
+    "spanish": {
+      "language": "Español",
+      "languageCode": "es",
+      "segments": [
+        {
+          "id": "es-1",
+          "startTime": 0,
+          "endTime": 3.5,
+          "text": "Hola, soy el Dr. Syed M. Quadri.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-2",
+          "startTime": 3.5,
+          "endTime": 7.2,
+          "text": "Bienvenidos a nuestra experiencia de demostración de audiolibros.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-3",
+          "startTime": 7.2,
+          "endTime": 12.8,
+          "text": "Lo que están a punto de escuchar es solo una muestra para ayudarles a explorar cómo sonarán nuestros libros de voz en esta plataforma.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-4",
+          "startTime": 12.8,
+          "endTime": 18.5,
+          "text": "Imaginen que están escuchando un capítulo fascinante sobre bienestar mental — la voz es calmada, clara y fácil de seguir.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-5",
+          "startTime": 18.5,
+          "endTime": 24.2,
+          "text": "Cada palabra está cuidadosamente elegida para dar vida al mensaje, haciendo que se sienta como si les estuviera hablando directamente.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-6",
+          "startTime": 24.2,
+          "endTime": 28.8,
+          "text": "En nuestros libros de voz reales, profundizaremos en temas como cómo su cerebro responde al estrés,",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-7",
+          "startTime": 28.8,
+          "endTime": 33.5,
+          "text": "por qué los pequeños hábitos pueden reprogramar su mentalidad, y cómo pueden tomar pasos simples hacia una mejor salud mental cada día.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-8",
+          "startTime": 33.5,
+          "endTime": 36.8,
+          "text": "Y aquí está la parte emocionante — muy pronto, estaremos lanzando episodios completos para que disfruten.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-9",
+          "startTime": 36.8,
+          "endTime": 42.5,
+          "text": "Están en las etapas finales de preparación, así que manténganse atentos, estén listos para escuchar.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-10",
+          "startTime": 42.5,
+          "endTime": 45.2,
+          "text": "Gracias por probar esta demostración.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "es-11",
+          "startTime": 45.2,
+          "endTime": 49.0,
+          "text": "Ahora, siéntense, relájense e imaginen las posibilidades.",
+          "speaker": "Dr. Syed M. Quadri"
+        }
+      ]
+    },
+    "french": {
+      "language": "Français",
+      "languageCode": "fr",
+      "segments": [
+        {
+          "id": "fr-1",
+          "startTime": 0,
+          "endTime": 3.5,
+          "text": "Bonjour, je suis le Dr Syed M. Quadri.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-2",
+          "startTime": 3.5,
+          "endTime": 7.2,
+          "text": "Bienvenue à notre expérience de démonstration de livre audio.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-3",
+          "startTime": 7.2,
+          "endTime": 12.8,
+          "text": "Ce que vous allez entendre n'est qu'un échantillon pour vous aider à explorer comment nos livres vocaux sonneront sur cette plateforme.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-4",
+          "startTime": 12.8,
+          "endTime": 18.5,
+          "text": "Imaginez que vous écoutez un chapitre captivant sur le bien-être mental — la voix est calme, claire et facile à suivre.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-5",
+          "startTime": 18.5,
+          "endTime": 24.2,
+          "text": "Chaque mot est soigneusement choisi pour donner vie au message, donnant l'impression que je vous parle directement.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-6",
+          "startTime": 24.2,
+          "endTime": 28.8,
+          "text": "Dans nos vrais livres vocaux, nous approfondirons des sujets comme la façon dont votre cerveau répond au stress,",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-7",
+          "startTime": 28.8,
+          "endTime": 33.5,
+          "text": "pourquoi les petites habitudes peuvent reprogrammer votre état d'esprit, et comment vous pouvez prendre des mesures simples vers une meilleure santé mentale chaque jour.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-8",
+          "startTime": 33.5,
+          "endTime": 36.8,
+          "text": "Et voici la partie excitante — très bientôt, nous publierons des épisodes complets pour votre plaisir.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-9",
+          "startTime": 36.8,
+          "endTime": 42.5,
+          "text": "Ils sont dans les dernières étapes de préparation, alors restez à l'écoute, gardez l'oreille ouverte, et soyez prêts à écouter.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-10",
+          "startTime": 42.5,
+          "endTime": 45.2,
+          "text": "Merci d'avoir essayé cette démonstration.",
+          "speaker": "Dr. Syed M. Quadri"
+        },
+        {
+          "id": "fr-11",
+          "startTime": 45.2,
+          "endTime": 49.0,
+          "text": "Maintenant, installez-vous confortablement, détendez-vous et imaginez les possibilités.",
+          "speaker": "Dr. Syed M. Quadri"
+        }
+      ]
+    }
+  }
+}

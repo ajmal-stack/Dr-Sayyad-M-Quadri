@@ -1,0 +1,371 @@
+{
+  "info": {
+    "name": "Dr. Syed M Quadri - Podcasts API",
+    "description": "Complete API collection for testing podcast endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api/v1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Public Endpoints",
+      "item": [
+        {
+          "name": "Get All Podcasts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts?page=1&limit=10&sortBy=latest",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"},
+                {"key": "sortBy", "value": "latest"}
+              ]
+            },
+            "description": "Get all podcasts with pagination and filtering"
+          }
+        },
+        {
+          "name": "Get Single Podcast",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/{{podcastId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "{{podcastId}}"]
+            },
+            "description": "Get a single podcast by ID or slug"
+          }
+        },
+        {
+          "name": "Get Featured Podcasts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/featured?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "featured"],
+              "query": [{"key": "limit", "value": "5"}]
+            },
+            "description": "Get featured podcasts"
+          }
+        },
+        {
+          "name": "Get Latest Podcasts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/latest?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "latest"],
+              "query": [{"key": "limit", "value": "10"}]
+            },
+            "description": "Get latest podcasts"
+          }
+        },
+        {
+          "name": "Get Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "categories"]
+            },
+            "description": "Get all podcast categories with counts"
+          }
+        },
+        {
+          "name": "Get Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "stats"]
+            },
+            "description": "Get podcast statistics and analytics"
+          }
+        },
+        {
+          "name": "Search Podcasts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/search?q=anxiety&category=Mental Health&sortBy=relevance&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "search"],
+              "query": [
+                {"key": "q", "value": "anxiety"},
+                {"key": "category", "value": "Mental Health"},
+                {"key": "sortBy", "value": "relevance"},
+                {"key": "limit", "value": "10"}
+              ]
+            },
+            "description": "Search podcasts by query with filters"
+          }
+        },
+        {
+          "name": "Get Podcasts by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/category/Mental Health?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "category", "Mental Health"],
+              "query": [{"key": "limit", "value": "10"}]
+            },
+            "description": "Get podcasts by specific category"
+          }
+        },
+        {
+          "name": "Get Podcasts by Host",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/host/Dr. Syed M Quadri?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "host", "Dr. Syed M Quadri"],
+              "query": [{"key": "limit", "value": "10"}]
+            },
+            "description": "Get podcasts by specific host"
+          }
+        },
+        {
+          "name": "Get Podcast Transcript",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/{{podcastId}}/transcript",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "{{podcastId}}", "transcript"]
+            },
+            "description": "Get transcript for a specific podcast"
+          }
+        },
+        {
+          "name": "Track Engagement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"play\",\n  \"listenTime\": 1200,\n  \"completed\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/{{podcastId}}/track",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "{{podcastId}}", "track"]
+            },
+            "description": "Track user engagement with podcast"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Endpoints",
+      "item": [
+        {
+          "name": "Create Podcast",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Podcast Episode\",\n  \"description\": \"This is a comprehensive episode about mental health and wellness strategies.\",\n  \"duration\": \"45:30\",\n  \"category\": \"Mental Health\",\n  \"audioUrl\": \"https://example.com/audio.mp3\",\n  \"coverImage\": \"/images/cover.jpg\",\n  \"featured\": false,\n  \"host\": \"Dr. Syed M Quadri\",\n  \"episodeNumber\": 50,\n  \"transcript\": \"Welcome to this episode...\",\n  \"showNotes\": [\n    \"Introduction (0:00 - 5:00)\",\n    \"Main topic discussion (5:00 - 35:00)\",\n    \"Q&A session (35:00 - 45:30)\"\n  ],\n  \"tags\": [\"mental-health\", \"wellness\", \"psychology\"],\n  \"isActive\": true,\n  \"isPublished\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/podcasts",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts"]
+            },
+            "description": "Create a new podcast episode"
+          }
+        },
+        {
+          "name": "Update Podcast",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Podcast Title\",\n  \"description\": \"Updated description for the podcast episode.\",\n  \"featured\": true,\n  \"tags\": [\"updated\", \"mental-health\", \"wellness\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/{{podcastId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "{{podcastId}}"]
+            },
+            "description": "Update an existing podcast"
+          }
+        },
+        {
+          "name": "Delete Podcast",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts/{{podcastId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts", "{{podcastId}}"]
+            },
+            "description": "Delete a podcast episode"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Advanced Filtering",
+      "item": [
+        {
+          "name": "Filter by Duration",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts?minDuration=30&maxDuration=60&sortBy=duration-short",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts"],
+              "query": [
+                {"key": "minDuration", "value": "30"},
+                {"key": "maxDuration", "value": "60"},
+                {"key": "sortBy", "value": "duration-short"}
+              ]
+            },
+            "description": "Filter podcasts by duration range"
+          }
+        },
+        {
+          "name": "Filter by Tags",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts?tags=anxiety,wellness&sortBy=popular",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts"],
+              "query": [
+                {"key": "tags", "value": "anxiety,wellness"},
+                {"key": "sortBy", "value": "popular"}
+              ]
+            },
+            "description": "Filter podcasts by tags"
+          }
+        },
+        {
+          "name": "Filter Featured Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts?featured=true&sortBy=latest",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts"],
+              "query": [
+                {"key": "featured", "value": "true"},
+                {"key": "sortBy", "value": "latest"}
+              ]
+            },
+            "description": "Get only featured podcasts"
+          }
+        },
+        {
+          "name": "Complex Filter Combination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/podcasts?category=Mental Health&host=Dr. Syed M Quadri&minDuration=20&maxDuration=50&tags=anxiety&featured=true&sortBy=popular&page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["podcasts"],
+              "query": [
+                {"key": "category", "value": "Mental Health"},
+                {"key": "host", "value": "Dr. Syed M Quadri"},
+                {"key": "minDuration", "value": "20"},
+                {"key": "maxDuration", "value": "50"},
+                {"key": "tags", "value": "anxiety"},
+                {"key": "featured", "value": "true"},
+                {"key": "sortBy", "value": "popular"},
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "5"}
+              ]
+            },
+            "description": "Complex filtering with multiple parameters"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set dynamic variables if needed",
+          "// pm.environment.set('timestamp', new Date().toISOString());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test script",
+          "pm.test('Status code is successful', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+          "});",
+          "",
+          "pm.test('Response has success field', function () {",
+          "    const jsonData = pm.response.json();",
+          "    pm.expect(jsonData).to.have.property('success');",
+          "    pm.expect(jsonData.success).to.be.true;",
+          "});",
+          "",
+          "pm.test('Response has timestamp', function () {",
+          "    const jsonData = pm.response.json();",
+          "    pm.expect(jsonData).to.have.property('timestamp');",
+          "});",
+          "",
+          "// Save podcast ID for subsequent requests",
+          "if (pm.response.json().data && pm.response.json().data._id) {",
+          "    pm.environment.set('podcastId', pm.response.json().data._id);",
+          "}"
+        ]
+      }
+    }
+  ]
+}
