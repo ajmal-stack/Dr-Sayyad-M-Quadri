@@ -1,6 +1,15 @@
 import express from 'express';
 import blogController from '../controllers/blogController.js';
-import { validateBlogQuery, validateBlogSearch, validateBlogIdentifier } from '../middleware/validation.js';
+import { 
+  validateBlogQuery, 
+  validateBlogSearch, 
+  validateBlogIdentifier,
+  validateBlogCreate,
+  validateBlogUpdate,
+  validateBlogId,
+  validateEngagementTracking
+} from '../middleware/validation.js';
+import { uploadBlogImage, uploadBlogImageFields } from '../middleware/fileUpload.js';
 
 const router = express.Router();
 
@@ -15,14 +24,15 @@ const router = express.Router();
  * @route   GET /api/v1/blogs
  * @desc    Get all blogs with filtering and pagination
  * @access  Public
- * @params  ?page=1&limit=10&category=Mental Health&author=Dr. Syed M Quadri&featured=true&search=anxiety
+ * @params  ?page=1&limit=10&category=General Health&author=Dr. Syed M Quadri&featured=true&search=diabetes&adminView=true
  */
 router.get('/', validateBlogQuery, blogController.getAllBlogs);
 
 /**
  * @route   GET /api/v1/blogs/featured
- * @desc    Get featured blog
+ * @desc    Get featured blog(s)
  * @access  Public
+ * @params  ?limit=1
  */
 router.get('/featured', blogController.getFeaturedBlog);
 
@@ -35,27 +45,11 @@ router.get('/featured', blogController.getFeaturedBlog);
 router.get('/latest', blogController.getLatestBlogs);
 
 /**
- * @route   GET /api/v1/blogs/trending
- * @desc    Get trending blogs
- * @access  Public
- * @params  ?limit=10&days=7
- */
-router.get('/trending', blogController.getTrendingBlogs);
-
-/**
  * @route   GET /api/v1/blogs/categories
  * @desc    Get all blog categories with counts
  * @access  Public
  */
 router.get('/categories', blogController.getCategories);
-
-/**
- * @route   GET /api/v1/blogs/tags
- * @desc    Get all blog tags with counts
- * @access  Public
- * @params  ?limit=50
- */
-router.get('/tags', blogController.getTags);
 
 /**
  * @route   GET /api/v1/blogs/stats
@@ -68,7 +62,7 @@ router.get('/stats', blogController.getBlogStats);
  * @route   GET /api/v1/blogs/search
  * @desc    Search blogs by query
  * @access  Public
- * @params  ?q=mental health&category=Psychology&author=Dr. Syed M Quadri
+ * @params  ?q=diabetes&category=General Health&author=Dr. Syed M Quadri
  */
 router.get('/search', validateBlogSearch, blogController.searchBlogs);
 
@@ -76,7 +70,7 @@ router.get('/search', validateBlogSearch, blogController.searchBlogs);
  * @route   GET /api/v1/blogs/category/:category
  * @desc    Get blogs by category
  * @access  Public
- * @params  category - Category name (e.g., "Mental Health", "Psychology")
+ * @params  category - Category name (e.g., "General Health", "Mental Health")
  */
 router.get('/category/:category', blogController.getBlogsByCategory);
 
@@ -89,21 +83,13 @@ router.get('/category/:category', blogController.getBlogsByCategory);
 router.get('/author/:author', blogController.getBlogsByAuthor);
 
 /**
- * @route   GET /api/v1/blogs/tag/:tag
- * @desc    Get blogs by tag
- * @access  Public
- * @params  tag - Tag name (e.g., "anxiety", "wellness")
- */
-router.get('/tag/:tag', blogController.getBlogsByTag);
-
-/**
  * @route   POST /api/v1/blogs/:identifier/track
  * @desc    Track blog engagement (view, like, share, read)
  * @access  Public
  * @params  identifier - Blog ID (ObjectId) or slug
- * @body    { action: 'view|like|share|read', progress?: number, userId?: string }
+ * @body    { action: 'view|like|share|read', readTime?: number, completed?: boolean, platform?: string }
  */
-router.post('/:identifier/track', validateBlogIdentifier, blogController.trackEngagement);
+router.post('/:identifier/track', validateBlogIdentifier, validateEngagementTracking, blogController.trackEngagement);
 
 /**
  * @route   GET /api/v1/blogs/:identifier
@@ -113,9 +99,35 @@ router.post('/:identifier/track', validateBlogIdentifier, blogController.trackEn
  */
 router.get('/:identifier', validateBlogIdentifier, blogController.getBlog);
 
-// Protected routes (authentication required) - Will be implemented later
-// router.post('/', authenticate, authorize('admin'), blogController.createBlog);
-// router.put('/:id', authenticate, authorize('admin'), blogController.updateBlog);
-// router.delete('/:id', authenticate, authorize('admin'), blogController.deleteBlog);
+// Protected routes (authentication required) - Temporarily without auth for testing
+// TODO: Add authentication middleware when auth system is ready
+
+/**
+ * @route   POST /api/v1/blogs
+ * @desc    Create a new blog with optional image upload
+ * @access  Admin (temporarily public for testing)
+ */
+router.post('/', uploadBlogImage, validateBlogCreate, blogController.createBlog);
+
+/**
+ * @route   PUT /api/v1/blogs/:id
+ * @desc    Update blog with optional image upload
+ * @access  Admin (temporarily public for testing)
+ */
+router.put('/:id', uploadBlogImage, validateBlogId, validateBlogUpdate, blogController.updateBlog);
+
+/**
+ * @route   DELETE /api/v1/blogs/:id
+ * @desc    Delete blog and associated image
+ * @access  Admin (temporarily public for testing)
+ */
+router.delete('/:id', validateBlogId, blogController.deleteBlog);
+
+/**
+ * @route   POST /api/v1/blogs/seed
+ * @desc    Seed database from blogs.json
+ * @access  Admin (temporarily public for testing)
+ */
+router.post('/seed', blogController.seedBlogs);
 
 export default router;

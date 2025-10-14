@@ -41,6 +41,7 @@ import {
   Logout,
   AccountCircle,
   VideoLibrary,
+  LocalHospital,
 } from '@mui/icons-material';
 import { useThemeMode } from './MuiThemeProvider';
 
@@ -50,6 +51,7 @@ const navigation = [
   { name: 'Podcasts', href: '/admin/podcasts', icon: Mic },
   { name: 'YouTube', href: '/admin/youtube', icon: VideoLibrary },
   { name: 'Blogs', href: '/admin/blogs', icon: Article },
+  { name: 'Treatments', href: '/admin/treatments', icon: LocalHospital },
   { name: 'Users', href: '/admin/users', icon: People },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];

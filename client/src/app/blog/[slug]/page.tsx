@@ -2,6 +2,9 @@ import { notFound } from 'next/navigation';
 import blogsData from '@/data/blogs.json';
 import BlogPostClient from './BlogPostClient';
 
+// API base URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+
 // Type definitions
 interface JSONBlogPost {
   id: number;
@@ -54,7 +57,26 @@ const createSlug = (title: string) => {
     .trim();
 };
 
-// Get blog post by slug from JSON data
+// Get blog post by slug or ID from API
+const getBlogPostFromAPI = async (identifier: string): Promise<any | null> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/blogs/${identifier}`, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+    
+    if (!response.ok) {
+      return null;
+    }
+    
+    const data = await response.json();
+    return data.success ? data.data : null;
+  } catch (error) {
+    console.error('Error fetching blog from API:', error);
+    return null;
+  }
+};
+
+// Get blog post by slug from JSON data (fallback)
 const getBlogPost = (slug: string): JSONBlogPost | null => {
   // Check all blogs (featured + others) for matching slug
   const allBlogs = [blogsData.featuredBlog, ...blogsData.otherBlogs];
@@ -292,7 +314,14 @@ interface BlogPostPageProps {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = getBlogPost(slug) || getHardcodedBlogPost(slug);
+  
+  // Try to fetch from API first (for blogs created in admin panel)
+  let post = await getBlogPostFromAPI(slug);
+  
+  // Fallback to JSON data or hardcoded data if not found in API
+  if (!post) {
+    post = getBlogPost(slug) || getHardcodedBlogPost(slug);
+  }
 
   if (!post) {
     notFound();

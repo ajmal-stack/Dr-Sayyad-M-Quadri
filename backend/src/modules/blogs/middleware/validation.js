@@ -1,414 +1,220 @@
-import { body, query, param, validationResult } from 'express-validator';
 import { AppError } from '../../../shared/middleware/errorHandler.js';
-
-/**
- * Validation middleware for blog operations
- */
-
-/**
- * Handle validation errors
- */
-const handleValidationErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const errorMessages = errors.array().map(error => ({
-      field: error.path,
-      message: error.msg,
-      value: error.value
-    }));
-    
-    throw new AppError('Validation failed', 400, errorMessages);
-  }
-  next();
-};
 
 /**
  * Validate blog query parameters
  */
-export const validateBlogQuery = [
-  query('page')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Page must be a positive integer'),
-    
-  query('limit')
-    .optional()
-    .isInt({ min: 1, max: 100 })
-    .withMessage('Limit must be between 1 and 100'),
-    
-  query('category')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Category must be between 2 and 50 characters'),
-    
-  query('author')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Author must be between 2 and 100 characters'),
-    
-  query('featured')
-    .optional()
-    .isBoolean()
-    .withMessage('Featured must be a boolean value'),
-    
-  query('difficulty')
-    .optional()
-    .isIn(['beginner', 'intermediate', 'advanced', 'expert'])
-    .withMessage('Difficulty must be one of: beginner, intermediate, advanced, expert'),
-    
-  query('format')
-    .optional()
-    .isIn(['article', 'listicle', 'how-to', 'interview', 'case-study', 'research', 'news', 'opinion'])
-    .withMessage('Format must be one of: article, listicle, how-to, interview, case-study, research, news, opinion'),
-    
-  query('minReadTime')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Minimum read time must be a positive integer (in minutes)'),
-    
-  query('maxReadTime')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Maximum read time must be a positive integer (in minutes)'),
-    
-  query('sortBy')
-    .optional()
-    .isIn(['latest', 'oldest', 'popular', 'trending', 'readTime', 'alphabetical', 'relevance'])
-    .withMessage('Invalid sort option'),
-    
-  query('search')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Search query must be between 2 and 100 characters'),
-    
-  query('status')
-    .optional()
-    .isIn(['draft', 'published', 'archived', 'scheduled'])
-    .withMessage('Status must be one of: draft, published, archived, scheduled'),
-    
-  handleValidationErrors
-];
+export const validateBlogQuery = (req, res, next) => {
+  const { page, limit, sortBy } = req.query;
+
+  // Validate page
+  if (page && (isNaN(page) || parseInt(page) < 1)) {
+    return next(new AppError('Page must be a positive number', 400));
+  }
+
+  // Validate limit
+  if (limit && (isNaN(limit) || parseInt(limit) < 1 || parseInt(limit) > 100)) {
+    return next(new AppError('Limit must be between 1 and 100', 400));
+  }
+
+  // Validate sortBy
+  const validSortOptions = ['latest', 'oldest', 'popular', 'title', 'relevance'];
+  if (sortBy && !validSortOptions.includes(sortBy)) {
+    return next(new AppError(`Invalid sort option. Valid options: ${validSortOptions.join(', ')}`, 400));
+  }
+
+  next();
+};
 
 /**
  * Validate blog search parameters
  */
-export const validateBlogSearch = [
-  query('q')
-    .notEmpty()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Search query is required and must be between 2 and 100 characters'),
-    
-  query('category')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Category must be between 2 and 50 characters'),
-    
-  query('author')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Author must be between 2 and 100 characters'),
-    
-  query('difficulty')
-    .optional()
-    .isIn(['beginner', 'intermediate', 'advanced', 'expert'])
-    .withMessage('Difficulty must be one of: beginner, intermediate, advanced, expert'),
-    
-  query('format')
-    .optional()
-    .isIn(['article', 'listicle', 'how-to', 'interview', 'case-study', 'research', 'news', 'opinion'])
-    .withMessage('Format must be one of: article, listicle, how-to, interview, case-study, research, news, opinion'),
-    
-  query('minReadTime')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Minimum read time must be a positive integer (in minutes)'),
-    
-  query('maxReadTime')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Maximum read time must be a positive integer (in minutes)'),
-    
-  query('page')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Page must be a positive integer'),
-    
-  query('limit')
-    .optional()
-    .isInt({ min: 1, max: 50 })
-    .withMessage('Limit must be between 1 and 50'),
-    
-  handleValidationErrors
-];
+export const validateBlogSearch = (req, res, next) => {
+  const { q: query, page, limit } = req.query;
+
+  // Validate search query
+  if (!query || typeof query !== 'string' || query.trim().length < 2) {
+    return next(new AppError('Search query must be at least 2 characters long', 400));
+  }
+
+  // Validate page
+  if (page && (isNaN(page) || parseInt(page) < 1)) {
+    return next(new AppError('Page must be a positive number', 400));
+  }
+
+  // Validate limit
+  if (limit && (isNaN(limit) || parseInt(limit) < 1 || parseInt(limit) > 100)) {
+    return next(new AppError('Limit must be between 1 and 100', 400));
+  }
+
+  next();
+};
 
 /**
- * Validate blog identifier parameter
+ * Validate blog identifier (ID or slug)
  */
-export const validateBlogIdentifier = [
-  param('identifier')
-    .notEmpty()
-    .trim()
-    .custom((value) => {
-      // Check if it's a valid ObjectId or a valid slug
-      const objectIdRegex = /^[0-9a-fA-F]{24}$/;
-      const slugRegex = /^[a-z0-9-]+$/;
-      
-      if (!objectIdRegex.test(value) && !slugRegex.test(value)) {
-        throw new Error('Invalid blog identifier. Must be a valid ID or slug.');
-      }
-      
-      return true;
-    }),
-    
-  handleValidationErrors
-];
+export const validateBlogIdentifier = (req, res, next) => {
+  const { identifier } = req.params;
+
+  if (!identifier || typeof identifier !== 'string' || identifier.trim().length === 0) {
+    return next(new AppError('Invalid blog identifier', 400));
+  }
+
+  next();
+};
+
+/**
+ * Strip HTML tags for validation
+ * Also decodes HTML entities and removes extra whitespace
+ */
+const stripHtmlTags = (html) => {
+  if (!html) return '';
+  
+  // Remove HTML tags
+  let text = html.replace(/<[^>]*>/g, ' ');
+  
+  // Decode common HTML entities
+  text = text
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&mdash;/g, '—')
+    .replace(/&ndash;/g, '–');
+  
+  // Remove extra whitespace and trim
+  return text.replace(/\s+/g, ' ').trim();
+};
+
+/**
+ * Validate blog creation data
+ */
+export const validateBlogCreate = (req, res, next) => {
+  const { title, excerpt, content, category } = req.body;
+
+  // Validate required fields
+  if (!title || typeof title !== 'string' || title.trim().length < 3) {
+    return next(new AppError('Title is required and must be at least 3 characters long', 400));
+  }
+
+  // Excerpt is plain text, content is HTML
+  const contentPlainText = stripHtmlTags(content);
+
+  // Log for debugging
+  console.log('Validation - Excerpt length:', excerpt?.length);
+  console.log('Validation - Content length (plain):', contentPlainText.length);
+
+  if (!excerpt || typeof excerpt !== 'string' || excerpt.trim().length < 10) {
+    return next(new AppError(`Excerpt is required and must be at least 10 characters long. Current: ${excerpt?.length || 0} chars`, 400));
+  }
+
+  if (!content || typeof content !== 'string' || contentPlainText.length < 50) {
+    return next(new AppError(`Content is required and must be at least 50 characters long (plain text). Current: ${contentPlainText.length} chars`, 400));
+  }
+
+  if (!category || typeof category !== 'string' || category.trim().length < 2) {
+    return next(new AppError('Category is required', 400));
+  }
+
+  // Validate title length
+  if (title.length > 200) {
+    return next(new AppError('Title cannot exceed 200 characters', 400));
+  }
+
+  // Validate excerpt length (plain text)
+  if (excerpt.length > 500) {
+    return next(new AppError('Excerpt cannot exceed 500 characters', 400));
+  }
+
+  // Validate content length (plain text)
+  if (contentPlainText.length > 50000) {
+    return next(new AppError('Content cannot exceed 50000 characters', 400));
+  }
+
+  next();
+};
+
+/**
+ * Validate blog update data
+ */
+export const validateBlogUpdate = (req, res, next) => {
+  const { title, excerpt, content, category } = req.body;
+
+  // Validate fields if provided
+  if (title !== undefined) {
+    if (typeof title !== 'string' || title.trim().length < 3) {
+      return next(new AppError('Title must be at least 3 characters long', 400));
+    }
+    if (title.length > 200) {
+      return next(new AppError('Title cannot exceed 200 characters', 400));
+    }
+  }
+
+  if (excerpt !== undefined) {
+    if (typeof excerpt !== 'string' || excerpt.trim().length < 10) {
+      return next(new AppError('Excerpt must be at least 10 characters long', 400));
+    }
+    if (excerpt.length > 500) {
+      return next(new AppError('Excerpt cannot exceed 500 characters', 400));
+    }
+  }
+
+  if (content !== undefined) {
+    const contentPlainText = stripHtmlTags(content);
+    if (typeof content !== 'string' || contentPlainText.length < 50) {
+      return next(new AppError('Content must be at least 50 characters long (plain text)', 400));
+    }
+    if (contentPlainText.length > 50000) {
+      return next(new AppError('Content cannot exceed 50000 characters (plain text)', 400));
+    }
+  }
+
+  if (category !== undefined) {
+    if (typeof category !== 'string' || category.trim().length < 2) {
+      return next(new AppError('Category must be at least 2 characters long', 400));
+    }
+  }
+
+  next();
+};
+
+/**
+ * Validate blog ID parameter
+ */
+export const validateBlogId = (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
+    return next(new AppError('Invalid blog ID format', 400));
+  }
+
+  next();
+};
 
 /**
  * Validate engagement tracking data
  */
-export const validateEngagementTracking = [
-  body('action')
-    .notEmpty()
-    .isIn(['view', 'like', 'share', 'read'])
-    .withMessage('Action must be one of: view, like, share, read'),
-    
-  body('progress')
-    .optional()
-    .isInt({ min: 0, max: 100 })
-    .withMessage('Progress must be between 0 and 100'),
-    
-  body('userId')
-    .optional()
-    .isMongoId()
-    .withMessage('User ID must be a valid MongoDB ObjectId'),
-    
-  // Custom validation: progress and userId are required for 'read' action
-  body('progress')
-    .if(body('action').equals('read'))
-    .notEmpty()
-    .withMessage('Progress is required for read action'),
-    
-  body('userId')
-    .if(body('action').equals('read'))
-    .notEmpty()
-    .withMessage('User ID is required for read action'),
-    
-  handleValidationErrors
-];
+export const validateEngagementTracking = (req, res, next) => {
+  const { action, readTime, platform } = req.body;
 
-/**
- * Validate blog creation data (for admin use later)
- */
-export const validateBlogCreation = [
-  body('title')
-    .notEmpty()
-    .trim()
-    .isLength({ min: 2, max: 200 })
-    .withMessage('Title is required and must be between 2 and 200 characters'),
-    
-  body('excerpt')
-    .notEmpty()
-    .trim()
-    .isLength({ min: 10, max: 500 })
-    .withMessage('Excerpt is required and must be between 10 and 500 characters'),
-    
-  body('content')
-    .notEmpty()
-    .trim()
-    .isLength({ min: 100 })
-    .withMessage('Content is required and must be at least 100 characters'),
-    
-  body('author')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Author must be between 2 and 100 characters'),
-    
-  body('category')
-    .notEmpty()
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Category is required and must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s&-]+$/)
-    .withMessage('Category can only contain letters, spaces, hyphens, and ampersands'),
-    
-  body('tags')
-    .optional()
-    .isArray()
-    .withMessage('Tags must be an array')
-    .custom((tags) => {
-      return tags.every(tag => typeof tag === 'string' && tag.trim().length > 0);
-    })
-    .withMessage('All tags must be non-empty strings'),
-    
-  body('image')
-    .notEmpty()
-    .trim()
-    .withMessage('Image is required'),
-    
-  body('featured')
-    .optional()
-    .isBoolean()
-    .withMessage('Featured must be a boolean value'),
-    
-  body('difficulty')
-    .optional()
-    .isIn(['beginner', 'intermediate', 'advanced', 'expert'])
-    .withMessage('Difficulty must be one of: beginner, intermediate, advanced, expert'),
-    
-  body('format')
-    .optional()
-    .isIn(['article', 'listicle', 'how-to', 'interview', 'case-study', 'research', 'news', 'opinion'])
-    .withMessage('Format must be one of: article, listicle, how-to, interview, case-study, research, news, opinion'),
-    
-  body('status')
-    .optional()
-    .isIn(['draft', 'published', 'archived', 'scheduled'])
-    .withMessage('Status must be one of: draft, published, archived, scheduled'),
-    
-  body('scheduledDate')
-    .optional()
-    .isISO8601()
-    .withMessage('Scheduled date must be a valid ISO 8601 date'),
-    
-  body('seoTitle')
-    .optional()
-    .trim()
-    .isLength({ max: 60 })
-    .withMessage('SEO title cannot exceed 60 characters'),
-    
-  body('seoDescription')
-    .optional()
-    .trim()
-    .isLength({ max: 160 })
-    .withMessage('SEO description cannot exceed 160 characters'),
-    
-  body('seoKeywords')
-    .optional()
-    .isArray()
-    .withMessage('SEO keywords must be an array'),
-    
-  handleValidationErrors
-];
+  const validActions = ['view', 'like', 'share', 'read'];
+  if (!action || !validActions.includes(action)) {
+    return next(new AppError(`Invalid action. Valid actions: ${validActions.join(', ')}`, 400));
+  }
 
-/**
- * Validate blog update data (for admin use later)
- */
-export const validateBlogUpdate = [
-  body('title')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 200 })
-    .withMessage('Title must be between 2 and 200 characters'),
-    
-  body('excerpt')
-    .optional()
-    .trim()
-    .isLength({ min: 10, max: 500 })
-    .withMessage('Excerpt must be between 10 and 500 characters'),
-    
-  body('content')
-    .optional()
-    .trim()
-    .isLength({ min: 100 })
-    .withMessage('Content must be at least 100 characters'),
-    
-  body('author')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Author must be between 2 and 100 characters'),
-    
-  body('category')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Category must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s&-]+$/)
-    .withMessage('Category can only contain letters, spaces, hyphens, and ampersands'),
-    
-  body('featured')
-    .optional()
-    .isBoolean()
-    .withMessage('Featured must be a boolean value'),
-    
-  body('isActive')
-    .optional()
-    .isBoolean()
-    .withMessage('isActive must be a boolean value'),
-    
-  body('isPublished')
-    .optional()
-    .isBoolean()
-    .withMessage('isPublished must be a boolean value'),
-    
-  body('status')
-    .optional()
-    .isIn(['draft', 'published', 'archived', 'scheduled'])
-    .withMessage('Status must be one of: draft, published, archived, scheduled'),
-    
-  body('difficulty')
-    .optional()
-    .isIn(['beginner', 'intermediate', 'advanced', 'expert'])
-    .withMessage('Difficulty must be one of: beginner, intermediate, advanced, expert'),
-    
-  body('format')
-    .optional()
-    .isIn(['article', 'listicle', 'how-to', 'interview', 'case-study', 'research', 'news', 'opinion'])
-    .withMessage('Format must be one of: article, listicle, how-to, interview, case-study, research, news, opinion'),
-    
-  handleValidationErrors
-];
+  if (action === 'read' && readTime !== undefined) {
+    if (isNaN(readTime) || parseInt(readTime) < 0) {
+      return next(new AppError('Read time must be a positive number', 400));
+    }
+  }
 
-/**
- * Validate category parameter
- */
-export const validateCategoryParam = [
-  param('category')
-    .notEmpty()
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Category must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s&-]+$/)
-    .withMessage('Category can only contain letters, spaces, hyphens, and ampersands'),
-    
-  handleValidationErrors
-];
+  if (action === 'share' && platform) {
+    const validPlatforms = ['facebook', 'twitter', 'linkedin', 'email'];
+    if (!validPlatforms.includes(platform)) {
+      return next(new AppError(`Invalid platform. Valid platforms: ${validPlatforms.join(', ')}`, 400));
+    }
+  }
 
-/**
- * Validate author parameter
- */
-export const validateAuthorParam = [
-  param('author')
-    .notEmpty()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Author must be between 2 and 100 characters')
-    .matches(/^[a-zA-Z\s.-]+$/)
-    .withMessage('Author can only contain letters, spaces, dots, and hyphens'),
-    
-  handleValidationErrors
-];
-
-/**
- * Validate tag parameter
- */
-export const validateTagParam = [
-  param('tag')
-    .notEmpty()
-    .trim()
-    .isLength({ min: 2, max: 30 })
-    .withMessage('Tag must be between 2 and 30 characters')
-    .matches(/^[a-zA-Z0-9-]+$/)
-    .withMessage('Tag can only contain letters, numbers, and hyphens'),
-    
-  handleValidationErrors
-];
-
-export { handleValidationErrors };
+  next();
+};
