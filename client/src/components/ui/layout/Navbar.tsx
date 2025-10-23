@@ -8,7 +8,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import booksData from '@/data/books.json';
+import { generateBookSlug } from '@/utils/slugify';
 import {
   ChevronDownIcon,
   Bars3Icon,
@@ -29,6 +29,8 @@ import {
 import MobileNavigation from './MobileNavigation';
 import { SearchDropdown } from '../primitives/SearchComponent';
 import MobileSearch from '../primitives/MobileSearch';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 interface BookItem {
   id: number;
@@ -53,10 +55,6 @@ interface BookItem {
   bestseller: boolean;
   tags: string[];
 }
-
-// Get books data from JSON
-const allBooks = [...booksData.featuredBooks, ...booksData.otherBooks] as BookItem[];
-const bookItems = allBooks.slice(0, 8); // Show first 8 books in navbar
 
 interface NavItem {
   name: string;
@@ -236,7 +234,7 @@ const navItems: NavItem[] = [
     color: 'from-blue-500 to-indigo-600',
   },
   {
-    name: 'ABOUT',
+    name: 'About',
     href: '/about',
     icon: <UserIcon className='w-5 h-5' />,
     color: 'from-blue-500 to-indigo-600',
@@ -255,6 +253,36 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [bookItems, setBookItems] = useState<BookItem[]>([]);
+  const [isLoadingBooks, setIsLoadingBooks] = useState(false);
+
+  // Fetch books from API
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setIsLoadingBooks(true);
+        const response = await fetch(`${API_URL}/books`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch books');
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          // Get first 8 books for navbar dropdown
+          setBookItems(data.data.slice(0, 8));
+        }
+      } catch (err) {
+        console.error('Error fetching books for navbar:', err);
+        setBookItems([]);
+      } finally {
+        setIsLoadingBooks(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -296,7 +324,12 @@ export default function Navbar() {
           </p>
         </div>
 
-        {bookItems.length === 0 ? (
+        {isLoadingBooks ? (
+          <div className='px-8 py-12 text-center'>
+            <div className='inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mb-4'></div>
+            <p className='text-slate-600'>Loading books...</p>
+          </div>
+        ) : bookItems.length === 0 ? (
           <div className='px-8 py-12 text-center'>
             <div className='text-slate-400 mb-4'>
               <BookOpenIcon className='w-20 h-20 mx-auto mb-4' />
@@ -331,10 +364,10 @@ export default function Navbar() {
               loop={bookItems.length > 4}
               className='px-8'
             >
-              {bookItems.map((book) => (
+              {bookItems.map((book: BookItem) => (
                 <SwiperSlide key={book.id}>
                   <Link
-                    href={`/books/${book.id}`}
+                    href={`/books/${generateBookSlug(book.title)}`}
                     onClick={handleDropdownClose}
                     className='group block bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/20 rounded-2xl p-5 hover:shadow-2xl transition-all duration-500 hover:scale-105 border-2 border-blue-200/60 hover:border-blue-300'
                   >

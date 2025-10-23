@@ -24,6 +24,7 @@ export default function TreatmentDetailPage() {
   const [treatment, setTreatment] = useState<Treatment | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showContactForm, setShowContactForm] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -117,8 +118,7 @@ export default function TreatmentDetailPage() {
           {/* Sidebar */}
           <div className="lg:col-span-3">
             <TreatmentSidebar 
-              onThisPage={treatment.onThisPage || []}
-              relatedTreatments={[]}
+              currentPage={`/treatment/${treatment.slug}`}
             />
           </div>
 
@@ -301,17 +301,29 @@ export default function TreatmentDetailPage() {
               </div>
             )}
 
-            {/* Contact Form */}
+            {/* Contact CTA */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Get Started Today</h2>
               <p className="text-gray-600 mb-6">
                 Contact us to schedule a consultation or learn more about this treatment.
               </p>
-              <ContactForm onSubmit={handleInquiry} />
+              <button
+                onClick={() => setShowContactForm(true)}
+                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
+              >
+                <EnvelopeIcon className="w-5 h-5" />
+                Contact Us
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Contact Form Modal */}
+      <ContactForm 
+        isOpen={showContactForm} 
+        onClose={() => setShowContactForm(false)} 
+      />
     </div>
   );
 }

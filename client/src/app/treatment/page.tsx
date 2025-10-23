@@ -363,14 +363,24 @@ export default function TreatmentPage() {
                         <div className="bg-white h-full">
                           {/* Image Container */}
                           <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 overflow-hidden">
-                            <Image
-                              src={service.image}
-                              alt={service.name}
-                              fill
-                              className="object-cover object-center"
-                              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                              priority={index < 4}
-                            />
+                            {service.image?.endsWith('.svg') || service.image?.includes('.svg') ? (
+                              // Use regular img tag for SVG files
+                              <img
+                                src={service.image}
+                                alt={service.name}
+                                className="w-full h-full object-cover object-center"
+                              />
+                            ) : (
+                              // Use Next.js Image for other formats
+                              <Image
+                                src={service.image}
+                                alt={service.name}
+                                fill
+                                className="object-cover object-center"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                                priority={index < 4}
+                              />
+                            )}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-500`} />
                             
                             {/* Hover Overlay */}
@@ -449,14 +459,24 @@ export default function TreatmentPage() {
                         <div className="bg-white h-full">
                           {/* Image Container */}
                           <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 overflow-hidden">
-                            <Image
-                              src={service.image}
-                              alt={service.name}
-                              fill
-                              className="object-cover object-center"
-                              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                              priority={false}
-                            />
+                            {service.image?.endsWith('.svg') || service.image?.includes('.svg') ? (
+                              // Use regular img tag for SVG files
+                              <img
+                                src={service.image}
+                                alt={service.name}
+                                className="w-full h-full object-cover object-center"
+                              />
+                            ) : (
+                              // Use Next.js Image for other formats
+                              <Image
+                                src={service.image}
+                                alt={service.name}
+                                fill
+                                className="object-cover object-center"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                                priority={false}
+                              />
+                            )}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-500`} />
                             
                             {/* Hover Overlay */}

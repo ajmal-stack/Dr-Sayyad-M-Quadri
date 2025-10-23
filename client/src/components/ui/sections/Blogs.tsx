@@ -1,25 +1,61 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { ClockIcon, ArrowRightIcon, UserIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
-import blogData from '@/data/blogs.json';
+import { generateBlogSlug } from '@/utils/slugify';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+
+interface Blog {
+  _id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  category: string;
+  image: string;
+  publishDate: string;
+  readTime: string;
+  slug: string;
+  featured?: boolean;
+}
 
 const Blogs = () => {
-  const allBlogs = [blogData.featuredBlog, ...blogData.otherBlogs];
-  const recentBlogs = allBlogs.slice(0, 3); // Show only 3 recent posts
+  const [recentBlogs, setRecentBlogs] = useState<Blog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Create slug from title (same function as in blog post page)
-  const createSlug = (title: string) => {
-    return title.toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .trim();
-  };
+  // Fetch blogs from API
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${API_URL}/blogs?limit=3&sort=-publishDate`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch blogs');
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setRecentBlogs(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching blogs:', err);
+        setRecentBlogs([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
-      day: 'numeric',
+      day: 'numeric',      
       month: 'short',
       year: 'numeric'
     });
@@ -59,12 +95,27 @@ const Blogs = () => {
 
         {/* Enhanced Blog Grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8'>
-          {recentBlogs.map((blog, index) => (
+          {isLoading ? (
+            // Loading skeleton
+            Array.from({ length: 3 }, (_, index) => (
+              <div
+                key={`blog-skeleton-${index}`}
+                className={`bg-slate-200 animate-pulse rounded-2xl ${index === 0 ? 'sm:col-span-2 lg:row-span-2' : ''}`}
+                style={{ height: index === 0 ? '480px' : '320px' }}
+              />
+            ))
+          ) : recentBlogs.length === 0 ? (
+            // Empty state
+            <div className='col-span-full text-center py-12'>
+              <p className='text-slate-600 text-lg'>No blog posts available at the moment.</p>
+            </div>
+          ) : (
+            recentBlogs.map((blog, index) => (
             <article 
-              key={blog.id} 
+              key={blog._id} 
               className={`group cursor-pointer ${index === 0 ? 'sm:col-span-2 lg:row-span-2' : ''}`}
             >
-              <Link href={`/blog/${createSlug(blog.title)}`} className='block h-full'>
+              <Link href={`/blog/${blog.slug || generateBlogSlug(blog.title)}`} className='block h-full'>
                 <div className='bg-white rounded-2xl overflow-hidden h-full flex flex-col shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group-hover:border-blue-200'>
                   {/* Enhanced Image */}
                   <div className={`relative overflow-hidden ${index === 0 ? 'h-48 sm:h-64 lg:h-80' : 'h-40 sm:h-48'}`}>
@@ -129,7 +180,8 @@ const Blogs = () => {
                 </div>
               </Link>
             </article>
-          ))}
+          ))
+          )}
         </div>
 
         {/* Enhanced View All Button */}

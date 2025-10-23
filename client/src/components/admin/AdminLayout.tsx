@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   Box,
   Drawer,
@@ -44,6 +44,8 @@ import {
   LocalHospital,
 } from '@mui/icons-material';
 import { useThemeMode } from './MuiThemeProvider';
+import { useAuth } from '@/contexts/AuthContext';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: Dashboard },
@@ -66,9 +68,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const { darkMode, toggleDarkMode } = useThemeMode();
+  const { user, logout } = useAuth();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -80,6 +84,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleProfileMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    handleProfileMenuClose();
+    await logout();
+  };
+
+  const handleProfile = () => {
+    handleProfileMenuClose();
+    router.push('/admin/settings');
   };
 
   const drawer = (
@@ -129,14 +143,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <Box sx={{ p: 2, mt: 'auto' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar sx={{ width: 32, height: 32, mr: 1 }}>
-            <AccountCircle />
+            {user?.avatar ? (
+              <img src={user.avatar} alt={user.name} />
+            ) : (
+              <AccountCircle />
+            )}
           </Avatar>
           <Box>
             <Typography variant="body2" fontWeight="medium">
-              Dr. Syed M Quadri
+              {user?.name || 'Admin User'}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Administrator
+              {user?.role === 'admin' ? 'Administrator' : 'User'}
             </Typography>
           </Box>
         </Box>
@@ -144,8 +162,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     </Box>
   );
 
+  // Skip protection for login page
+  const isLoginPage = pathname === '/admin/login';
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <ProtectedRoute requireAdmin>
+      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <AppBar
         position="fixed"
         sx={{
@@ -220,18 +246,26 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleProfileMenuClose}
-              onClick={handleProfileMenuClose}
             >
-              <MenuItem onClick={handleProfileMenuClose}>
+              <Box sx={{ px: 2, py: 1 }}>
+                <Typography variant="subtitle2" fontWeight="bold">
+                  {user?.name}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {user?.email}
+                </Typography>
+              </Box>
+              <Divider />
+              <MenuItem onClick={handleProfile}>
                 <AccountCircle sx={{ mr: 1 }} />
                 Profile
               </MenuItem>
-              <MenuItem onClick={handleProfileMenuClose}>
+              <MenuItem onClick={() => { handleProfileMenuClose(); router.push('/admin/settings'); }}>
                 <Settings sx={{ mr: 1 }} />
                 Settings
               </MenuItem>
               <Divider />
-              <MenuItem onClick={handleProfileMenuClose}>
+              <MenuItem onClick={handleLogout}>
                 <Logout sx={{ mr: 1 }} />
                 Logout
               </MenuItem>
@@ -292,5 +326,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         {children}
       </Box>
     </Box>
+    </ProtectedRoute>
   );
 }

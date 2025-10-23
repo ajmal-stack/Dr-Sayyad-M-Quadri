@@ -126,28 +126,18 @@ export const getTreatment = async (req, res, next) => {
  */
 export const createTreatment = async (req, res, next) => {
   try {
-    // Handle image upload if file is provided
-    if (req.file) {
-      const uploadOptions = {
-        folder: 'dr-quadri/treatments',
-        resource_type: 'image',
-        transformation: [
-          { width: 1200, height: 630, crop: 'limit' },
-          { quality: 'auto:good' }
-        ]
-      };
-
-      const result = await cloudinary.uploader.upload(req.file.path, uploadOptions);
-      
-      req.body.image = result.secure_url;
+    // Handle image upload if file is provided (from our middleware)
+    if (req.uploadedFiles && req.uploadedFiles.image) {
+      const imageData = req.uploadedFiles.image;
+      req.body.image = imageData.url;
       req.body.imageCloudinary = {
-        publicId: result.public_id,
-        url: result.secure_url,
-        originalName: req.file.originalname,
-        fileSize: req.file.size,
-        mimeType: req.file.mimetype,
-        width: result.width,
-        height: result.height
+        publicId: imageData.publicId,
+        url: imageData.url,
+        originalName: imageData.originalName,
+        fileSize: imageData.fileSize,
+        mimeType: imageData.mimeType,
+        width: imageData.width,
+        height: imageData.height
       };
     }
 
@@ -220,37 +210,28 @@ export const updateTreatment = async (req, res, next) => {
       return next(new AppError('Treatment not found', 404));
     }
 
-    // Handle image upload if new file is provided
-    if (req.file) {
+    // Handle image upload if new file is provided (from our middleware)
+    if (req.uploadedFiles && req.uploadedFiles.image) {
       // Delete old image from Cloudinary if it exists
       if (treatment.imageCloudinary?.publicId) {
         try {
-          await cloudinary.uploader.destroy(treatment.imageCloudinary.publicId);
+          const { deleteTreatmentImageFromCloudinary } = await import('../middleware/fileUpload.js');
+          await deleteTreatmentImageFromCloudinary(treatment.imageCloudinary.publicId);
         } catch (deleteError) {
           console.error('Failed to delete old image:', deleteError);
         }
       }
 
-      const uploadOptions = {
-        folder: 'dr-quadri/treatments',
-        resource_type: 'image',
-        transformation: [
-          { width: 1200, height: 630, crop: 'limit' },
-          { quality: 'auto:good' }
-        ]
-      };
-
-      const result = await cloudinary.uploader.upload(req.file.path, uploadOptions);
-      
-      req.body.image = result.secure_url;
+      const imageData = req.uploadedFiles.image;
+      req.body.image = imageData.url;
       req.body.imageCloudinary = {
-        publicId: result.public_id,
-        url: result.secure_url,
-        originalName: req.file.originalname,
-        fileSize: req.file.size,
-        mimeType: req.file.mimetype,
-        width: result.width,
-        height: result.height
+        publicId: imageData.publicId,
+        url: imageData.url,
+        originalName: imageData.originalName,
+        fileSize: imageData.fileSize,
+        mimeType: imageData.mimeType,
+        width: imageData.width,
+        height: imageData.height
       };
     }
 

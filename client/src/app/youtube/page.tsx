@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   PlayIcon,
   EyeIcon,
@@ -8,8 +8,9 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import youtubeData from '@/data/youtube.json';
 import Link from 'next/link';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 interface YouTubeVideo {
   id: string;
@@ -33,9 +34,36 @@ const YouTubeContent = () => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'mental-health' | 'general'>('mental-health');
   const [activeFilter, setActiveFilter] = useState('all');
+  const [youtubeVideos, setYoutubeVideos] = useState<YouTubeVideo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const videoRefs = useRef<{ [key: string]: HTMLIFrameElement | null }>({});
 
-  const youtubeVideos: YouTubeVideo[] = youtubeData as YouTubeVideo[];
+  // Fetch YouTube videos from API
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${API_URL}/youtube`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch YouTube videos');
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setYoutubeVideos(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching YouTube videos:', err);
+        setYoutubeVideos([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
 
   // Categorize videos into Mental Health and General topics
   const mentalHealthCategories = ['Mental Health', 'Depression', 'Anxiety', 'Emotional Health'];
@@ -372,7 +400,27 @@ const YouTubeContent = () => {
 
         {/* Video Grid */}
         <div className='grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-8 mb-8 sm:mb-12 lg:mb-16'>
-          {filteredVideos.map((video) => (
+          {isLoading ? (
+            // Loading skeleton
+            [...Array(6)].map((_, index) => (
+              <div
+                key={index}
+                className='relative w-full bg-slate-200 animate-pulse rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden'
+              >
+                <div className='aspect-video bg-slate-300' />
+                <div className='p-2 sm:p-3 lg:p-6 space-y-2'>
+                  <div className='h-4 bg-slate-300 rounded w-3/4' />
+                  <div className='h-3 bg-slate-300 rounded w-1/2' />
+                </div>
+              </div>
+            ))
+          ) : filteredVideos.length === 0 ? (
+            // No videos message
+            <div className='col-span-full text-center py-12'>
+              <p className='text-slate-600 text-lg'>No videos available for this category.</p>
+            </div>
+          ) : (
+            filteredVideos.map((video) => (
             <div
               key={video.id}
               className='group bg-white rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 border border-red-100'
@@ -512,7 +560,8 @@ const YouTubeContent = () => {
                 </div> */}
               </div>
             </div>
-          ))}
+          ))
+          )}
         </div>
 
         {/* Quick Access Sections */}

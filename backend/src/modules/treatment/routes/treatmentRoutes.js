@@ -23,6 +23,7 @@ import {
   validateEngagementTracking,
   validateCategory
 } from '../middleware/validation.js';
+import { uploadTreatmentImage } from '../middleware/fileUpload.js';
 
 const router = express.Router();
 
@@ -89,6 +90,7 @@ router.post(
 // Create new treatment
 router.post(
   '/',
+  ...uploadTreatmentImage,
   validateTreatmentCreate,
   createTreatment
 );
@@ -96,6 +98,7 @@ router.post(
 // Update treatment
 router.put(
   '/:id',
+  ...uploadTreatmentImage,
   validateTreatmentId,
   validateTreatmentUpdate,
   updateTreatment

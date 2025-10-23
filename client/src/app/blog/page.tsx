@@ -12,7 +12,26 @@ import {
   TagIcon
 } from '@heroicons/react/24/outline';
 import LoadingAnimation from '@/components/ui/LoadingAnimation';
-import blogsData from '@/data/blogs.json';
+import { generateBlogSlug } from '@/utils/slugify';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+
+interface Blog {
+  _id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  category: string;
+  image: string;
+  publishDate: string;
+  readTime: string;
+  slug: string;
+  tags?: string[];
+  featured?: boolean;
+  views?: number;
+  likes?: number;
+}
 
 // Blog categories for filtering
 const categories = [
@@ -21,21 +40,41 @@ const categories = [
   { name: 'Mental Health', value: 'Mental Health' },
   { name: 'Cardiovascular Health', value: 'Cardiovascular Health' },
   { name: 'Preventive Care', value: 'Preventive Care' },
-  { name: 'Lifestyle Medicine', value: 'Lifestyle Medicine' }
+  { name: 'Lifestyle Medicine', value: 'Lifestyle Medicine' },
+  { name: 'Wellness', value: 'Wellness' }
 ];
 
 export default function BlogPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [allBlogs] = useState([blogsData.featuredBlog, ...blogsData.otherBlogs]);
+  const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
 
+  // Fetch blogs from API
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    const fetchBlogs = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${API_URL}/blogs`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch blogs');
+        }
 
-    return () => clearTimeout(timer);
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setAllBlogs(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching blogs:', err);
+        setAllBlogs([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlogs();
   }, []);
 
   // Filter blogs based on search and category
@@ -59,13 +98,6 @@ export default function BlogPage() {
       month: 'long',
       day: 'numeric'
     });
-  };
-
-  const createSlug = (title: string) => {
-    return title.toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .trim();
   };
 
   if (isLoading) {
@@ -181,7 +213,7 @@ export default function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredBlogs.map((blog) => (
                 <article
-                  key={blog.id}
+                  key={blog._id}
                   className="group bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:transform hover:scale-[1.02] overflow-hidden"
                 >
                   {/* Image */}
@@ -260,7 +292,7 @@ export default function BlogPage() {
 
                     {/* Read More */}
                     <Link
-                      href={`/blog/${createSlug(blog.title)}`}
+                      href={`/blog/${blog.slug || generateBlogSlug(blog.title)}`}
                       className="inline-flex items-center font-semibold text-blue-600 hover:text-blue-700 group/link transition-colors duration-200"
                     >
                       Read Article

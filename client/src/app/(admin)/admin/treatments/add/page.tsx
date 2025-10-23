@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -26,6 +26,11 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Autocomplete,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import {
   Save,
@@ -37,6 +42,9 @@ import {
 } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { treatmentsApi } from '@/services/api/treatmentsApi';
+import { treatmentCategoriesApi } from '@/services/api/treatmentCategoriesApi';
+import RichTextEditor from '@/components/ui/RichTextEditor';
+import ImageUpload from '@/components/ui/ImageUpload';
 
 interface TreatmentFormData {
   name: string;
@@ -104,6 +112,8 @@ export default function AddTreatmentPage() {
   const [conditionInput, setConditionInput] = useState('');
   const [keyPointInput, setKeyPointInput] = useState('');
   const [keywordInput, setKeywordInput] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [snackbar, setSnackbar] = useState<{
@@ -116,12 +126,145 @@ export default function AddTreatmentPage() {
     severity: 'success',
   });
 
+  // Category and Subcategory state
+  const [categories, setCategories] = useState<string[]>([]);
+  const [subcategories, setSubcategories] = useState<string[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [loadingSubcategories, setLoadingSubcategories] = useState(false);
+  
+  // Dialog state for adding new category/subcategory
+  const [categoryDialog, setCategoryDialog] = useState(false);
+  const [subcategoryDialog, setSubcategoryDialog] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newSubcategoryName, setNewSubcategoryName] = useState('');
+  const [addingCategory, setAddingCategory] = useState(false);
+  const [addingSubcategory, setAddingSubcategory] = useState(false);
+
+  // Load categories on mount
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  // Load subcategories when category changes
+  useEffect(() => {
+    if (formData.category) {
+      loadSubcategories(formData.category);
+    } else {
+      setSubcategories([]);
+    }
+  }, [formData.category]);
+
+  const loadCategories = async () => {
+    try {
+      setLoadingCategories(true);
+      const allCategories = await treatmentCategoriesApi.getAllCategories();
+      const categoryNames = allCategories.map(cat => cat.name);
+      setCategories(categoryNames);
+    } catch (error) {
+      console.error('Error loading categories:', error);
+      showSnackbar('Failed to load categories', 'error');
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
+  const loadSubcategories = async (categoryName: string) => {
+    try {
+      setLoadingSubcategories(true);
+      const type = categoryName as 'Mental Health' | 'General Health';
+      const subs = await treatmentCategoriesApi.getSubcategories(categoryName, type);
+      const subNames = subs.map(sub => sub.name);
+      setSubcategories(subNames);
+    } catch (error) {
+      console.error('Error loading subcategories:', error);
+      setSubcategories([]);
+    } finally {
+      setLoadingSubcategories(false);
+    }
+  };
+
+  const handleAddNewCategory = async () => {
+    if (!newCategoryName.trim()) {
+      showSnackbar('Please enter a category name', 'warning');
+      return;
+    }
+
+    try {
+      setAddingCategory(true);
+      const result = await treatmentCategoriesApi.getOrCreateCategory(
+        newCategoryName,
+        formData.category as 'Mental Health' | 'General Health'
+      );
+      
+      showSnackbar(
+        result.created ? 'Category created successfully' : 'Category already exists',
+        'success'
+      );
+      
+      await loadCategories();
+      setCategoryDialog(false);
+      setNewCategoryName('');
+    } catch (error) {
+      console.error('Error adding category:', error);
+      showSnackbar('Failed to add category', 'error');
+    } finally {
+      setAddingCategory(false);
+    }
+  };
+
+  const handleAddNewSubcategory = async () => {
+    if (!newSubcategoryName.trim()) {
+      showSnackbar('Please enter a subcategory name', 'warning');
+      return;
+    }
+
+    if (!formData.category) {
+      showSnackbar('Please select a category first', 'warning');
+      return;
+    }
+
+    try {
+      setAddingSubcategory(true);
+      const result = await treatmentCategoriesApi.addSubcategory(
+        formData.category,
+        formData.category as 'Mental Health' | 'General Health',
+        newSubcategoryName
+      );
+      
+      showSnackbar(
+        result.created ? 'Subcategory added successfully' : 'Subcategory already exists',
+        'success'
+      );
+      
+      await loadSubcategories(formData.category);
+      setSubcategoryDialog(false);
+      setNewSubcategoryName('');
+      
+      // Auto-select the new subcategory
+      handleInputChange('subcategory', newSubcategoryName);
+    } catch (error) {
+      console.error('Error adding subcategory:', error);
+      showSnackbar('Failed to add subcategory', 'error');
+    } finally {
+      setAddingSubcategory(false);
+    }
+  };
+
+  const showSnackbar = (message: string, severity: 'success' | 'error' | 'warning' | 'info') => {
+    setSnackbar({ open: true, message, severity });
+  };
+
   const handleInputChange = (field: keyof TreatmentFormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear validation error for this field
     if (validationErrors[field as keyof ValidationErrors]) {
       setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
     }
+  };
+
+  const handleImageUpload = (file: File | null, preview: string | null) => {
+    setImageFile(file);
+    setImagePreview(preview);
   };
 
   const handleAddItem = (
@@ -192,45 +335,102 @@ export default function AddTreatmentPage() {
     try {
       setSubmitting(true);
 
-      // Prepare data
-      const treatmentData: any = {
-        name: formData.name.trim(),
-        description: formData.description.trim(),
-        detailedDescription: formData.detailedDescription.trim(),
-        category: formData.category,
-        subcategory: formData.subcategory.trim() || undefined,
-        image: formData.image.trim() || undefined,
-        gradient: formData.gradient,
-        icon: formData.icon,
-        duration: formData.duration.trim() || undefined,
-        methods: formData.methods,
-        conditions: formData.conditions,
-        keyPoints: formData.keyPoints,
-        metaTitle: formData.metaTitle.trim() || undefined,
-        metaDescription: formData.metaDescription.trim() || undefined,
-        keywords: formData.keywords,
-        status: formData.status,
-        featured: formData.featured,
-        active: formData.active,
-      };
+      let response;
 
-      // Add pricing if provided
-      if (formData.sessionCost || formData.packageCost) {
-        treatmentData.pricing = {
-          sessionCost: formData.sessionCost ? parseFloat(formData.sessionCost) : undefined,
-          packageCost: formData.packageCost ? parseFloat(formData.packageCost) : undefined,
-          insuranceAccepted: formData.insuranceAccepted,
+      // If image file is uploaded, use FormData
+      if (imageFile) {
+        const formDataToSend = new FormData();
+        
+        // Add all form fields
+        formDataToSend.append('name', formData.name.trim());
+        formDataToSend.append('description', formData.description.trim());
+        formDataToSend.append('detailedDescription', formData.detailedDescription.trim());
+        formDataToSend.append('category', formData.category);
+        if (formData.subcategory.trim()) {
+          formDataToSend.append('subcategory', formData.subcategory.trim());
+        }
+        formDataToSend.append('gradient', formData.gradient);
+        formDataToSend.append('icon', formData.icon);
+        if (formData.duration.trim()) {
+          formDataToSend.append('duration', formData.duration.trim());
+        }
+        formDataToSend.append('methods', JSON.stringify(formData.methods));
+        formDataToSend.append('conditions', JSON.stringify(formData.conditions));
+        formDataToSend.append('keyPoints', JSON.stringify(formData.keyPoints));
+        if (formData.metaTitle.trim()) {
+          formDataToSend.append('metaTitle', formData.metaTitle.trim());
+        }
+        if (formData.metaDescription.trim()) {
+          formDataToSend.append('metaDescription', formData.metaDescription.trim());
+        }
+        formDataToSend.append('keywords', JSON.stringify(formData.keywords));
+        formDataToSend.append('status', formData.status);
+        formDataToSend.append('featured', String(formData.featured));
+        formDataToSend.append('active', String(formData.active));
+
+        // Add pricing if provided
+        if (formData.sessionCost || formData.packageCost) {
+          const pricing = {
+            sessionCost: formData.sessionCost ? parseFloat(formData.sessionCost) : undefined,
+            packageCost: formData.packageCost ? parseFloat(formData.packageCost) : undefined,
+            insuranceAccepted: formData.insuranceAccepted,
+          };
+          formDataToSend.append('pricing', JSON.stringify(pricing));
+        }
+
+        // Add availability
+        const availability = {
+          inPerson: formData.inPerson,
+          telehealth: formData.telehealth,
+          emergency: formData.emergency,
         };
+        formDataToSend.append('availability', JSON.stringify(availability));
+
+        // Add image file
+        formDataToSend.append('image', imageFile);
+
+        response = await treatmentsApi.create(formDataToSend);
+      } else {
+        // Use JSON if no image file
+        const treatmentData: any = {
+          name: formData.name.trim(),
+          description: formData.description.trim(),
+          detailedDescription: formData.detailedDescription.trim(),
+          category: formData.category,
+          subcategory: formData.subcategory.trim() || undefined,
+          image: formData.image.trim() || undefined,
+          gradient: formData.gradient,
+          icon: formData.icon,
+          duration: formData.duration.trim() || undefined,
+          methods: formData.methods,
+          conditions: formData.conditions,
+          keyPoints: formData.keyPoints,
+          metaTitle: formData.metaTitle.trim() || undefined,
+          metaDescription: formData.metaDescription.trim() || undefined,
+          keywords: formData.keywords,
+          status: formData.status,
+          featured: formData.featured,
+          active: formData.active,
+        };
+
+        // Add pricing if provided
+        if (formData.sessionCost || formData.packageCost) {
+          treatmentData.pricing = {
+            sessionCost: formData.sessionCost ? parseFloat(formData.sessionCost) : undefined,
+            packageCost: formData.packageCost ? parseFloat(formData.packageCost) : undefined,
+            insuranceAccepted: formData.insuranceAccepted,
+          };
+        }
+
+        // Add availability
+        treatmentData.availability = {
+          inPerson: formData.inPerson,
+          telehealth: formData.telehealth,
+          emergency: formData.emergency,
+        };
+
+        response = await treatmentsApi.create(treatmentData);
       }
-
-      // Add availability
-      treatmentData.availability = {
-        inPerson: formData.inPerson,
-        telehealth: formData.telehealth,
-        emergency: formData.emergency,
-      };
-
-      const response = await treatmentsApi.create(treatmentData);
 
       if (response.success) {
         showSnackbar('Treatment created successfully!', 'success');
@@ -246,10 +446,6 @@ export default function AddTreatmentPage() {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const showSnackbar = (message: string, severity: 'success' | 'error' | 'warning' | 'info') => {
-    setSnackbar({ open: true, message, severity });
   };
 
   return (
@@ -331,45 +527,90 @@ export default function AddTreatmentPage() {
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
+                <RichTextEditor
                   label="Detailed Description"
-                  multiline
-                  rows={4}
                   value={formData.detailedDescription}
-                  onChange={(e) => handleInputChange('detailedDescription', e.target.value)}
-                  helperText="Longer description for treatment details (max 1000 characters)"
-                  inputProps={{ maxLength: 1000 }}
+                  onChange={(value) => handleInputChange('detailedDescription', value)}
+                  placeholder="Enter detailed treatment information. You can copy and paste content from NIMH or other sources..."
+                  helperText="Rich text editor - supports formatting, lists, headings, links, and more. Perfect for copying content from medical websites."
+                  height={300}
                 />
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <FormControl fullWidth required error={!!validationErrors.category}>
-                  <InputLabel>Category</InputLabel>
-                  <Select
-                    value={formData.category}
-                    label="Category"
-                    onChange={(e) => handleInputChange('category', e.target.value)}
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-start' }}>
+                  <FormControl fullWidth required error={!!validationErrors.category}>
+                    <InputLabel>Category</InputLabel>
+                    <Select
+                      value={formData.category}
+                      label="Category"
+                      onChange={(e) => {
+                        handleInputChange('category', e.target.value);
+                        handleInputChange('subcategory', ''); // Reset subcategory when category changes
+                      }}
+                      disabled={loadingCategories}
+                    >
+                      {categories.map((cat) => (
+                        <MenuItem key={cat} value={cat}>
+                          {cat}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {validationErrors.category && (
+                      <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 2 }}>
+                        {validationErrors.category}
+                      </Typography>
+                    )}
+                  </FormControl>
+                  <IconButton
+                    color="primary"
+                    onClick={() => setCategoryDialog(true)}
+                    sx={{ mt: 1 }}
+                    title="Add new category"
                   >
-                    <MenuItem value="Mental Health">Mental Health</MenuItem>
-                    <MenuItem value="General Health">General Health</MenuItem>
-                  </Select>
-                  {validationErrors.category && (
-                    <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 2 }}>
-                      {validationErrors.category}
-                    </Typography>
-                  )}
-                </FormControl>
+                    <AddIcon />
+                  </IconButton>
+                </Box>
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Subcategory"
-                  value={formData.subcategory}
-                  onChange={(e) => handleInputChange('subcategory', e.target.value)}
-                  placeholder="e.g., Anxiety & Stress, Chronic Disease"
-                />
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-start' }}>
+                  <Autocomplete
+                    fullWidth
+                    freeSolo
+                    options={subcategories}
+                    value={formData.subcategory}
+                    onChange={(_, newValue) => handleInputChange('subcategory', newValue || '')}
+                    onInputChange={(_, newInputValue) => handleInputChange('subcategory', newInputValue)}
+                    disabled={!formData.category || loadingSubcategories}
+                    loading={loadingSubcategories}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Subcategory"
+                        placeholder={formData.category ? "Select or type new subcategory" : "Select category first"}
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {loadingSubcategories ? <CircularProgress color="inherit" size={20} /> : null}
+                              {params.InputProps.endAdornment}
+                            </>
+                          ),
+                        }}
+                      />
+                    )}
+                  />
+                  <IconButton
+                    color="primary"
+                    onClick={() => setSubcategoryDialog(true)}
+                    disabled={!formData.category}
+                    sx={{ mt: 1 }}
+                    title="Add new subcategory"
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </Box>
               </Grid>
 
               <Grid item xs={12} sm={6}>
@@ -382,13 +623,14 @@ export default function AddTreatmentPage() {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Image URL"
-                  value={formData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  placeholder="https://example.com/image.jpg"
+              <Grid item xs={12}>
+                <ImageUpload
+                  label="Treatment Image"
+                  value={imagePreview || undefined}
+                  onChange={handleImageUpload}
+                  maxSize={10}
+                  acceptedFormats={['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml']}
+                  helperText="Upload a high-quality image for the treatment (max 10MB). Supported formats: JPG, PNG, WebP, SVG. Recommended size: 1200x630px"
                 />
               </Grid>
             </Grid>
@@ -720,6 +962,92 @@ export default function AddTreatmentPage() {
           </Paper>
         </Grid>
       </Grid>
+
+      {/* Add Category Dialog */}
+      <Dialog open={categoryDialog} onClose={() => setCategoryDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Add New Category</DialogTitle>
+        <DialogContent>
+          <Box sx={{ pt: 2 }}>
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel>Category Type</InputLabel>
+              <Select
+                value={formData.category}
+                label="Category Type"
+                onChange={(e) => handleInputChange('category', e.target.value)}
+              >
+                <MenuItem value="Mental Health">Mental Health</MenuItem>
+                <MenuItem value="General Health">General Health</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              fullWidth
+              label="Category Name"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              placeholder="e.g., Mood Disorders, Cardiovascular"
+              autoFocus
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleAddNewCategory();
+                }
+              }}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCategoryDialog(false)}>Cancel</Button>
+          <Button
+            onClick={handleAddNewCategory}
+            variant="contained"
+            disabled={addingCategory || !newCategoryName.trim() || !formData.category}
+            startIcon={addingCategory ? <CircularProgress size={16} /> : <AddIcon />}
+          >
+            {addingCategory ? 'Adding...' : 'Add Category'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Add Subcategory Dialog */}
+      <Dialog open={subcategoryDialog} onClose={() => setSubcategoryDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Add New Subcategory</DialogTitle>
+        <DialogContent>
+          <Box sx={{ pt: 2 }}>
+            <TextField
+              fullWidth
+              label="Parent Category"
+              value={formData.category}
+              disabled
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Subcategory Name"
+              value={newSubcategoryName}
+              onChange={(e) => setNewSubcategoryName(e.target.value)}
+              placeholder="e.g., Anxiety & Stress, Heart Disease"
+              autoFocus
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleAddNewSubcategory();
+                }
+              }}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSubcategoryDialog(false)}>Cancel</Button>
+          <Button
+            onClick={handleAddNewSubcategory}
+            variant="contained"
+            disabled={addingSubcategory || !newSubcategoryName.trim()}
+            startIcon={addingSubcategory ? <CircularProgress size={16} /> : <AddIcon />}
+          >
+            {addingSubcategory ? 'Adding...' : 'Add Subcategory'}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Snackbar */}
       <Snackbar

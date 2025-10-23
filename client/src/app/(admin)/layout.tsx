@@ -1,15 +1,9 @@
-import type { Metadata } from 'next';
+'use client';
+
 import MuiThemeProvider from '@/components/admin/MuiThemeProvider';
 import AdminLayout from '@/components/admin/AdminLayout';
+import { AuthProvider } from '@/contexts/AuthContext';
 import './admin.css';
-
-export const metadata: Metadata = {
-  title: 'Admin Panel - Dr. Syed M Quadri',
-  description: 'Administrative dashboard for managing content and users',
-  icons: {
-    icon: '/favicon.ico',
-  },
-};
 
 export default function AdminRootLayout({
   children,
@@ -17,10 +11,12 @@ export default function AdminRootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <MuiThemeProvider>
-      <AdminLayout>
-        {children}
-      </AdminLayout>
-    </MuiThemeProvider>
+    <AuthProvider>
+      <MuiThemeProvider>
+        <AdminLayout>
+          {children}
+        </AdminLayout>
+      </MuiThemeProvider>
+    </AuthProvider>
   );
 }

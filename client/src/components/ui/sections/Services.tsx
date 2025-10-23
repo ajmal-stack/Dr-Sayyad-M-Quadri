@@ -5,85 +5,52 @@ import Image from 'next/image';
 import Link from 'next/link';
 // import { CheckCircleIcon } from '@heroicons/react/24/outline';
 
-const services = [
-  {
-    id: 1,
-    name: 'Anxiety Disorders',
-    description:
-      'Evidence-based treatment for panic attacks, social anxiety, generalized anxiety disorders, and phobias using proven therapeutic techniques.',
-    image: '/Services/Anxiety Disorders.svg',
-    gradient: 'from-blue-500 to-indigo-600',
-    link: '/treatment/anxiety',
-  },
-  {
-    id: 2,
-    name: 'Depression Treatment',
-    description:
-      'Personalized treatment for major depression, dysthymia, and mood-related challenges using evidence-based therapeutic approaches.',
-    image: '/Services/Depression Treatment.svg',
-    gradient: 'from-emerald-500 to-teal-600',
-    link: '/treatment/depression',
-  },
-  {
-    id: 3,
-    name: 'Stress Management',
-    description:
-      'Master techniques to manage work stress, life transitions, and daily pressures with personalized coping strategies.',
-    image: '/Services/Stress Management.svg',
-    gradient: 'from-orange-500 to-amber-600',
-    link: '/treatment/stress',
-  },
-  {
-    id: 4,
-    name: 'Trauma Therapy',
-    description:
-      'Expert treatment for PTSD, childhood trauma, and traumatic life experiences using specialized therapeutic approaches.',
-    image: '/Services/Trauma Therapy.svg',
-    gradient: 'from-purple-500 to-violet-600',
-    link: '/treatment/trauma',
-  },
-  {
-    id: 5,
-    name: 'Couples Therapy',
-    description:
-      'Improve communication, resolve conflicts, and strengthen emotional connections in your relationships.',
-    image: '/Services/Couples Therapy.svg',
-    gradient: 'from-pink-500 to-rose-600',
-    link: '/treatment/couples',
-  },
-  {
-    id: 6,
-    name: 'Sleep Disorders',
-    description:
-      'Address insomnia, sleep anxiety, and develop healthy sleep patterns for better mental and physical health.',
-    image: '/Services/Sleep Disorders.svg',
-    gradient: 'from-indigo-500 to-blue-600',
-    link: '/treatment/sleep',
-  },
-  {
-    id: 7,
-    name: 'Addiction Recovery',
-    description:
-      'Support for substance abuse recovery and behavioral addiction treatment with compassionate, evidence-based care.',
-    image: '/Services/Addiction Recovery.svg',
-    gradient: 'from-teal-500 to-cyan-600',
-    link: '/treatment/addiction',
-  },
-  {
-    id: 8,
-    name: 'Life Transitions',
-    description:
-      'Navigate major life changes, career transitions, and personal growth challenges with professional guidance.',
-    image: '/Services/Life Transitions.svg',
-    gradient: 'from-violet-500 to-purple-600',
-    link: '/treatment/life-transitions',
-  },
-];
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+
+interface Treatment {
+  _id: string;
+  name: string;
+  description: string;
+  image: string;
+  gradient: string;
+  slug: string;
+  category: string;
+  featured?: boolean;
+}
 
 export default function Services() {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [services, setServices] = useState<Treatment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch treatments from API
+  useEffect(() => {
+    const fetchTreatments = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${API_URL}/treatments?category=Mental Health&limit=8`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch treatments');
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setServices(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching treatments:', err);
+        setServices([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTreatments();
+  }, []);
 
   useEffect(() => {
     setIsVisible(true);
@@ -99,15 +66,15 @@ export default function Services() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const handleCardInteraction = (serviceId: number, isInteracting: boolean) => {
+  const handleCardInteraction = (serviceId: string, isInteracting: boolean) => {
     if (!isMobile) {
       setHoveredCard(isInteracting ? serviceId : null);
     }
   };
 
-  const handleMobileCardTap = (serviceId: number) => {
+  const handleMobileCardTap = (serviceId: string) => {
     if (isMobile) {
-      setHoveredCard(hoveredCard === serviceId ? null : serviceId);
+      setHoveredCard(hoveredCard === serviceId ? null : serviceId); 
     }
   };
 
@@ -149,32 +116,57 @@ export default function Services() {
 
         {/* Services Grid */}
         <div className='grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mb-0'>
-          {services.map((service, index) => (
+          {isLoading ? (
+            // Loading skeleton
+            Array.from({ length: 8 }, (_, index) => (
+              <div
+                key={`service-skeleton-${index}`}
+                className='relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg bg-slate-200 animate-pulse'
+                style={{ height: '288px' }}
+              />
+            ))
+          ) : services.length === 0 ? (
+            // Empty state
+            <div className='col-span-full text-center py-12'>
+              <p className='text-slate-600 text-lg'>No services available at the moment.</p>
+            </div>
+          ) : (
+            services.map((service, index) => (
             <Link
-              key={service.id}
-              href={service.link}
+              key={service._id}
+              href={`/treatment/${service.slug}`}
               className={`group relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer block ${
                 isVisible
                   ? 'animate-in slide-in-from-bottom duration-1000'
                   : 'opacity-0'
               }`}
               style={{ animationDelay: `${index * 100}ms` }}
-              onMouseEnter={() => handleCardInteraction(service.id, true)}
-              onMouseLeave={() => handleCardInteraction(service.id, false)}
-              onClick={() => handleMobileCardTap(service.id)}
+              onMouseEnter={() => handleCardInteraction(service._id, true)}
+              onMouseLeave={() => handleCardInteraction(service._id, false)}
+              onClick={() => handleMobileCardTap(service._id)}
             >
               {/* Image Container */}
               <div className='relative h-36 sm:h-56 md:h-64 lg:h-72 xl:h-80 overflow-hidden'>
-                {/* SVG Background Image */}
+                {/* Background Image - Handle SVG separately */}
                 <div className='w-full h-full relative'>
-                  <Image
-                    src={service.image}
-                    alt={service.name}
-                    fill
-                    className='object-cover object-center'
-                    sizes='(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 33vw, 25vw'
-                    priority={index < 4}
-                  />
+                  {service.image?.endsWith('.svg') || service.image?.includes('.svg') ? (
+                    // Use regular img tag for SVG files
+                    <img
+                      src={service.image}
+                      alt={service.name}
+                      className='w-full h-full object-cover object-center'
+                    />
+                  ) : (
+                    // Use Next.js Image for other formats
+                    <Image
+                      src={service.image}
+                      alt={service.name}
+                      fill
+                      className='object-cover object-center'
+                      sizes='(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 33vw, 25vw'
+                      priority={index < 4}
+                    />
+                  )}
                 </div>
 
                 {/* Gradient Overlay */}
@@ -185,13 +177,13 @@ export default function Services() {
                 {/* Hover/Tap Text Overlay */}
                 <div
                   className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30 transition-all duration-500 ${
-                    hoveredCard === service.id ? 'opacity-100' : 'opacity-0'
+                    hoveredCard === service._id ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
                   <div className='absolute inset-0 flex flex-col justify-center items-center text-center p-2 sm:p-4 lg:p-6 text-white transform transition-all duration-500'>
                     <h3
                       className={`text-sm sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-3 lg:mb-4 transform transition-all duration-500 ${
-                        hoveredCard === service.id
+                        hoveredCard === service._id
                           ? 'translate-y-0 opacity-100'
                           : 'translate-y-4 opacity-0'
                       }`}
@@ -200,7 +192,7 @@ export default function Services() {
                     </h3>
                     <p
                       className={`text-xs sm:text-sm lg:text-base leading-relaxed transform transition-all duration-500 delay-100 ${
-                        hoveredCard === service.id
+                        hoveredCard === service._id
                           ? 'translate-y-0 opacity-100'
                           : 'translate-y-4 opacity-0'
                       }`}
@@ -213,7 +205,7 @@ export default function Services() {
                 {/* Service Name at Bottom (visible when not hovering/tapped) */}
                 <div
                   className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2 sm:p-4 lg:p-6 transition-opacity duration-500 ${
-                    hoveredCard === service.id ? 'opacity-0' : 'opacity-100'
+                    hoveredCard === service._id ? 'opacity-0' : 'opacity-100'
                   }`}
                 >
                   <h3 className='text-white text-sm sm:text-lg lg:text-xl font-bold leading-tight'>
@@ -222,7 +214,8 @@ export default function Services() {
                 </div>
               </div>
             </Link>
-          ))}
+          ))
+          )}
         </div>
 
         {/* Mobile-specific instruction text */}

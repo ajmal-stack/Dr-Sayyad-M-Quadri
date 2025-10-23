@@ -9,6 +9,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/primitives/Button';
+import { generateBookSlug } from '@/utils/slugify';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -137,7 +138,7 @@ export default function BooksGridDesktop({ items, className = '' }: BooksGridDes
             {items.map((item, index) => (
               <Link
                 key={item.id}
-                href={`/books/${item.id}`}
+                href={`/books/${generateBookSlug(item.title)}`}
                 className='group relative w-full block'
                 style={{ 
                   animationDelay: `${index * 100}ms`,

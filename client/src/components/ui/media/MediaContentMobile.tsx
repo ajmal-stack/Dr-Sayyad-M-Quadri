@@ -14,11 +14,11 @@ import {
 import { Button } from '../primitives/Button';
 import Image from 'next/image';
 import Link from 'next/link';
+import { generateBookSlug, generatePodcastSlug } from '@/utils/slugify';
 // import { ContentLoader } from '../primitives/Loader';
-import booksData from '@/data/books.json';
-import podcastData from '@/data/podcasts.json';
-import youtubeData from '@/data/youtube.json';
 // import LoadingAnimation from '../LoadingAnimation';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 // Add the blob animation styles
 const blobStyles = `
@@ -101,12 +101,6 @@ interface PodcastEpisode {
   episodeNumber?: number;
 }
 
-// Get books data from JSON
-const allBooks = [...booksData.featuredBooks, ...booksData.otherBooks] as Book[];
-const books = allBooks.slice(0, 6); // Show first 6 books
-
-// Get YouTube videos data from JSON
-const youtubeVideos: YouTubeVideo[] = youtubeData as YouTubeVideo[];
 
 // Utility functions for formatting
 const formatViews = (views: number) => {
@@ -127,18 +121,20 @@ const formatDate = (dateString: string) => {
   return `${Math.floor(diffDays / 30)} months ago`;
 };
 
-// Get podcast episodes from JSON data
-const podcastEpisodes: PodcastEpisode[] = podcastData.episodes.slice(0, 6); // Show first 6 episodes
-
 export default function MediaContentMobile() {
   const [currentBookPage, setCurrentBookPage] = useState(0);
   const [currentVideoPage, setCurrentVideoPage] = useState(0);
   const [currentPodcastPage, setCurrentPodcastPage] = useState(0);
   const [playingAudio, setPlayingAudio] = useState<number | null>(null);
-  // const [isLoading, setIsLoading] = useState(true);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [isLoadingBooks, setIsLoadingBooks] = useState(true);
+  const [podcastEpisodes, setPodcastEpisodes] = useState<PodcastEpisode[]>([]);
+  const [isLoadingPodcasts, setIsLoadingPodcasts] = useState(true);
+  const [youtubeVideos, setYoutubeVideos] = useState<YouTubeVideo[]>([]);
+  const [isLoadingYoutube, setIsLoadingYoutube] = useState(true);
 
   const itemsPerPage = 2; // 2 cards per page for mobile 
   
@@ -151,6 +147,90 @@ export default function MediaContentMobile() {
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
 
+  // Fetch books from API
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setIsLoadingBooks(true);
+        const response = await fetch(`${API_URL}/books`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch books');
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          // Get first 6 books for home page
+          setBooks(data.data.slice(0, 6));
+        }
+      } catch (err) {
+        console.error('Error fetching books:', err);
+        setBooks([]);
+      } finally {
+        setIsLoadingBooks(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  // Fetch podcasts from API
+  useEffect(() => {
+    const fetchPodcasts = async () => {
+      try {
+        setIsLoadingPodcasts(true);
+        const response = await fetch(`${API_URL}/podcasts`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch podcasts');
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          // Get first 6 podcasts for home page
+          setPodcastEpisodes(data.data.slice(0, 6));
+        }
+      } catch (err) {
+        console.error('Error fetching podcasts:', err);
+        setPodcastEpisodes([]);
+      } finally {
+        setIsLoadingPodcasts(false);
+      }
+    };
+
+    fetchPodcasts();
+  }, []);
+
+  // Fetch YouTube videos from API
+  useEffect(() => {
+    const fetchYoutubeVideos = async () => {
+      try {
+        setIsLoadingYoutube(true);
+        const response = await fetch(`${API_URL}/youtube`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch YouTube videos');
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          // Get first 6 videos for home page
+          setYoutubeVideos(data.data.slice(0, 6));
+        }
+      } catch (err) {
+        console.error('Error fetching YouTube videos:', err);
+        setYoutubeVideos([]);
+      } finally {
+        setIsLoadingYoutube(false);
+      }
+    };
+
+    fetchYoutubeVideos();
+  }, []);
+
   useEffect(() => {
     // Inject blob animation styles only once
     if (!document.getElementById('blob-animations')) {
@@ -159,9 +239,6 @@ export default function MediaContentMobile() {
       styleElement.textContent = blobStyles;
       document.head.appendChild(styleElement);
     }
-
-    // Remove artificial delay - load instantly
-    // setIsLoading(false);
   }, []);
 
   const getBooksPageItems = () => {
@@ -392,7 +469,7 @@ export default function MediaContentMobile() {
                     <p className='text-xs text-white/80 mb-2'>
                       By {book.author} • {book.pages ? `${book.pages} pages` : book.duration || book.type}
                     </p>
-                    <Link href={`/books/${book.id}`}>
+                    <Link href={`/books/${generateBookSlug(book.title)}`}>
                       <Button variant="secondary" size="xs" fullWidth>
                         View Details
                       </Button>
@@ -450,10 +527,26 @@ export default function MediaContentMobile() {
             onTouchMove={onTouchMove}
             onTouchEnd={() => onTouchEnd('podcasts')}
           >
-            {getPodcastPageItems().map((episode, index) => (
-              <div
+            {isLoadingPodcasts ? (
+              // Loading skeleton
+              Array.from({ length: 2 }, (_, index) => (
+                <div
+                  key={`podcast-skeleton-mobile-${index}`}
+                  className='relative w-full bg-slate-200 animate-pulse rounded-2xl'
+                  style={{ height: '200px' }}
+                />
+              ))
+            ) : podcastEpisodes.length === 0 ? (
+              // No podcasts message
+              <div className='col-span-full text-center py-8'>
+                <p className='text-slate-600 text-sm'>No podcasts available.</p>
+              </div>
+            ) : (
+              getPodcastPageItems().map((episode, index) => (
+              <Link
                 key={episode.id}
-                className='group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 border border-purple-100 cursor-pointer'
+                href={`/podcast/${generatePodcastSlug(episode.title)}`}
+                className='group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 border border-purple-100 cursor-pointer block'
               >
                 {/* Podcast Thumbnail */}
                 <div className='relative aspect-video bg-slate-200 overflow-hidden'>
@@ -500,8 +593,9 @@ export default function MediaContentMobile() {
                     {formatDate(episode.publishDate)} • {episode.duration}
                   </p>
                 </div>
-              </div>
-            ))}
+              </Link>
+            ))
+            )}
           </div>
 
           {/* Pagination Dots */}
@@ -551,7 +645,22 @@ export default function MediaContentMobile() {
             onTouchMove={onTouchMove}
             onTouchEnd={() => onTouchEnd('videos')}
           >
-            {getVideosPageItems().map((video, index) => (
+            {isLoadingYoutube ? (
+              // Loading skeleton
+              Array.from({ length: 2 }, (_, index) => (
+                <div
+                  key={`youtube-skeleton-mobile-${index}`}
+                  className='relative w-full bg-slate-200 animate-pulse rounded-2xl'
+                  style={{ height: '200px' }}
+                />
+              ))
+            ) : youtubeVideos.length === 0 ? (
+              // No videos message
+              <div className='col-span-full text-center py-8'>
+                <p className='text-slate-600 text-sm'>No YouTube videos available.</p>
+              </div>
+            ) : (
+              getVideosPageItems().map((video, index) => (
               <div
                 key={video.id}
                 className='group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 border border-red-100 cursor-pointer'
@@ -592,7 +701,8 @@ export default function MediaContentMobile() {
                   </p>
                 </div>
               </div>
-            ))}
+            ))
+            )}
           </div>
 
           {/* Pagination Dots */}

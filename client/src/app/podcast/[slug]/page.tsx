@@ -25,7 +25,9 @@ import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { OptimizedImage } from '@/components/ui/primitives/OptimizedImage';
 import { Button } from '@/components/ui/primitives/Button';
-import podcastData from '@/data/podcasts.json';
+import { generatePodcastSlug } from '@/utils/slugify';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 interface Podcast {
   id: number;
@@ -47,7 +49,7 @@ interface Podcast {
   tags?: string[];
 }
 
-export default function PodcastDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function PodcastDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   // Audio player state
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -58,17 +60,48 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
   const [isLiked, setIsLiked] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [podcast, setPodcast] = useState<Podcast | null>(null);
+  const [allPodcasts, setAllPodcasts] = useState<Podcast[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Unwrap params Promise and get podcast data from JSON
+  // Unwrap params Promise
   const resolvedParams = use(params);
-  const episodes = podcastData.episodes as Podcast[];
-  const podcast = episodes.find(p => p.id === parseInt(resolvedParams.id));
 
-  if (!podcast) {
-    notFound();
-  }
+  // Fetch podcasts from API
+  useEffect(() => {
+    const fetchPodcasts = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${API_URL}/podcasts`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch podcasts');
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setAllPodcasts(data.data);
+          
+          // Find podcast by slug
+          const foundPodcast = data.data.find((p: Podcast) => 
+            generatePodcastSlug(p.title) === resolvedParams.slug
+          );
+          
+          setPodcast(foundPodcast || null);
+        }
+      } catch (err) {
+        console.error('Error fetching podcasts:', err);
+        setPodcast(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPodcasts();
+  }, [resolvedParams.slug]);
 
   // Audio event handlers
   useEffect(() => {
@@ -135,7 +168,22 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const relatedPodcasts = episodes
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-gray-600">Loading podcast...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!podcast) {
+    notFound();
+  }
+
+  const relatedPodcasts = allPodcasts
     .filter(p => p.id !== podcast.id && p.category === podcast.category)
     .slice(0, 3);
 
@@ -184,12 +232,14 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
               )}
 
               {/* Episode Number */}
-              <div className="absolute top-3 left-3">
-                <div className="bg-white/90 backdrop-blur-sm text-gray-900 px-3 py-1.5 rounded-full text-sm font-bold flex items-center">
-                  <HashtagIcon className="w-4 h-4 mr-1" />
-                  {podcast.episodeNumber}
+              {podcast.episodeNumber && (
+                <div className="absolute top-3 left-3">
+                  <div className="bg-white/90 backdrop-blur-sm text-gray-900 px-3 py-1.5 rounded-full text-sm font-bold flex items-center">
+                    <HashtagIcon className="w-4 h-4 mr-1" />
+                    {podcast.episodeNumber}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Audio Player */}
@@ -334,7 +384,9 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
                   <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
                     {podcast.category}
                   </span>
-                  <span className="text-sm text-gray-500">Episode #{podcast.episodeNumber}</span>
+                  {podcast.episodeNumber && (
+                    <span className="text-sm text-gray-500">Episode #{podcast.episodeNumber}</span>
+                  )}
                 </div>
 
                 {/* Title */}
@@ -344,11 +396,15 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
 
                 {/* Host and Date */}
                 <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <UserIcon className="w-5 h-5 text-gray-400" />
-                    <span className="text-gray-700 font-medium">{podcast.host}</span>
-                  </div>
-                  <span className="hidden sm:inline text-gray-400">•</span>
+                  {podcast.host && (
+                    <>
+                      <div className="flex items-center space-x-2">
+                        <UserIcon className="w-5 h-5 text-gray-400" />
+                        <span className="text-gray-700 font-medium">{podcast.host}</span>
+                      </div>
+                      <span className="hidden sm:inline text-gray-400">•</span>
+                    </>
+                  )}
                   <div className="flex items-center space-x-2">
                     <CalendarIcon className="w-5 h-5 text-gray-400" />
                     <span className="text-gray-600">
@@ -363,18 +419,24 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
 
                 {/* Stats */}
                 <div className="flex items-center space-x-6 text-sm text-gray-600">
-                  <div className="flex items-center space-x-1">
-                    <EyeIcon className="w-4 h-4" />
-                    <span>{podcast.views?.toLocaleString()} views</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <HeartIcon className="w-4 h-4" />
-                    <span>{podcast.likes} likes</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <ArrowDownTrayIcon className="w-4 h-4" />
-                    <span>{podcast.downloads} downloads</span>
-                  </div>
+                  {podcast.views && (
+                    <div className="flex items-center space-x-1">
+                      <EyeIcon className="w-4 h-4" />
+                      <span>{podcast.views.toLocaleString()} views</span>
+                    </div>
+                  )}
+                  {podcast.likes && (
+                    <div className="flex items-center space-x-1">
+                      <HeartIcon className="w-4 h-4" />
+                      <span>{podcast.likes} likes</span>
+                    </div>
+                  )}
+                  {podcast.downloads && (
+                    <div className="flex items-center space-x-1">
+                      <ArrowDownTrayIcon className="w-4 h-4" />
+                      <span>{podcast.downloads} downloads</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Description */}
@@ -386,17 +448,19 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
                     ) : (
                       <p>{podcast.description.slice(0, 200)}...</p>
                     )}
-                    <button
-                      onClick={() => setShowFullDescription(!showFullDescription)}
-                      className="text-blue-600 hover:text-blue-700 font-medium ml-2"
-                    >
-                      {showFullDescription ? 'Show less' : 'Show more'}
-                    </button>
+                    {podcast.description.length > 200 && (
+                      <button
+                        onClick={() => setShowFullDescription(!showFullDescription)}
+                        className="text-blue-600 hover:text-blue-700 font-medium ml-2"
+                      >
+                        {showFullDescription ? 'Show less' : 'Show more'}
+                      </button>
+                    )}
                   </div>
                 </div>
 
                 {/* Tags */}
-                {podcast.tags && (
+                {podcast.tags && podcast.tags.length > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-medium text-gray-700">Tags</h4>
                     <div className="flex flex-wrap gap-2">
@@ -415,7 +479,7 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
             </div>
 
             {/* Show Notes */}
-            {podcast.showNotes && (
+            {podcast.showNotes && podcast.showNotes.length > 0 && (
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Show Notes</h3>
                 <ul className="space-y-2">
@@ -460,7 +524,7 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
               {relatedPodcasts.map((relatedPodcast) => (
                 <Link
                   key={relatedPodcast.id}
-                  href={`/podcast/${relatedPodcast.id}`}
+                  href={`/podcast/${generatePodcastSlug(relatedPodcast.title)}`}
                   className="group bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100"
                 >
                   <div className="flex space-x-4">
@@ -478,8 +542,12 @@ export default function PodcastDetailPage({ params }: { params: Promise<{ id: st
                         {relatedPodcast.title}
                       </h3>
                       <div className="flex items-center mt-2 space-x-3 text-sm text-gray-500">
-                        <span>#{relatedPodcast.episodeNumber}</span>
-                        <span>•</span>
+                        {relatedPodcast.episodeNumber && (
+                          <>
+                            <span>#{relatedPodcast.episodeNumber}</span>
+                            <span>•</span>
+                          </>
+                        )}
                         <span>{relatedPodcast.duration}</span>
                       </div>
                     </div>

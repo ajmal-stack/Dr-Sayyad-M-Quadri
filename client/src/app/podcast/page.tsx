@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import podcastData from '@/data/podcasts.json';
+import { generatePodcastSlug } from '@/utils/slugify';
 import PodcastSearchModal from '@/components/ui/primitives/PodcastSearchModal';
 import {
   PlayIcon,
@@ -20,6 +20,8 @@ import {
   SpeakerXMarkIcon,
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 interface Podcast {
   id: number;
@@ -67,12 +69,33 @@ export default function PodcastPage() {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Load podcast data from JSON
+  // Fetch podcast data from API
   useEffect(() => {
-    const episodes = podcastData.episodes as Podcast[];
-    setPodcasts(episodes);
-    setFilteredPodcasts(episodes);
-    setLoading(false);
+    const fetchPodcasts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_URL}/podcasts`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch podcasts');
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setPodcasts(data.data);
+          setFilteredPodcasts(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching podcasts:', err);
+        setPodcasts([]);
+        setFilteredPodcasts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPodcasts();
   }, []);
 
   // Audio event handlers
@@ -397,7 +420,7 @@ export default function PodcastPage() {
               {featuredPodcasts.map((podcast) => (
                 <Link
                   key={podcast.id}
-                  href={`/podcast/${podcast.id}`}
+                  href={`/podcast/${generatePodcastSlug(podcast.title)}`}
                   onClick={(e) => handleCardClick(podcast.id, e)}
                   className='group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:-translate-y-1 border border-gray-100 block'
                 >
@@ -538,7 +561,7 @@ export default function PodcastPage() {
             {podcasts.slice(0, 8).map((podcast) => (
               <Link
                 key={podcast.id}
-                href={`/podcast/${podcast.id}`}
+                href={`/podcast/${generatePodcastSlug(podcast.title)}`}
                 className='group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:-translate-y-1 border border-gray-100 block'
               >
                 <div className='relative aspect-[4/3] overflow-hidden'>

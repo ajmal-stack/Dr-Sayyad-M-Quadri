@@ -187,6 +187,10 @@ export default function TreatmentsPage() {
     loadInitialData();
   };
 
+  const handleViewTreatment = (slug: string) => {
+    window.open(`/treatment/${slug}`, '_blank');
+  };
+
   const showSnackbar = (message: string, severity: 'success' | 'error' | 'warning' | 'info') => {
     setSnackbar({ open: true, message, severity });
   };
@@ -580,11 +584,13 @@ export default function TreatmentsPage() {
                   <Button
                     size="small"
                     startIcon={<Visibility />}
-                    onClick={() => window.open(`/treatment/${treatment.slug}`, '_blank')}
+                    onClick={() => handleViewTreatment(treatment.slug || treatment._id)}
+                    fullWidth
+                    variant="outlined"
                   >
                     Preview
                   </Button>
-                  <Box>
+                  <Tooltip title="Edit">
                     <IconButton
                       size="small"
                       color="primary"
@@ -592,6 +598,8 @@ export default function TreatmentsPage() {
                     >
                       <Edit />
                     </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete">
                     <IconButton
                       size="small"
                       color="error"
@@ -610,7 +618,7 @@ export default function TreatmentsPage() {
                         <Delete />
                       )}
                     </IconButton>
-                  </Box>
+                  </Tooltip>
                 </CardActions>
               </Card>
             </Grid>

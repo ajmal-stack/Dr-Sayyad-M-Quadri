@@ -23,12 +23,12 @@ const treatmentSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Short description is required'],
       trim: true,
-      maxLength: [500, 'Description cannot be more than 500 characters'],
+      maxLength: [1000, 'Description cannot be more than 1000 characters'],
     },
     detailedDescription: {
       type: String,
       trim: true,
-      maxLength: [1000, 'Detailed description cannot be more than 1000 characters'],
+      maxLength: [500000, 'Detailed description cannot be more than 500000 characters'],
     },
 
     // Category and Classification
