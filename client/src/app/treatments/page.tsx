@@ -254,11 +254,12 @@ export default function TreatmentPage() {
                                 }`}>
                                   {service.name}
                                 </h3>
-                                  <p className={`text-xs sm:text-sm leading-tight sm:leading-relaxed transform transition-all duration-600 ease-out delay-150 ${
-                                    activeService === service._id ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-                                }`}>
-                                  {service.detailedDescription || service.description}
-                                </p>
+                                  <div 
+                                    className={`text-xs sm:text-sm leading-tight sm:leading-relaxed transform transition-all duration-600 ease-out delay-150 prose prose-sm prose-invert max-w-none ${
+                                      activeService === service._id ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+                                    }`}
+                                    dangerouslySetInnerHTML={{ __html: service.detailedDescription || service.description }}
+                                  />
                               </div>
                             </div>
 
@@ -299,7 +300,7 @@ export default function TreatmentPage() {
                       </span>
                     </h2>
                     <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto">
-                      Comprehensive medical care and preventive health services for your overall wellbeing
+                      Comprehensive healthcare services for your physical wellbeing
                     </p>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
@@ -352,11 +353,12 @@ export default function TreatmentPage() {
                                 }`}>
                                   {service.name}
                                 </h3>
-                                  <p className={`text-xs sm:text-sm leading-tight sm:leading-relaxed transform transition-all duration-600 ease-out delay-150 ${
-                                    activeService === service._id ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-                                }`}>
-                                  {service.detailedDescription || service.description}
-                                </p>
+                                  <div 
+                                    className={`text-xs sm:text-sm leading-tight sm:leading-relaxed transform transition-all duration-600 ease-out delay-150 prose prose-sm prose-invert max-w-none ${
+                                      activeService === service._id ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+                                    }`}
+                                    dangerouslySetInnerHTML={{ __html: service.detailedDescription || service.description }}
+                                  />
                               </div>
                             </div>
 

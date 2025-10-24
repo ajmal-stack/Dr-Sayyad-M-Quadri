@@ -131,9 +131,10 @@ export default function TreatmentDetailPage() {
             {/* Detailed Description */}
             {treatment.detailedDescription && (
               <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-                <p className="text-gray-700 text-lg leading-relaxed">
-                  {treatment.detailedDescription}
-                </p>
+                <div 
+                  className="prose prose-lg max-w-none text-gray-700"
+                  dangerouslySetInnerHTML={{ __html: treatment.detailedDescription }}
+                />
               </div>
             )}
 

@@ -190,15 +190,14 @@ export default function Services() {
                     >
                       {service.name}
                     </h3>
-                    <p
-                      className={`text-xs sm:text-sm lg:text-base leading-relaxed transform transition-all duration-500 delay-100 ${
+                    <div
+                      className={`text-xs sm:text-sm lg:text-base leading-relaxed transform transition-all duration-500 delay-100 prose prose-sm prose-invert max-w-none ${
                         hoveredCard === service._id
                           ? 'translate-y-0 opacity-100'
                           : 'translate-y-4 opacity-0'
                       }`}
-                    >
-                      {service.description}
-                    </p>
+                      dangerouslySetInnerHTML={{ __html: service.description }}
+                    />
                   </div>
                 </div>
 

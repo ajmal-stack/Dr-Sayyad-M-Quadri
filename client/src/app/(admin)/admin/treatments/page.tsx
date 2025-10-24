@@ -188,7 +188,7 @@ export default function TreatmentsPage() {
   };
 
   const handleViewTreatment = (slug: string) => {
-    window.open(`/treatment/${slug}`, '_blank');
+    window.open(`/treatments/${slug}`, '_blank');
   };
 
   const showSnackbar = (message: string, severity: 'success' | 'error' | 'warning' | 'info') => {
