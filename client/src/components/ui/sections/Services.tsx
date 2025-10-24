@@ -134,7 +134,7 @@ export default function Services() {
             services.map((service, index) => (
             <Link
               key={service._id}
-              href={`/treatment/${service.slug}`}
+              href={`/treatments/${service.slug}`}
               className={`group relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:scale-105 cursor-pointer block ${
                 isVisible
                   ? 'animate-in slide-in-from-bottom duration-1000'
