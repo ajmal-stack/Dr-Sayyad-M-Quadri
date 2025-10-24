@@ -63,17 +63,21 @@ export default function TreatmentDetailPage() {
   };
 
   if (loading) {
-    return <LoadingAnimation />;
+    return (
+      <div className="min-h-screen bg-gray-50 pt-14 sm:pt-16 lg:pt-20 flex items-center justify-center">
+        <LoadingAnimation />
+      </div>
+    );
   }
 
   if (error || !treatment) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 pt-14 sm:pt-16 lg:pt-20 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Treatment Not Found</h1>
           <p className="text-gray-600 mb-8">{error || 'The treatment you are looking for does not exist.'}</p>
           <Link
-            href="/treatment"
+            href="/treatments"
             className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
           >
             View All Treatments
@@ -84,7 +88,7 @@ export default function TreatmentDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-14 sm:pt-16 lg:pt-20">
       {/* Hero Section */}
       <div className={`bg-gradient-to-r ${treatment.gradient || 'from-blue-500 to-indigo-600'} text-white py-16`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

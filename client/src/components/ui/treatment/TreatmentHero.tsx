@@ -127,7 +127,7 @@ export default function TreatmentHero({
                 <ArrowRightIcon className="w-5 h-5 ml-2" />
               </Link>
               <Link 
-                href="/treatment" 
+                href="/treatments" 
                 className="inline-flex items-center justify-center border-2 border-slate-300 text-slate-700 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:border-blue-600 hover:text-blue-600 transform hover:scale-105 transition-all duration-300"
               >
                 View All Treatments

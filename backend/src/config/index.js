@@ -58,7 +58,7 @@ export const config = {
   // Rate Limiting
   rateLimit: {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
-    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || (process.env.NODE_ENV === 'development' ? 5000 : 100), // Much higher limit in dev
     authMax: parseInt(process.env.AUTH_RATE_LIMIT_MAX_REQUESTS) || 5,
     trustProxy: parseInt(process.env.TRUST_PROXY) || 1,
   },

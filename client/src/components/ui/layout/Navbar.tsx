@@ -164,7 +164,7 @@ const navItems: NavItem[] = [
   },
   {
     name: 'Treatment',
-    href: '/treatment',
+    href: '/treatments',
     icon: <HeartIcon className='w-5 h-5' />,
     color: 'from-blue-500 to-indigo-600',
     // hasDropdown: true,
