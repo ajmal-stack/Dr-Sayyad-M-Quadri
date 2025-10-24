@@ -85,7 +85,8 @@ interface YouTubeVideo {
 }
 
 interface PodcastEpisode {
-  id: number;
+  _id: string;
+  id?: number;
   title: string;
   description: string;
   duration: string;
@@ -125,7 +126,7 @@ export default function MediaContentMobile() {
   const [currentBookPage, setCurrentBookPage] = useState(0);
   const [currentVideoPage, setCurrentVideoPage] = useState(0);
   const [currentPodcastPage, setCurrentPodcastPage] = useState(0);
-  const [playingAudio, setPlayingAudio] = useState<number | null>(null);
+  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
@@ -142,6 +143,9 @@ export default function MediaContentMobile() {
   const booksContainerRef = useRef<HTMLDivElement>(null);
   const videosContainerRef = useRef<HTMLDivElement>(null);
   const podcastsContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Audio player ref
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Touch handling state
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
@@ -241,6 +245,16 @@ export default function MediaContentMobile() {
     }
   }, []);
 
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
   const getBooksPageItems = () => {
     const startBook = currentBookPage * itemsPerPage;
     return books.slice(startBook, startBook + itemsPerPage);
@@ -326,8 +340,35 @@ export default function MediaContentMobile() {
     return () => clearTimeout(timer);
   }, [hasInteracted]);
 
-  const toggleAudioPlay = (episodeId: number) => {
-    setPlayingAudio(playingAudio === episodeId ? null : episodeId);
+  const toggleAudioPlay = (episodeId: string, audioUrl: string) => {
+    if (playingAudio === episodeId) {
+      // Pause current audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      setPlayingAudio(null);
+    } else {
+      // Play new audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      
+      // Create new audio element
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      
+      audio.play().catch(err => {
+        console.error('Error playing audio:', err);
+        setPlayingAudio(null);
+      });
+      
+      // Handle audio end
+      audio.onended = () => {
+        setPlayingAudio(null);
+      };
+      
+      setPlayingAudio(episodeId);
+    }
   };
 
   const handleVideoPlay = (videoId: string) => {
@@ -544,7 +585,7 @@ export default function MediaContentMobile() {
             ) : (
               getPodcastPageItems().map((episode, index) => (
               <Link
-                key={episode.id}
+                key={episode._id}
                 href={`/podcast/${generatePodcastSlug(episode.title)}`}
                 className='group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 border border-purple-100 cursor-pointer block'
               >
@@ -572,10 +613,11 @@ export default function MediaContentMobile() {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        toggleAudioPlay(episode.id);
+                        toggleAudioPlay(episode._id, episode.audioUrl);
                       }}
+                      aria-label={playingAudio === episode._id ? 'Pause podcast' : 'Play podcast'}
                     >
-                      {playingAudio === episode.id ? (
+                      {playingAudio === episode._id ? (
                         <PauseIcon className='w-6 h-6' />
                       ) : (
                         <PlayIcon className='w-6 h-6 ml-0.5' />
