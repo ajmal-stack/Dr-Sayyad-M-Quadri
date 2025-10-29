@@ -24,7 +24,7 @@ interface Blog {
   author: string;
   category: string;
   image: string;
-  publishDate: string;
+  publishDate: string;  
   readTime: string;
   slug: string;
   tags?: string[];
@@ -79,9 +79,14 @@ export default function BlogPage() {
 
   // Filter blogs based on search and category
   const filteredBlogs = allBlogs.filter(blog => {
+    // Parse tags if they're a string
+    const parsedTags = blog.tags 
+      ? (typeof blog.tags === 'string' ? JSON.parse(blog.tags) : blog.tags)
+      : [];
+    
     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         blog.tags?.some((tag: string) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+                         parsedTags.some((tag: string) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesCategory = selectedCategory === 'all' || blog.category === selectedCategory;
     
@@ -266,19 +271,30 @@ export default function BlogPage() {
                     {/* Tags */}
                     {blog.tags && blog.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {blog.tags.slice(0, 2).map((tag: string) => (
-                          <span
-                            key={tag}
-                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {blog.tags.length > 2 && (
-                          <span className="text-xs text-gray-400">
-                            +{blog.tags.length - 2} more
-                          </span>
-                        )}
+                        {(() => {
+                          // Parse tags if they're a string
+                          const parsedTags = typeof blog.tags === 'string' 
+                            ? JSON.parse(blog.tags) 
+                            : blog.tags;
+                          
+                          return (
+                            <>
+                              {parsedTags.slice(0, 3).map((tag: string, index: number) => (
+                                <span
+                                  key={`${tag}-${index}`}
+                                  className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                              {parsedTags.length > 3 && (
+                                <span className="text-xs text-gray-400">
+                                  +{parsedTags.length - 3} more
+                                </span>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     )}
 
